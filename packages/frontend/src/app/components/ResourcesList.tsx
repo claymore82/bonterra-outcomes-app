@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Box, Heading, Text, Button, Flex } from '@chakra-ui/react'
+import { Box, Heading, Text, Button, Flex, Spinner } from '@chakra-ui/react'
+import { buildApiUrl } from '../../utils/api'
 
 // Define the resource type
 interface Resource {
@@ -21,35 +22,28 @@ export default function ResourcesList() {
   useEffect(() => {
     const fetchResources = async () => {
       try {
-        // Mock data until endpoint is created
-        const mockResources = [
-          {
-            id: "res-1",
-            name: "User Documentation",
-            description: "Comprehensive guides for using the Bonterra Platform",
-            type: "Documentation",
-            lastUpdated: "2023-03-10",
-            status: "Active"
-          },
-          {
-            id: "res-2",
-            name: "API Reference",
-            description: "Complete API documentation for Bonterra Platform integrations",
-            type: "Developer Resource",
-            lastUpdated: "2023-03-08",
-            status: "Active"
-          },
-          {
-            id: "res-3",
-            name: "Component Library",
-            description: "Reusable UI components for Bonterra Platform applications",
-            type: "Developer Resource",
-            lastUpdated: "2023-03-01",
-            status: "Active"
-          }
-        ];
+        // Call the API endpoint using the buildApiUrl utility
+        const response = await fetch(buildApiUrl('api/v1/resources'));
         
-        setResources(mockResources);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch resources: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        // Ensure we have the expected format or handle different response formats
+        if (data && data.data && Array.isArray(data.data)) {
+          // Standard response format with data property
+          setResources(data.data);
+        } else if (Array.isArray(data)) {
+          // API returned a direct array
+          setResources(data);
+        } else {
+          console.error('Unexpected API response format:', data);
+          setResources([]);
+          setError('Received invalid data format from server');
+        }
+        
         setLoading(false);
       } catch (err) {
         console.error('Error fetching resources:', err);
@@ -64,7 +58,8 @@ export default function ResourcesList() {
   if (loading) {
     return (
       <Box textAlign="center" py={10}>
-        <Text>Loading resources...</Text>
+        <Spinner size="lg" />
+        <Text mt={3}>Loading resources...</Text>
       </Box>
     );
   }

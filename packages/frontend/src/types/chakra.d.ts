@@ -3,6 +3,18 @@ declare module '@chakra-ui/react' {
   export interface ChakraComponent {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (props: any): JSX.Element;
+    Root?: ChakraComponent;
+    Indicator?: ChakraComponent;
+    Content?: ChakraComponent;
+    Title?: ChakraComponent;
+    Description?: ChakraComponent;
+    // Table components
+    Header?: ChakraComponent;
+    Body?: ChakraComponent;
+    Footer?: ChakraComponent;
+    Row?: ChakraComponent;
+    Cell?: ChakraComponent;
+    ColumnHeader?: ChakraComponent;
   }
   
   // Add missing exports from Chakra UI v3
@@ -23,17 +35,10 @@ declare module '@chakra-ui/react' {
   
   // Add table components
   export const Table: ChakraComponent;
-  export const Thead: ChakraComponent;
-  export const Tbody: ChakraComponent;
-  export const Tr: ChakraComponent;
-  export const Th: ChakraComponent;
-  export const Td: ChakraComponent;
   
   // Add other components
   export const Badge: ChakraComponent;
   export const Spinner: ChakraComponent;
   export const Alert: ChakraComponent;
-  export const AlertIcon: ChakraComponent;
-  export const AlertTitle: ChakraComponent;
-  export const AlertDescription: ChakraComponent;
+  // AlertIcon, AlertTitle, and AlertDescription are now under Alert.*
 } 

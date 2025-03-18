@@ -3,5 +3,10 @@
   "compilerOptions": {
     "module": "ESNext",
     "moduleResolution": "Bundler",
-  },
+    "baseUrl": ".",
+    "paths": {
+      "@bonstart/core": ["../core/src"],
+      "@bonstart/core/*": ["../core/src/*"]
+    }
+  }
 }

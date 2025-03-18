@@ -9,7 +9,7 @@ export default $config({
       home: "aws",
       providers: {
         aws: {
-          profile: process.env.AWS_PROFILE || "investingio"
+          profile: process.env.AWS_PROFILE
         }
       },
     };
@@ -21,7 +21,7 @@ export default $config({
 
     return {
       MyBucket: storage.bucket.name,
-      api: api.api.url,
+      apiUrl: api.api.url,
       frontendUrl: frontend.site.url,
     };
   },

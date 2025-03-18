@@ -1,7 +1,17 @@
-import { Handler } from "aws-lambda";
+import { APIGatewayProxyHandlerV2 } from "aws-lambda";
 
-// Mock data for platform resources
-const mockResources = [
+// Resource type definition
+interface Resource {
+  id: string;
+  name: string;
+  description: string;
+  type: string;
+  lastUpdated: string;
+  status: string;
+}
+
+// Mock resources data for development/demo
+const mockResources: Resource[] = [
   {
     id: "res-1",
     name: "User Documentation",
@@ -28,37 +38,49 @@ const mockResources = [
   }
 ];
 
-export const handler: Handler = async (event) => {
-  // Add CORS headers
-  const headers = {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers": "Content-Type",
-    "Access-Control-Allow-Methods": "GET, OPTIONS"
-  };
-
-  // Handle OPTIONS request for CORS preflight
-  if (event.httpMethod === "OPTIONS") {
-    return {
-      statusCode: 200,
-      headers,
-      body: ""
-    };
-  }
-
+export const handler: APIGatewayProxyHandlerV2 = async (event) => {
   try {
+    // In a real implementation, you would fetch resources from a database
+    // const resources = await fetchResourcesFromDatabase();
+    
+    // For now, we'll use the mock data
+    const resources = mockResources;
+    
+    // Optional: Add pagination parameters to match recurring-donations exactly
+    // In a real implementation, you'd handle proper pagination based on query parameters
+    const page = 1;
+    const limit = resources.length;
+    const total = resources.length;
+    const pages = 1;
+
+    // Return in the same format as recurring-donations
     return {
       statusCode: 200,
-      headers,
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({
-        resources: mockResources
+        data: resources,
+        pagination: {
+          page,
+          limit,
+          total,
+          pages
+        }
       })
     };
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error fetching resources:", error);
+    
     return {
       statusCode: 500,
-      headers,
-      body: JSON.stringify({ error: "Failed to fetch resources" })
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message: "Internal server error",
+        error: (error instanceof Error) ? error.message : "Unknown error"
+      })
     };
   }
 }; 

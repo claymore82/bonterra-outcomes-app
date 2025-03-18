@@ -12,9 +12,11 @@
     ]
   },
   "dependencies": {
-    "sst": "*"
+    "sst": "*",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "vitest": "^3.0.8"
+    "vitest": "^3.0.8",
+    "@types/uuid": "^9.0.8"
   }
 }
