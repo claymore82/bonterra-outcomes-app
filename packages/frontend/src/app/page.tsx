@@ -1,9 +1,15 @@
 'use client'
 
-import { Box, Heading, Text, Container, Button, Stack, Flex } from '@chakra-ui/react'
-import ResourcesList from './components/ResourcesList'
+import { Box, Heading, Text, Button, Container, Flex } from '@chakra-ui/react'
+import { useRouter } from 'next/navigation'
 
 export default function Home() {
+  const router = useRouter();
+
+  const handleGetStarted = () => {
+    router.push('/dashboard');
+  };
+
   return (
     <Container maxW="container.xl" py={10}>
       <Box textAlign="center" py={10}>
@@ -13,14 +19,13 @@ export default function Home() {
         <Text fontSize="xl" mb={6}>
           Bonterra Platform Starter Application
         </Text>
-        <Stack direction={['column', 'row']} gap={4} justify="center">
-          <Button colorScheme="blue" size="lg">
-            Get Started
-          </Button>
-          <Button colorScheme="gray" size="lg">
-            Documentation
-          </Button>
-        </Stack>
+        <Button 
+          colorScheme="blue" 
+          size="lg"
+          onClick={handleGetStarted}
+        >
+          Get Started
+        </Button>
       </Box>
       
       <Flex direction={['column', 'row']} gap={8} mt={10}>
@@ -46,10 +51,6 @@ export default function Home() {
           </Text>
         </Box>
       </Flex>
-      
-      <Box mt={10} p={6} boxShadow="md" borderRadius="md">
-        <ResourcesList />
-      </Box>
     </Container>
   )
 }
