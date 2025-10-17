@@ -82,6 +82,25 @@ async function main() {
   console.log('\n✅ Configuration complete!');
   console.log(`   Updated ${filesChanged} file(s)`);
   
+  // Remove setup warning from homepage
+  console.log('\n🎨 Removing setup warning from homepage...\n');
+  const homePagePath = path.join(rootDir, 'packages/app/src/app/page.tsx');
+  
+  try {
+    let content = fs.readFileSync(homePagePath, 'utf8');
+    
+    // Remove the entire warning section (emoji + heading + description)
+    content = content.replace(
+      /\s*<div className="mb-6 text-6xl">⚠️<\/div>[\s\S]*?to configure your project\s*<\/p>/,
+      ''
+    );
+    
+    fs.writeFileSync(homePagePath, content, 'utf8');
+    console.log('  ✓ Removed warning section');
+  } catch (error) {
+    console.error('  ✗ Failed to update homepage:', error.message);
+  }
+  
   // Clean up template files
   console.log('\n🧹 Cleaning up template files...\n');
   
