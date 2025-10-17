@@ -1,0 +1,9 @@
+# Build outputs - AI doesn't need to index these
+.next/
+.sst/
+dist/
+build/
+out/
+
+# Dependencies
+node_modules/

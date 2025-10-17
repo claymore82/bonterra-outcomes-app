@@ -1,111 +1,65 @@
-# Bonstart
+# Bonstart v2
 
-A starter application for building within the Bonterra Platform, demonstrating AWS native serverless web application building. This project is built using [SST](https://sst.dev) with a Next.js frontend and serverless backend.
+> Modern SST v3 + Next.js template for Bonterra projects
 
-## Project Overview
+## ⚠️ First-Time Setup Required
 
-Bonstart provides a foundation for developers to build scalable applications on the Bonterra Platform. It showcases serverless architecture patterns, API integrations, and modern frontend development practices to accelerate your development process.
-
-## Architecture
-
-This project is structured as a monorepo:
-
-1. `packages/frontend/` - Next.js 15 application with Chakra UI v3
-2. `packages/functions/` - AWS Lambda functions for serverless API endpoints
-3. `packages/core/` - Shared code and utilities used across the project
-4. `packages/scripts/` - Utility scripts for the application
-
-## Infrastructure
-
-The `infra/` directory contains the infrastructure defined using SST constructs:
-
-- `api.ts` - API Gateway configuration for backend endpoints
-- `storage.ts` - S3 bucket and database configurations
-- `frontend.ts` - Next.js site configuration
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js v20.x or later
-- npm v9.x or later
-- AWS account and configured AWS CLI
-
-### Environment Setup
-
-1. Copy the example environment file:
-   ```bash
-   cp .env.example .env
-   ```
-
-2. Update the `.env` file with your own values:
-   ```
-   AWS_PROFILE=your-aws-profile-name
-   ```
-
-### Local Development
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/bonstart.git
-   cd bonstart
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Start local development environment, frontend and backend:
-   ```bash
-   npx sst dev
-   ```
-
-   Optionally, start only the frontend:
-   ```bash
-   cd packages/frontend
-   npm run dev
-   ```
-
-4. Access the frontend at [http://localhost:3000](http://localhost:3000)
-
-### Deployment
-
-Deploy to AWS using SST:
+After creating a new project from this template, you **must** configure it:
 
 ```bash
-# Production stage
-npx sst deploy --stage production
+# 1. Install dependencies
+npm install
+
+# 2. Configure your project (REQUIRED)
+npm run bonstart:init
+
+# 3. Start development
+npm run dev
+
+# 4. Deploy to AWS
+npm run sst:deploy
 ```
 
-## API Endpoints
+The `bonstart:init` script will prompt you for:
+- **Project name** (replaces "bonstart-template" everywhere)
+- **AWS region** (default: us-east-1)
+- **AWS profile** (optional, uses default if not specified)
 
-| Method | Endpoint      | Description                       |
-|--------|---------------|-----------------------------------|
-| GET    | /             | Health check endpoint             |
-| GET    | /resources    | Retrieve example resource data    |
+## 📦 What's Included
 
-## Frontend
+- **SST v3**: Modern infrastructure as code for AWS
+- **Next.js 15**: React framework with App Router
+- **Tailwind CSS**: Utility-first styling
+- **Stitch Design System**: Bonterra's design system (Step 2)
+- **Auth0 Integration**: Authentication boilerplate (Step 4)
+- **TypeScript**: Full type safety
+- **Node 22**: Latest LTS
 
-The frontend is built with:
+## 🛠️ Development Status
 
-- Next.js 15
-- Chakra UI v3
-- React 19
+This is **Step 1** of the bonstart v2 template.
 
-## Additional Information
+### ✅ Completed
+- Basic SST + Next.js structure
+- Tailwind CSS setup
+- Development scripts
+- Placeholder system
 
-- The API URL is automatically passed to the frontend during deployment
-- Static assets are deployed to AWS CloudFront for optimal delivery
-- Database interactions will be handled through serverless functions (Not yet built)
+### 🚧 Coming Soon
+- Stitch design system integration
+- Auth0 boilerplate
+- Setup script (bonstart:init)
+- Comprehensive documentation
 
-## Contributing
+## 📚 Documentation
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+Full documentation coming in Step 8.
+
+## 🤝 Contributing
+
+This is a Bonterra internal template. Follow Bonterra development standards.
 
 ---
+
+Built with ❤️ for Bonterra
 
