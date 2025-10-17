@@ -30,30 +30,35 @@ The `bonstart:init` script will prompt you for:
 - **SST v3**: Modern infrastructure as code for AWS
 - **Next.js 15**: React framework with App Router
 - **Tailwind CSS**: Utility-first styling
-- **Stitch Design System**: Bonterra's design system (Step 2)
-- **Auth0 Integration**: Authentication boilerplate (Step 4)
 - **TypeScript**: Full type safety
 - **Node 22**: Latest LTS
-
-## 🛠️ Development Status
-
-This is **Step 1** of the bonstart v2 template.
-
-### ✅ Completed
-- Basic SST + Next.js structure
-- Tailwind CSS setup
-- Development scripts
-- Placeholder system
-
-### 🚧 Coming Soon
-- Stitch design system integration
-- Auth0 boilerplate
-- Setup script (bonstart:init)
-- Comprehensive documentation
+- **ITD Documentation**: Architecture decision templates and examples
+- **ESLint + Prettier**: Code quality and formatting
 
 ## 📚 Documentation
 
-Full documentation coming in Step 8.
+### Architecture Decisions
+
+Document your technical decisions using the **ITD (Implementation/Technical Decision)** framework:
+
+```bash
+# See templates and examples
+docs/
+├── README.md                   # Documentation guidelines
+├── templates/                  # ITD and data structure templates
+├── examples/                   # Example ITD
+├── 01-general/                 # System-wide decisions
+├── 02-auth/                    # Authentication decisions
+└── core-data-structures/       # Data models
+```
+
+**Quick Start:**
+1. Copy a template from `docs/templates/`
+2. Document your decision with context, alternatives, and reasoning
+3. Name with category prefix (e.g., `GENERAL-001-your-decision.md`)
+4. Create PR for team review
+
+See [docs/README.md](docs/README.md) for full guidelines.
 
 ## 🤝 Contributing
 

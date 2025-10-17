@@ -22,15 +22,15 @@
     "npm": ">=10.0.0"
   },
   "devDependencies": {
-    "sst": "3.14.21",
-    "typescript": "^5.5.2"
+    "sst": "3.17.19",
+    "typescript": "^5.7.2"
   },
   "optionalDependencies": {
-    "sst-darwin-arm64": "3.14.21",
-    "sst-darwin-x64": "3.14.21",
-    "sst-linux-arm64": "3.14.21",
-    "sst-linux-x64": "3.14.21",
-    "sst-win32-x64": "3.14.21"
+    "sst-darwin-arm64": "3.17.19",
+    "sst-darwin-x64": "3.17.19",
+    "sst-linux-arm64": "3.17.19",
+    "sst-linux-x64": "3.17.19",
+    "sst-win32-x64": "3.17.19"
   }
 }
 
