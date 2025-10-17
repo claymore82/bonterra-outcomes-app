@@ -22,7 +22,7 @@
     "npm": ">=10.0.0"
   },
   "devDependencies": {
-    "sst": "3.17.19",
+    "sst": "^3.9.28",
     "typescript": "^5.7.2"
   },
   "optionalDependencies": {
@@ -33,4 +33,3 @@
     "sst-win32-x64": "3.17.19"
   }
 }
-
