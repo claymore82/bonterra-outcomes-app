@@ -1,7 +1,7 @@
 /// <reference path="./.sst/platform/config.d.ts" />
 
 /**
- * SST v3 configuration for Bonstart
+ * SST v3 configuration for bonstart-template
  * This defines how the app is deployed to AWS using SST's Nextjs component
  */
 export default $config({
@@ -13,7 +13,7 @@ export default $config({
     const longLivedEnvs = ["prod", "staging", "develop"];
 
     return {
-      name: "bonstart",
+      name: "bonstart-template",
       removal: longLivedEnvs.includes(input?.stage) ? "retain" : "remove",
       protect: longLivedEnvs.includes(input?.stage),
       home: "aws",

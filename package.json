@@ -1,8 +1,8 @@
 {
-  "name": "bonstart",
+  "name": "bonstart-template",
   "version": "2.0.0",
   "private": true,
-  "description": "Modern SST v3 + Next.js template for Bonterra projects",
+  "description": "⚠️ Run 'npm run bonstart:init' to configure this project",
   "workspaces": [
     "packages/*"
   ],
@@ -15,9 +15,7 @@
     "prettier": "npm run prettier -w packages/app",
     "prettier:check": "npm run prettier:check -w packages/app",
     "typecheck": "npm run typecheck -w packages/app",
-    "bonstart:init": "node scripts/setup.js",
-    "bonstart:cleanup": "node scripts/cleanup.js",
-    "postinstall": "node scripts/check-setup.js || exit 0"
+    "bonstart:init": "node scripts/setup.js"
   },
   "engines": {
     "node": ">=22.0.0",

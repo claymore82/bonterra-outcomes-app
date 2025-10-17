@@ -2,25 +2,28 @@
 
 > Modern SST v3 + Next.js template for Bonterra projects
 
-## 🚀 Quick Start
+## ⚠️ First-Time Setup Required
+
+After creating a new project from this template, you **must** configure it:
 
 ```bash
-# 1. Use this template (GitHub) or clone
-git clone <your-repo>
-cd <your-project>
-
-# 2. Install dependencies
+# 1. Install dependencies
 npm install
 
-# 3. Configure your project
+# 2. Configure your project (REQUIRED)
 npm run bonstart:init
 
-# 4. Start development
+# 3. Start development
 npm run dev
 
-# 5. Deploy to AWS
+# 4. Deploy to AWS
 npm run sst:deploy
 ```
+
+The `bonstart:init` script will prompt you for:
+- **Project name** (replaces "bonstart-template" everywhere)
+- **AWS region** (default: us-east-1)
+- **AWS profile** (optional, uses default if not specified)
 
 ## 📦 What's Included
 
