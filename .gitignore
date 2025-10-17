@@ -1,20 +1,21 @@
 # dependencies
-node_modules
+node_modules/
 .pnp
 .pnp.js
 
-# testing
-coverage
-
-# SST
+# sst
 .sst/
-.build/
-.open-next/
+sst-env.d.ts
+
+# next.js
+.next/
+out/
+build/
+dist/
 
 # misc
 .DS_Store
 *.pem
-Thumbs.db
 
 # debug
 npm-debug.log*
@@ -25,11 +26,24 @@ yarn-error.log*
 .env
 .env*.local
 
+# vercel
+.vercel
+
 # typescript
 *.tsbuildinfo
+next-env.d.ts
+
+# testing
+coverage/
+.nyc_output/
 
 # IDE
-.idea/
 .vscode/
+.idea/
 *.swp
-*.swo 
+*.swo
+*~
+
+# OS
+Thumbs.db
+

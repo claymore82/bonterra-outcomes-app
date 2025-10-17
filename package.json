@@ -1,17 +1,38 @@
 {
   "name": "bonstart",
-  "version": "0.0.0",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Modern SST v3 + Next.js template for Bonterra projects",
   "workspaces": [
     "packages/*"
   ],
-  "scripts": {},
-  "devDependencies": {
-    "@tsconfig/node22": "^22",
-    "typescript": "^5"
+  "scripts": {
+    "dev": "npm run dev -w packages/app",
+    "build": "npm run build -w packages/app",
+    "sst:dev": "npm run sst:dev -w packages/app",
+    "sst:deploy": "npm run sst:deploy -w packages/app",
+    "lint": "npm run lint -w packages/app",
+    "prettier": "npm run prettier -w packages/app",
+    "prettier:check": "npm run prettier:check -w packages/app",
+    "typecheck": "npm run typecheck -w packages/app",
+    "bonstart:init": "node scripts/setup.js",
+    "bonstart:cleanup": "node scripts/cleanup.js",
+    "postinstall": "node scripts/check-setup.js || exit 0"
   },
-  "dependencies": {
-    "@types/uuid": "^10.0.0",
-    "sst": "^3",
-    "uuid": "^11.1.0"
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=10.0.0"
+  },
+  "devDependencies": {
+    "sst": "3.14.21",
+    "typescript": "^5.5.2"
+  },
+  "optionalDependencies": {
+    "sst-darwin-arm64": "3.14.21",
+    "sst-darwin-x64": "3.14.21",
+    "sst-linux-arm64": "3.14.21",
+    "sst-linux-x64": "3.14.21",
+    "sst-win32-x64": "3.14.21"
   }
 }
+
