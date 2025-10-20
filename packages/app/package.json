@@ -12,7 +12,8 @@
     "typecheck": "tsc --noEmit",
     "sst:dev": "sst dev",
     "sst:deploy": "sst deploy",
-    "sst:deploy:production": "sst deploy --stage production"
+    "sst:deploy:production": "sst deploy --stage production",
+    "prepare": "husky"
   },
   "dependencies": {
     "next": "^15.3.0",
@@ -30,6 +31,8 @@
     "constructs": "^10.4.2",
     "eslint": "^9",
     "eslint-config-next": "15.3.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.4",
     "postcss": "^8",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.11",

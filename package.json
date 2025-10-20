@@ -15,7 +15,8 @@
     "prettier": "npm run prettier -w packages/app",
     "prettier:check": "npm run prettier:check -w packages/app",
     "typecheck": "npm run typecheck -w packages/app",
-    "bonstart:init": "node scripts/setup.js"
+    "bonstart:init": "node scripts/setup.js",
+    "prepare": "husky"
   },
   "engines": {
     "node": ">=22.0.0",
