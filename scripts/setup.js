@@ -84,7 +84,7 @@ async function main() {
   
   // Remove setup warning from homepage
   console.log('\n🎨 Removing setup warning from homepage...\n');
-  const homePagePath = path.join(rootDir, 'packages/app/src/app/page.tsx');
+  const homePagePath = path.join(rootDir, 'packages/core/src/app/page.tsx');
   
   try {
     let content = fs.readFileSync(homePagePath, 'utf8');

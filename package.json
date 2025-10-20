@@ -7,14 +7,14 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "npm run dev -w packages/app",
-    "build": "npm run build -w packages/app",
-    "sst:dev": "npm run sst:dev -w packages/app",
-    "sst:deploy": "npm run sst:deploy -w packages/app",
-    "lint": "npm run lint -w packages/app",
-    "prettier": "npm run prettier -w packages/app",
-    "prettier:check": "npm run prettier:check -w packages/app",
-    "typecheck": "npm run typecheck -w packages/app",
+    "dev": "npm run dev -w packages/core",
+    "build": "npm run build -w packages/core",
+    "sst:dev": "npm run sst:dev -w packages/core",
+    "sst:deploy": "npm run sst:deploy -w packages/core",
+    "lint": "npm run lint -w packages/core",
+    "prettier": "npm run prettier -w packages/core",
+    "prettier:check": "npm run prettier:check -w packages/core",
+    "typecheck": "npm run typecheck -w packages/core",
     "bonstart:init": "node scripts/setup.js"
   },
   "engines": {
