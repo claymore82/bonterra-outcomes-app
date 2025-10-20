@@ -1,0 +1,77 @@
+# ==============================================================================
+# Deployment Workflow
+# ==============================================================================
+#
+# Purpose: Deploys the application to AWS using SST with per-branch environments
+#
+# This workflow handles deployment to different environments:
+# - main branch -> prod environment
+# - develop branch -> develop environment
+# - feature branches -> ephemeral environments
+#
+# ==============================================================================
+
+name: Deploy
+
+on:
+  push:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  id-token: write      # To authenticate with AWS OIDC
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  select_environment:
+    name: Select Environment
+    uses: ./.github/workflows/select-environment.yml
+    secrets:
+      REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy:
+    name: Deploy
+    needs: select_environment
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ needs.select_environment.outputs.environment }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE }}
+          aws-region: ${{ vars.AWS_REGION }}
+          role-session-name: GitHubActions-Deploy-${{ needs.select_environment.outputs.sst_stage_short }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Deploy with SST
+        working-directory: packages/app
+        run: |
+          echo "Deploying to stage: ${{ needs.select_environment.outputs.sst_stage }}"
+          echo "Resource naming: bonstart-template-${{ needs.select_environment.outputs.sst_stage }}-*"
+          npx sst deploy --stage ${{ needs.select_environment.outputs.sst_stage }}
+
+      - name: Create deployment summary
+        run: |
+          echo "# 🚀 Deployment Successful!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** ${{ needs.select_environment.outputs.environment }}" >> $GITHUB_STEP_SUMMARY
+          echo "**SST Stage:** \`${{ needs.select_environment.outputs.sst_stage }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY

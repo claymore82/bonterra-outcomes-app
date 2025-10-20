@@ -1,0 +1,127 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'CloudFormation template for GitHub Actions AWS IAM Role for {{APP_NAME}} deployments. Source: https://github.com/{{GITHUB_ORG}}/{{REPO_NAME}}/blob/main/.github/bootstrap-cloudformation/GitHubActionsRole.yaml.'
+
+Parameters:
+  GitHubRepo:
+    Type: String
+    Description: GitHub repository in format "owner/repo"
+    Default: {{GITHUB_ORG}}/{{REPO_NAME}}
+
+Resources:
+  GitHubActionsRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: !Sub ${AWS::StackName}-GithubActionsRole
+      Description: !Sub 'Managed by CloudFormation ${AWS::StackName}. Do not edit this role directly.'
+
+      # This policy restricts which GitHub Actions can assume the role
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: !Sub 'arn:aws:iam::${AWS::AccountId}:oidc-provider/token.actions.githubusercontent.com'
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringLike:
+                'token.actions.githubusercontent.com:sub': !Sub "repo:${GitHubRepo}:*"
+              StringEquals:
+                'token.actions.githubusercontent.com:aud': 'sts.amazonaws.com'
+
+      Policies:
+        - PolicyName: {{APP_NAME}}DeploymentPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Sid: SSTDeploymentPermissions
+              Effect: Allow
+              Action:
+                - ssm:GetParameter
+                - ssm:PutParameter
+                - ssm:DeleteParameter
+                - s3:GetBucketLocation
+                - s3:ListAllMyBuckets
+                - iam:GetRole
+                - iam:CreateRole
+                - iam:DeleteRole
+                - iam:AttachRolePolicy
+                - iam:DetachRolePolicy
+                - iam:PutRolePolicy
+                - iam:DeleteRolePolicy
+                - iam:TagRole
+                - iam:ListRolePolicies
+                - iam:GetRolePolicy
+                - iam:ListAttachedRolePolicies
+                - iam:ListInstanceProfilesForRole
+                - cloudfront:*
+                - logs:DescribeLogGroups
+                - lambda:GetEventSourceMapping
+                - lambda:DeleteEventSourceMapping
+                - sts:GetCallerIdentity
+                - ec2:DescribeRegions
+              Resource: '*'
+
+            - Sid: SSTBucket
+              Effect: Allow
+              Action:
+                - s3:*
+              Resource:
+                - arn:aws:s3:::{{APP_NAME}}-*
+                - arn:aws:s3:::{{APP_NAME}}-*/*
+                - arn:aws:s3:::*-siteassetsbucket-*
+                - arn:aws:s3:::*-siteassetsbucket-*/*
+
+            - Sid: SSTLambda
+              Effect: Allow
+              Action:
+                - lambda:*
+              Resource:
+                - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:{{APP_NAME}}-*'
+                - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:*EventsSubscriber*'
+                - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:*SiteRevalidation*'
+                - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:*SiteImage*'
+                - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:*SiteServer*'
+                - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:event-source-mapping:*'
+
+            - Sid: SSTLogs
+              Effect: Allow
+              Action:
+                - logs:*
+              Resource:
+                - !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*'
+
+            - Sid: SSTSQS
+              Effect: Allow
+              Action:
+                - sqs:*
+              Resource:
+                - !Sub 'arn:aws:sqs:${AWS::Region}:${AWS::AccountId}:*-SiteRevalidationEventsQueue-*'
+                - !Sub 'arn:aws:sqs:${AWS::Region}:${AWS::AccountId}:{{APP_NAME}}-*'
+
+            - Sid: SSTDynamo
+              Effect: Allow
+              Action:
+                - dynamodb:*
+              Resource:
+                - !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/{{APP_NAME}}*'
+
+
+            - Sid: PassRoleToLambda
+              Effect: Allow
+              Action: iam:PassRole
+              Resource:
+                - !Sub 'arn:aws:iam::${AWS::AccountId}:role/{{APP_NAME}}-*'
+                - !Sub 'arn:aws:iam::${AWS::AccountId}:role/*EventsSubscriber*Role*'
+                - !Sub 'arn:aws:iam::${AWS::AccountId}:role/*SiteRevalidation*'
+                - !Sub 'arn:aws:iam::${AWS::AccountId}:role/*SiteImageOptimizerRole*'
+                - !Sub 'arn:aws:iam::${AWS::AccountId}:role/*SiteServer*Role*'
+              Condition:
+                StringEquals:
+                  iam:PassedToService: lambda.amazonaws.com
+
+Outputs:
+  GitHubActionsRoleARN:
+    Description: ARN of the GitHub Actions Role
+    Value: !GetAtt GitHubActionsRole.Arn
+    Export:
+      Name: !Sub ${AWS::StackName}-GitHubActionsRoleARN

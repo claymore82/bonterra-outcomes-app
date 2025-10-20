@@ -13,17 +13,27 @@ npm install
 # 2. Configure your project (REQUIRED)
 npm run bonstart:init
 
-# 3. Start development
+# 3. Set up CI/CD (optional, but recommended)
+npm run bonstart:init-ci
+
+# 4. Start development
 npm run dev
 
-# 4. Deploy to AWS
+# 5. Deploy to AWS
 npm run sst:deploy
 ```
 
-The `bonstart:init` script will prompt you for:
+### Setup Scripts
+
+**`bonstart:init`** - Initial project configuration:
 - **Project name** (replaces "bonstart-template" everywhere)
-- **AWS region** (default: us-east-1)
-- **AWS profile** (optional, uses default if not specified)
+- Removes setup warnings and template files
+
+**`bonstart:init-ci`** - CI/CD configuration:
+- **GitHub organization/username** (for GitHub Actions)
+- **Repository name** (defaults to project name)
+- **AWS Account IDs** (optional, for CloudFormation templates)
+- Configures GitHub Actions workflows and CloudFormation templates
 
 ## 📦 What's Included
 

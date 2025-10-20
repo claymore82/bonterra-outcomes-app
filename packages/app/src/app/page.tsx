@@ -30,11 +30,17 @@ export default function Home() {
               </code>
             </p>
             <p>
-              <strong>3. Start developing:</strong>{" "}
+              <strong>3. Set up CI/CD (optional):</strong>{" "}
+              <code className="rounded bg-gray-100 px-2 py-1">
+                npm run bonstart:init-ci
+              </code>
+            </p>
+            <p>
+              <strong>4. Start developing:</strong>{" "}
               <code className="rounded bg-gray-100 px-2 py-1">npm run dev</code>
             </p>
             <p>
-              <strong>4. Deploy to AWS:</strong>{" "}
+              <strong>5. Deploy to AWS:</strong>{" "}
               <code className="rounded bg-gray-100 px-2 py-1">
                 npm run sst:deploy
               </code>
