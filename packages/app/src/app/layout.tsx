@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
+import "@bonterratech/stitch-extension/stitch-extension.css";
+import "../../styles/stylex.css";
 import "./globals.css";
+import { NextLinkProvider } from "../components/NextLinkProvider";
 
 export const metadata: Metadata = {
   title: "bonstart-template",
@@ -13,7 +16,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <NextLinkProvider>{children}</NextLinkProvider>
+      </body>
     </html>
   );
 }
