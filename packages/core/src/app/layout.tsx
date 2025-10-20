@@ -6,7 +6,7 @@ import { NextLinkProvider } from "../components/NextLinkProvider";
 
 export const metadata: Metadata = {
   title: "bonstart-template",
-  description: "⚠️ Run 'npm run bonstart:init' to configure this project",
+  description: "Full stack starter template for Bonterra projects",
 };
 
 export default function RootLayout({
