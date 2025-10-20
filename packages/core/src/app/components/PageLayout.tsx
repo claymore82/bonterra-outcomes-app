@@ -1,8 +1,8 @@
-'use client';
-import React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import * as stylex from '@stylexjs/stylex';
+"use client";
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import * as stylex from "@stylexjs/stylex";
 import {
   BannerContainer,
   Divider,
@@ -17,11 +17,11 @@ import {
   StartContainer,
   InlineStack,
   Text,
-} from '@bonterratech/stitch-extension';
-import { coreTokens as $ } from '@bonterratech/stitch-tokens/coreTokens.stylex';
-import Footer from './Footer';
-import SideNav from './SideNav';
-import type { StyleXStyles } from '@stylexjs/stylex';
+} from "@bonterratech/stitch-extension";
+import { coreTokens as $ } from "@bonterratech/stitch-tokens/coreTokens.stylex";
+import Footer from "./Footer";
+import SideNav from "./SideNav";
+import type { StyleXStyles } from "@stylexjs/stylex";
 
 export interface PageLayoutProps {
   pageTitle?: string;
@@ -32,10 +32,10 @@ export interface PageLayoutProps {
 
 export const styles = stylex.create({
   headerResponsiveContainer: {
-    height: $['--s-size-500'],
+    height: $["--s-size-500"],
   },
   headerContentWrapper: {
-    padding: `${$['--s-space-100']} ${$['--s-space-300']}`,
+    padding: `${$["--s-space-100"]} ${$["--s-space-300"]}`,
   },
   noSideNav: {
     gridTemplateAreas: `
@@ -44,7 +44,7 @@ export const styles = stylex.create({
     `,
   },
   noSideNavGridContainer: {
-    gridTemplateColumns: 'initial',
+    gridTemplateColumns: "initial",
   },
 });
 
@@ -77,7 +77,7 @@ export default function PageLayout({
                 </ResponsiveWrapper>
                 <ResponsiveWrapper hideBelow="md">
                   <Text variant="lg" weight="500" whitespace="nowrap">
-                    {pageTitle || 'Bonstart'}
+                    {pageTitle || "Bonstart"}
                   </Text>
                 </ResponsiveWrapper>
               </InlineStack>

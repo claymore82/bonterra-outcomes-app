@@ -1,25 +1,25 @@
-'use client';
-import { usePathname } from 'next/navigation';
+"use client";
+import { usePathname } from "next/navigation";
 import {
   SideNav as StitchSideNav,
   SideNavItems,
   type SideNavItem,
   type IconName,
-} from '@bonterratech/stitch-extension';
+} from "@bonterratech/stitch-extension";
 
 const navItems: SideNavItem[] = [
   {
-    activeIcon: 'house' as IconName,
-    icon: 'house-outline' as IconName,
-    label: 'Home',
-    to: '/',
+    activeIcon: "house" as IconName,
+    icon: "house-outline" as IconName,
+    label: "Home",
+    to: "/",
     isActive: false,
   },
   {
-    activeIcon: 'paper-plane' as IconName,
-    icon: 'paper-plane-outline' as IconName,
-    label: 'Quick Start',
-    to: '/quick-start',
+    activeIcon: "paper-plane" as IconName,
+    icon: "paper-plane-outline" as IconName,
+    label: "Quick Start",
+    to: "/quick-start",
     isActive: false,
   },
 ];

@@ -2,20 +2,18 @@
 
 import {
   Button,
-  Card,
   Heading,
   Text,
   Stack,
   InlineStack,
-  TileLayout,
 } from "@bonterratech/stitch-extension";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCopy } from '@fortawesome/pro-regular-svg-icons';
-import { useState } from 'react';
-import * as stylex from '@stylexjs/stylex';
-import { coreTokens as $ } from '@bonterratech/stitch-tokens/coreTokens.stylex';
-import PageLayout from '../components/PageLayout';
-import { EXTERNAL_URLS } from '../constants';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCopy } from "@fortawesome/pro-regular-svg-icons";
+import { useState } from "react";
+import * as stylex from "@stylexjs/stylex";
+import { coreTokens as $ } from "@bonterratech/stitch-tokens/coreTokens.stylex";
+import PageLayout from "../components/PageLayout";
+import { EXTERNAL_URLS } from "../constants";
 
 interface CopyCodeProps {
   code: string;
@@ -45,66 +43,68 @@ function CopyCode({ code }: CopyCodeProps) {
 
 const styles = stylex.create({
   codeBlock: {
-    borderRadius: $['--s-border-radius-sm'],
-    backgroundColor: '#f3f4f6',
-    padding: `${$['--s-space-200']} ${$['--s-space-300']}`,
-    fontSize: $['--s-font-size-100'],
-    fontFamily: 'ui-monospace, SFMono-Regular, monospace',
-    border: '1px solid #e5e7eb',
-    display: 'inline-block',
+    borderRadius: $["--s-border-radius-sm"],
+    backgroundColor: "#f3f4f6",
+    padding: `${$["--s-space-200"]} ${$["--s-space-300"]}`,
+    fontSize: $["--s-font-size-100"],
+    fontFamily: "ui-monospace, SFMono-Regular, monospace",
+    border: "1px solid #e5e7eb",
+    display: "inline-block",
   },
   copyIcon: {
-    color: '#6b7280',
-    cursor: 'pointer',
-    transition: 'all 150ms ease',
-    width: '16px',
-    height: '16px',
-    ':hover': {
-      color: '#374151',
-      transform: 'scale(1.1)',
+    color: "#6b7280",
+    cursor: "pointer",
+    transition: "all 150ms ease",
+    width: "16px",
+    height: "16px",
+    ":hover": {
+      color: "#374151",
+      transform: "scale(1.1)",
     },
-    ':active': {
-      transform: 'scale(0.95)',
+    ":active": {
+      transform: "scale(0.95)",
     },
   },
   copyIconCopied: {
-    color: '#059669',
-    transform: 'scale(1.1)',
+    color: "#059669",
+    transform: "scale(1.1)",
   },
 });
 
 const numberStyle = {
-  minWidth: '24px',
-  height: '24px',
-  borderRadius: '50%',
-  backgroundColor: '#3b82f6',
-  color: 'white',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  fontSize: '14px',
-  fontWeight: '600',
-  flexShrink: 0
+  minWidth: "24px",
+  height: "24px",
+  borderRadius: "50%",
+  backgroundColor: "#3b82f6",
+  color: "white",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  fontSize: "14px",
+  fontWeight: "600",
+  flexShrink: 0,
 };
 
 export default function QuickStart() {
   return (
     <PageLayout pageTitle="Quick Start">
-      <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '0 2rem' }}>
+      <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "0 2rem" }}>
         <Stack space="600">
           <Stack space="400" horizontalAlign="center">
             <Heading level={1}>Quick Start</Heading>
             <Text>Get up and running with Bonstart in just a few steps.</Text>
           </Stack>
 
-          <div style={{
-            backgroundColor: 'white',
-            border: '1px solid #e5e7eb',
-            borderRadius: '8px',
-            padding: '32px',
-            width: 'min(800px, 100vw - 4rem)',
-            margin: '0 auto'
-          }}>
+          <div
+            style={{
+              backgroundColor: "white",
+              border: "1px solid #e5e7eb",
+              borderRadius: "8px",
+              padding: "32px",
+              width: "min(800px, 100vw - 4rem)",
+              margin: "0 auto",
+            }}
+          >
             <Stack space="600" horizontalAlign="center">
               <Heading level={2}>Setup Steps</Heading>
               <Stack space="400" horizontalAlign="start">
@@ -144,13 +144,17 @@ export default function QuickStart() {
               <InlineStack gap="400" horizontalAlign="center">
                 <Button
                   variant="primary"
-                  onPress={() => window.open(EXTERNAL_URLS.BONSTART_REPO, '_blank')}
+                  onPress={() =>
+                    window.open(EXTERNAL_URLS.BONSTART_REPO, "_blank")
+                  }
                 >
                   Get Started
                 </Button>
                 <Button
                   variant="subtle"
-                  onPress={() => window.open(EXTERNAL_URLS.BONSTART_DOCS, '_blank')}
+                  onPress={() =>
+                    window.open(EXTERNAL_URLS.BONSTART_DOCS, "_blank")
+                  }
                 >
                   View Docs
                 </Button>
