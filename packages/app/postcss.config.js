@@ -53,7 +53,6 @@ const dev = process.env.NODE_ENV !== 'production';
 
 module.exports = {
   plugins: {
-    '@tailwindcss/postcss': {},
     '@stylexjs/postcss-plugin': {
       // Narrowed file patterns to process
       include: [
