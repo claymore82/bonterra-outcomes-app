@@ -50,7 +50,7 @@ jobs:
             core.info('Context ref: ' + context.ref);
 
             const branchToEnvironment = {
-                'main': 'prod',
+                'main': 'production',
                 'staging': 'staging',
                 'develop': 'develop'
             };

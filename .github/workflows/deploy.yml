@@ -129,3 +129,10 @@ jobs:
           echo "**SST Stage:** \`${{ needs.select_environment.outputs.sst_stage }}\`" >> $GITHUB_STEP_SUMMARY
           echo "**Branch:** \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
           echo "**Commit:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+
+      - name: Comment on PR
+        if: steps.extract_url.outputs.url != ''
+        uses: ./.github/actions/comment-pr-url
+        with:
+          deployment-url: ${{ steps.extract_url.outputs.url }}
+          github-token: ${{ secrets.GHA_REPO_TOKEN }}

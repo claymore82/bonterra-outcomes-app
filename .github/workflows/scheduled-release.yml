@@ -1,0 +1,170 @@
+# ==============================================================================
+# Automatic Scheduled Release Workflow
+# ==============================================================================
+#
+# Purpose: Automates the release process by orchestrating branch merges and deployments across environments
+#
+# This workflow manages the complete release pipeline by automatically merging develop to staging
+# and staging to main branches, then triggering deployments for both environments. It runs on a
+# scheduled basis and can be manually triggered with options to skip specific stages.
+#
+# Supported Environments: production and staging
+#
+# Runners: GitHub provided runners
+# ==============================================================================
+
+name: Scheduled Release
+on:
+  schedule:
+    # Runs at 10am, 2pm, and 4pm UTC Monday-Friday
+    - cron: '0 10,14,16 * * 1-5'
+  workflow_dispatch:
+    inputs:
+      skip_production:
+        description: 'Skip merge and deploy for main (production)'
+        required: false
+        default: false
+        type: boolean
+      skip_staging:
+        description: 'Skip merge and deploy for staging'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  scheduled-release:
+    name: Scheduled Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # ========================================================================
+      # Promote staging → production (main)
+      # ========================================================================
+
+      - name: Merge staging 🟨 → main 🟥
+        id: production-merge
+        if: ${{ !inputs.skip_production }}
+        uses: bonterratech/gha-merge-branch@v1
+        with:
+          owner: ${{ github.repository_owner }}
+          repository: ${{ github.event.repository.name }}
+          from_branch: staging
+          to_branch: main
+          github_token: ${{ secrets.GHA_REPO_TOKEN }}
+          message: 'chore: merge staging into main [skip actions]'
+
+      - name: Wait for branch sync
+        if: ${{ !inputs.skip_production }}
+        run: sleep 10
+
+      - name: Deploy main 🟥
+        id: production-deploy
+        if: ${{ !inputs.skip_production }}
+        uses: convictional/trigger-workflow-and-wait@v1.6.5
+        with:
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+          github_token: ${{ secrets.GHA_REPO_TOKEN }}
+          ref: main
+          workflow_file_name: deploy.yml
+
+      # ========================================================================
+      # Promote develop → staging
+      # ========================================================================
+
+      - name: Merge develop 🟩 → staging 🟨
+        id: staging-merge
+        if: ${{ !inputs.skip_staging }}
+        uses: bonterratech/gha-merge-branch@v1
+        with:
+          owner: ${{ github.repository_owner }}
+          repository: ${{ github.event.repository.name }}
+          from_branch: develop
+          to_branch: staging
+          github_token: ${{ secrets.GHA_REPO_TOKEN }}
+          message: 'chore: merge develop into staging [skip actions]'
+
+      - name: Wait for branch sync
+        if: ${{ !inputs.skip_staging }}
+        run: sleep 10
+
+      - name: Deploy staging 🟨
+        id: staging-deploy
+        if: ${{ !inputs.skip_staging }}
+        uses: convictional/trigger-workflow-and-wait@v1.6.5
+        with:
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+          github_token: ${{ secrets.GHA_REPO_TOKEN }}
+          ref: staging
+          workflow_file_name: deploy.yml
+
+      # ========================================================================
+      # Failure Notification
+      # ========================================================================
+
+      - name: Create failure summary
+        if: ${{ failure() }}
+        run: |
+          echo "# ❌ Scheduled Release Failed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "One or more steps in the release pipeline failed." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Failed Steps:**" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.production-merge.outcome }}" == "failure" ]; then
+            echo "- Merge staging → main" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ "${{ steps.production-deploy.outcome }}" == "failure" ]; then
+            echo "- Deploy main (production)" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ "${{ steps.staging-merge.outcome }}" == "failure" ]; then
+            echo "- Merge develop → staging" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ "${{ steps.staging-deploy.outcome }}" == "failure" ]; then
+            echo "- Deploy staging" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "[View workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
+
+      # Optional: Add Slack notification if SLACK_WEBHOOK_URL secret is configured
+      # - name: Send Failure Slack Message
+      #   uses: slackapi/slack-github-action@v2
+      #   if: ${{ failure() }}
+      #   with:
+      #     webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #     webhook-type: 'incoming-webhook'
+      #     payload: |
+      #       {
+      #         "blocks": [
+      #           {
+      #             "type": "header",
+      #             "text": {
+      #               "type": "plain_text",
+      #               "text": "Scheduled Release Failed"
+      #             }
+      #           },
+      #           {
+      #             "type": "section",
+      #             "text": {
+      #               "type": "mrkdwn",
+      #               "text": ":x: *Release Failure*"
+      #             }
+      #           },
+      #           {
+      #             "type": "section",
+      #             "text": {
+      #               "type": "mrkdwn",
+      #               "text": "<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Go to workflow>"
+      #             }
+      #           }
+      #         ]
+      #       }
+

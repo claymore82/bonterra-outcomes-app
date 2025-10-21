@@ -64,7 +64,7 @@ jobs:
           STAGE_NAME=${{ env.stage }}
 
           # Don't remove protected stages
-          denylist=(prod staging develop)
+          denylist=(production staging develop)
           for i in ${denylist[@]}; do
             if [[ $i == "$STAGE_NAME" ]]; then
               echo "Not removing stage $i because it is on the denylist"

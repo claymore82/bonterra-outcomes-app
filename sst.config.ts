@@ -10,12 +10,13 @@ export default $config({
       region: "us-east-1" as aws.Region,
     };
 
-    const longLivedEnvs = ["prod", "staging", "develop"];
+    const longLivedEnvs = ["production", "staging", "develop"];
 
     return {
       // Resource naming: All AWS resources will be prefixed with this name + stage
-      // e.g. "my-project-dev-Site" for dev stage, "my-project-prod-Site" for prod
-      name: "bonstart-template-replace-me",
+      // e.g. "bonstart-dev-Site" for dev stage, "bonstart-prod-Site" for prod
+      // Keep this short (<15 chars) to avoid AWS resource name truncation
+      name: "bonstart",
       removal: longLivedEnvs.includes(input?.stage) ? "retain" : "remove",
       protect: longLivedEnvs.includes(input?.stage),
       home: "aws",
@@ -26,7 +27,7 @@ export default $config({
     };
   },
   async run() {
-    const longLivedEnvs = ["prod", "staging", "develop"];
+    const longLivedEnvs = ["production", "staging", "develop"];
     
     // AWS managed CloudFront cache policy IDs
     // See: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html
@@ -44,7 +45,7 @@ export default $config({
         ...($dev && { APP_BASE_URL: config.APP_BASE_URL_LOCAL }),
       },
       // CloudFront cache policy strategy:
-      // - Long-lived envs (prod/staging/develop): SST creates dedicated cache policies (3 total)
+      // - Long-lived envs (production/staging/develop): SST creates dedicated cache policies (3 total)
       // - Ephemeral branches: Use AWS managed "CachingDisabled" policy (doesn't count against quota, ensures streaming works)
       ...(!longLivedEnvs.includes($app.stage)
         ? { cachePolicy: AWS_MANAGED_CACHING_DISABLED_POLICY_ID }

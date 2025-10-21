@@ -62,7 +62,7 @@ function readProjectConfig() {
     const appName = nameMatch ? nameMatch[1] : null;
 
     // Check if still using template values
-    const isTemplate = content.includes('bonstart-template-replace-me') || appName === 'bonstart-template';
+    const isTemplate = appName === 'bonstart';
 
     return { appName, isTemplate };
   } catch (error) {
@@ -108,7 +108,7 @@ async function main() {
 
   // Define CI/CD specific replacements
   const replacements = [
-    ['bonstart-template-replace-me', appName],
+    ['bonstart', appName],
     ['YOUR-ORG/YOUR-REPO', `${githubOrg}/${repoName}`],
     ['YOUR_ORG', githubOrg]
   ];
