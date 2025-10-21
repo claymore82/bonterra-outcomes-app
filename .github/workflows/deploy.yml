@@ -21,6 +21,7 @@ on:
 permissions:
   id-token: write      # To authenticate with AWS OIDC
   contents: read
+  packages: read       # To install @bonterratech packages
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
