@@ -1,7 +1,7 @@
-import Link from "next/link";
-import React from "react";
-import { Icon, Text } from "@bonterratech/stitch-extension";
-import { EXTERNAL_URLS } from "../constants";
+import Link from 'next/link';
+import React from 'react';
+import { Icon, Text } from '@bonterratech/stitch-extension';
+import { EXTERNAL_URLS } from '../constants';
 
 interface FooterProps {
   showHelp?: boolean;

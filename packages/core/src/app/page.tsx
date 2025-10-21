@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import * as stylex from "@stylexjs/stylex";
+import * as stylex from '@stylexjs/stylex';
 import {
   Card,
   Heading,
@@ -11,10 +11,10 @@ import {
   GlobalToastProvider,
   TileLayout,
   Icon,
-} from "@bonterratech/stitch-extension";
-import PageLayout from "./components/PageLayout";
-import { EXTERNAL_URLS } from "./constants";
-import { cardStyles } from "./sharedStyles";
+} from '@bonterratech/stitch-extension';
+import PageLayout from './components/PageLayout';
+import { EXTERNAL_URLS } from './constants';
+import { cardStyles } from './sharedStyles';
 
 export default function Home() {
   return (
