@@ -4,6 +4,18 @@
 dist/
 build/
 out/
+*.tsbuildinfo
 
 # Dependencies
 node_modules/
+
+# Environment files
+.env*
+
+# But include important packages from node_modules
+!node_modules/@types/
+!node_modules/@bonterratech/stitch-extension/
+!node_modules/@bonterratech/stitch-tokens/
+
+# Include Stitch AI assets if they exist
+!stitch-ai-assets/

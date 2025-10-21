@@ -1,0 +1,10 @@
+# Core Data Structures
+
+Document data models, schemas, and database design decisions here:
+- Database schemas (e.g., `DS-001-user-table.md`)
+- Data modeling decisions
+- ERD diagrams
+- Access patterns
+
+**Naming**: Use `DS-XXX-descriptive-name.md` format
+

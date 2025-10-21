@@ -1,0 +1,26 @@
+# Dependencies
+node_modules
+
+# Build outputs
+.next/
+.open-next/
+.sst/
+dist/
+build/
+out/
+
+# Config files with non-standard syntax
+.swcrc
+*.config.*
+
+# Generated files
+*.min.js
+*.bundle.js
+sst-env.d.ts
+next-env.d.ts
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+

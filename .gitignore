@@ -47,3 +47,4 @@ coverage/
 # OS
 Thumbs.db
 
+packages/app/.open-next/

@@ -1,0 +1,144 @@
+# ==============================================================================
+# Environment Cleanup Workflow
+# ==============================================================================
+#
+# Purpose: Automates the cleanup of ephemeral environments and associated resources when no longer needed
+#
+# This workflow handles the complete teardown of deployments when branches are deleted
+# or when manually triggered. It includes safety measures to prevent accidental deletion
+# of protected environments and manages cleanup of both cloud resources and GitHub
+# environments. The workflow can be triggered by branch deletion events or manual dispatch.
+#
+# Supported Environments: ephemeral (branch-based environments only)
+#
+# Runners: GitHub provided runners
+# ==============================================================================
+
+name: Clean-up Environment
+
+on:
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: 'Stage to clean up'
+        required: true
+        type: string
+      unlock_only:
+        description: 'Only unlock the stage without removing it'
+        required: false
+        type: boolean
+        default: false
+  delete:
+
+permissions:
+  contents: read
+  id-token: write # To authenticate with AWS OIDC
+  packages: read
+
+jobs:
+  select_environment:
+    name: Select Environment
+    uses: ./.github/workflows/select-environment.yml
+    secrets:
+      REPO_TOKEN: ${{ secrets.GHA_REPO_TOKEN }}
+
+  cleanup:
+    name: Remove SST Stage and Environment
+    needs: select_environment
+    # Needed since delete covers more than just branches
+    if: >-
+      github.event_name == 'workflow_dispatch'
+      || (github.event_name == 'delete' && github.event.ref_type == 'branch')
+    runs-on: ubuntu-latest
+    env:
+      stage: ${{ inputs.stage || needs.select_environment.outputs.sst_stage }}
+    steps:
+      - name: Wait for other cleanups to finish
+        uses: ahmadnassri/action-workflow-queue@v1
+        with:
+          github-token: ${{ secrets.GHA_REPO_TOKEN }}
+
+      - name: Determine Stage Name
+        id: determine_stage
+        run: |
+          STAGE_NAME=${{ env.stage }}
+
+          # Don't remove protected stages
+          denylist=(production staging develop)
+          for i in ${denylist[@]}; do
+            if [[ $i == "$STAGE_NAME" ]]; then
+              echo "Not removing stage $i because it is on the denylist"
+              exit 1
+            fi
+          done
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        env:
+          short_stage: ${{ inputs.stage && 'workflow_dispatch' || needs.select_environment.outputs.sst_stage_short }}
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE }}
+          aws-region: ${{ vars.AWS_REGION }}
+          role-session-name: GitHubActions-Cleanup-${{ env.short_stage }}
+
+      - name: Stage Exists
+        id: stage_exists
+        run: |
+          echo "Reading SST bootstrap data from Systems Manager Parameter Store"
+          BOOTSTRAP=$(aws ssm get-parameter --name /sst/bootstrap)
+          echo "Getting state bucket from bootstrap data"
+          STATE_BUCKET=$(echo $BOOTSTRAP | jq -r ".Parameter.Value|fromjson|.state")
+          echo "Using state bucket: $STATE_BUCKET"
+          if [[ $(aws s3 ls $STATE_BUCKET/app/bonstart-template-replace-me/${{ env.stage }}.json) ]]; then
+            echo "Stage exists"
+            echo "stage_exists=1" >> $GITHUB_OUTPUT
+          else
+            echo "Stage does not exist"
+            echo "stage_exists=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup Node.js
+        if: steps.stage_exists.outputs.stage_exists == '1'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Clean up existing .npmrc
+        run: rm -f .npmrc
+
+      - name: Configure npm for private packages
+        run: |
+          echo "@bonterratech:registry=https://npm.pkg.github.com/" > .npmrc
+          echo "@fortawesome:registry=https://npm.fontawesome.com/" >> .npmrc
+          echo "@awesome.me:registry=https://npm.fontawesome.com/" >> .npmrc
+          echo "//npm.fontawesome.com/:_authToken=${{ secrets.FONT_AWESOME_NPM_TOKEN }}" >> .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.STITCH_TOKEN }}" >> .npmrc
+
+      - name: Install Dependencies
+        if: steps.stage_exists.outputs.stage_exists == '1'
+        run: npm ci
+
+      - name: Unlock SST Stage
+        if: steps.stage_exists.outputs.stage_exists == '1'
+        env:
+          CI: true
+        run: |
+          echo "Unlocking SST stage: ${{ env.stage }}"
+          npx sst unlock --stage ${{ env.stage }} || echo "No lock to remove or unlock failed"
+          echo ":unlock: Unlocked SST stage: ${{ env.stage }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Remove SST Stage
+        if: steps.stage_exists.outputs.stage_exists == '1' && github.event.inputs.unlock_only != 'true'
+        env:
+          CI: true
+        run: |
+          echo "Removing SST stage: ${{ env.stage }}"
+          npx sst remove --stage ${{ env.stage }}
+          echo ":wastebasket: Removed SST stage: ${{ env.stage }}" >> $GITHUB_STEP_SUMMARY
+
+      # Delete not used because we're not creating separate GitHub Environments for each SST stage
+

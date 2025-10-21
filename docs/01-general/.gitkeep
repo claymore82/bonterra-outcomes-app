@@ -1,0 +1,10 @@
+# General System-Wide ITDs
+
+Place foundational architectural decisions here:
+- Framework selections (e.g., `GENERAL-001-framework-selection.md`)
+- Infrastructure choices
+- Cross-cutting concerns
+- Company-wide patterns
+
+**Naming**: Use `GENERAL-XXX-descriptive-name.md` format
+
