@@ -85,7 +85,7 @@ jobs:
         run: |
           echo "Deploying to stage: ${{ needs.select_environment.outputs.sst_stage }}"
           echo "Resource naming: bonstart-template-replace-me-${{ needs.select_environment.outputs.sst_stage }}-*"
-          npx sst deploy --stage ${{ needs.select_environment.outputs.sst_stage }}
+          npx sst deploy --stage ${{ needs.select_environment.outputs.sst_stage }} --verbose
 
       - name: Create deployment summary
         run: |
