@@ -33,25 +33,25 @@ bonstart is a production-ready template for building serverless web applications
 graph TB
     Dev[Developer]
     
-    subgraph system["bonstart Template (System Boundary)"]
-        Core["packages/core<br/>Next.js 15 App"]
-        Functions["packages/functions<br/>(Future: Lambda)"]
-        Shared["packages/shared<br/>(Future: Shared code)"]
-        SSTConfig["sst.config.ts<br/>Infrastructure definition"]
+    subgraph system[bonstart Template - System Boundary]
+        Core[packages/core - Next.js 15 App]
+        Functions[packages/functions - Future Lambda]
+        Shared[packages/shared - Future Shared code]
+        SSTConfig[sst.config.ts - Infrastructure definition]
     end
     
-    CFN[AWS CloudFormation<br/>Per-stage stacks]
+    CFN[AWS CloudFormation - Per-stage stacks]
     
     subgraph aws[AWS Production Environment]
         CF[CloudFront CDN]
-        LambdaEdge[Lambda@Edge<br/>Next.js SSR]
-        APIGW[API Gateway<br/>API Routes]
-        S3[S3 Bucket<br/>Static Assets]
-        LambdaFn[Lambda Functions<br/>(Future)]
-        DB[(DynamoDB/RDS<br/>Future)]
+        LambdaEdge[Lambda@Edge - Next.js SSR]
+        APIGW[API Gateway - API Routes]
+        S3[S3 Bucket - Static Assets]
+        LambdaFn[Lambda Functions - Future]
+        DB[(DynamoDB/RDS - Future)]
     end
     
-    Dev -->|npm run dev<br/>sst deploy| system
+    Dev -->|npm run dev / sst deploy| system
     system -->|SST CLI| CFN
     CFN -->|Provisions| aws
     
@@ -180,8 +180,8 @@ graph LR
     end
     
     subgraph Future[Future Components]
-        Functions[Lambda Functions<br/>packages/functions]
-        Shared[Shared Code<br/>packages/shared]
+        Functions[Lambda Functions - packages/functions]
+        Shared[Shared Code - packages/shared]
     end
     
     SSTConfig[sst.config.ts]
