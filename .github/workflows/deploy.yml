@@ -1,0 +1,131 @@
+# ==============================================================================
+# Deployment Workflow
+# ==============================================================================
+#
+# Purpose: Deploys the application to AWS using SST with per-branch environments
+#
+# This workflow handles deployment to different environments:
+# - main branch -> prod environment
+# - develop branch -> develop environment
+# - feature branches -> ephemeral environments
+#
+# ==============================================================================
+
+name: Deploy
+
+on:
+  push:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  id-token: write      # To authenticate with AWS OIDC
+  contents: read
+  packages: read       # To install @bonterratech packages
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  select_environment:
+    name: Select Environment
+    uses: ./.github/workflows/select-environment.yml
+    secrets:
+      REPO_TOKEN: ${{ secrets.GHA_REPO_TOKEN }}
+
+  deploy:
+    name: Deploy
+    needs: select_environment
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ needs.select_environment.outputs.environment }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE }}
+          aws-region: ${{ vars.AWS_REGION }}
+          role-session-name: GitHubActions-Deploy-${{ needs.select_environment.outputs.sst_stage_short }}
+
+      - name: Verify AWS credentials
+        run: |
+          echo "Testing AWS credentials... role to assume: ${{ vars.AWS_ROLE }}"
+          aws sts get-caller-identity
+          echo "AWS credentials working!"
+
+      - name: Clean up existing .npmrc
+        run: rm -f .npmrc
+
+      - name: Configure npm for private packages
+        run: |
+          echo "@bonterratech:registry=https://npm.pkg.github.com/" > .npmrc
+          echo "@fortawesome:registry=https://npm.fontawesome.com/" >> .npmrc
+          echo "@awesome.me:registry=https://npm.fontawesome.com/" >> .npmrc
+          echo "//npm.fontawesome.com/:_authToken=${{ secrets.FONT_AWESOME_NPM_TOKEN }}" >> .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.STITCH_TOKEN }}" >> .npmrc
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Prettier check
+        run: npm run prettier:check
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run TypeScript check
+        run: npm run typecheck
+
+      - name: Unlock SST Stage (if locked)
+        run: |
+          echo "Attempting to unlock stage: ${{ needs.select_environment.outputs.sst_stage }}"
+          npx sst unlock --stage ${{ needs.select_environment.outputs.sst_stage }} || echo "No lock to remove or unlock failed (this is fine)"
+
+      - name: Deploy with SST
+        id: deploy_sst
+        run: |
+          echo "Deploying to stage: ${{ needs.select_environment.outputs.sst_stage }}"
+          echo "Resource naming: bonstart-template-replace-me-${{ needs.select_environment.outputs.sst_stage }}-*"
+          # Use tee to capture output to file and still see it in logs
+          npx sst deploy --stage ${{ needs.select_environment.outputs.sst_stage }} | tee deploy_output.log
+          # Use SST exit code
+          exit ${PIPESTATUS[0]}
+
+      - name: Extract Site URL
+        id: extract_url
+        run: |
+          # Extract site URL from SST deploy output
+          SITE=$(grep -oP 'url: \K.*' deploy_output.log | head -n 1)
+          if [[ -z "$SITE" ]]; then
+            echo "::warning::Could not extract Site URL from SST output."
+            echo "url=" >> $GITHUB_OUTPUT
+          else
+            echo "🌐 Deployed to: $SITE"
+            echo "url=$SITE" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create deployment summary
+        run: |
+          echo "# 🚀 Deployment Successful!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [[ -n "${{ steps.extract_url.outputs.url }}" ]]; then
+            echo "🌐 **URL**: [${{ steps.extract_url.outputs.url }}](${{ steps.extract_url.outputs.url }})" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "**Environment:** ${{ needs.select_environment.outputs.environment }}" >> $GITHUB_STEP_SUMMARY
+          echo "**SST Stage:** \`${{ needs.select_environment.outputs.sst_stage }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
