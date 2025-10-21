@@ -61,10 +61,9 @@ jobs:
         run: npm ci
 
       - name: Deploy with SST
-        working-directory: packages/app
         run: |
           echo "Deploying to stage: ${{ needs.select_environment.outputs.sst_stage }}"
-          echo "Resource naming: bonstart-template-${{ needs.select_environment.outputs.sst_stage }}-*"
+          echo "Resource naming: bonstart-template-replace-me-${{ needs.select_environment.outputs.sst_stage }}-*"
           npx sst deploy --stage ${{ needs.select_environment.outputs.sst_stage }}
 
       - name: Create deployment summary

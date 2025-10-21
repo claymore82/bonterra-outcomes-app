@@ -54,7 +54,7 @@ function walkDirectory(dir, callback, exclude = []) {
 
 function readProjectConfig() {
   try {
-    const sstConfigPath = path.join(__dirname, '..', 'packages', 'app', 'sst.config.ts');
+    const sstConfigPath = path.join(__dirname, '..', 'sst.config.ts');
     const content = fs.readFileSync(sstConfigPath, 'utf8');
 
     // Extract app name from: name: "project-name",
@@ -62,7 +62,7 @@ function readProjectConfig() {
     const appName = nameMatch ? nameMatch[1] : null;
 
     // Check if still using template values
-    const isTemplate = content.includes('{{APP_NAME}}') || appName === 'bonstart-template';
+    const isTemplate = content.includes('bonstart-template-replace-me') || appName === 'bonstart-template';
 
     return { appName, isTemplate };
   } catch (error) {
@@ -91,8 +91,6 @@ async function main() {
   // Only ask for what we need
   const githubOrg = await question('GitHub organization/username: ');
   const repoName = await question(`Repository name (or press Enter for "${appName}"): `) || appName;
-  const prodAccountId = await question('Production AWS Account ID (optional): ') || '{{PROD_ACCOUNT_ID}}';
-  const devAccountId = await question('Development AWS Account ID (optional): ') || '{{DEV_ACCOUNT_ID}}';
 
   if (!githubOrg) {
     console.error('\n❌ GitHub organization is required for CI/CD setup.');
@@ -110,17 +108,15 @@ async function main() {
 
   // Define CI/CD specific replacements
   const replacements = [
-    ['{{APP_NAME}}', appName],
-    ['{{GITHUB_ORG}}', githubOrg],
-    ['{{REPO_NAME}}', repoName],
-    ['{{PROD_ACCOUNT_ID}}', prodAccountId],
-    ['{{DEV_ACCOUNT_ID}}', devAccountId]
+    ['bonstart-template-replace-me', appName],
+    ['YOUR-ORG/YOUR-REPO', `${githubOrg}/${repoName}`],
+    ['YOUR_ORG', githubOrg]
   ];
 
   // Only process .github directory and SST config
   const ciFiles = [
     '.github',
-    'packages/app/sst.config.ts'
+    'sst.config.ts'
   ];
 
   for (const ciPath of ciFiles) {

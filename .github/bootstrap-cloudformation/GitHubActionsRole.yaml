@@ -1,11 +1,11 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'CloudFormation template for GitHub Actions AWS IAM Role for {{APP_NAME}} deployments. Source: https://github.com/{{GITHUB_ORG}}/{{REPO_NAME}}/blob/main/.github/bootstrap-cloudformation/GitHubActionsRole.yaml.'
+Description: 'CloudFormation template for GitHub Actions AWS IAM Role for bonstart-template-replace-me deployments. Source: https://github.com/YOUR-ORG/YOUR-REPO/blob/main/.github/bootstrap-cloudformation/GitHubActionsRole.yaml.'
 
 Parameters:
   GitHubRepo:
     Type: String
     Description: GitHub repository in format "owner/repo"
-    Default: {{GITHUB_ORG}}/{{REPO_NAME}}
+    Default: YOUR-ORG/YOUR-REPO
 
 Resources:
   GitHubActionsRole:
@@ -29,7 +29,7 @@ Resources:
                 'token.actions.githubusercontent.com:aud': 'sts.amazonaws.com'
 
       Policies:
-        - PolicyName: {{APP_NAME}}DeploymentPolicy
+        - PolicyName: BonstartTemplateDeploymentPolicy
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
@@ -66,8 +66,8 @@ Resources:
               Action:
                 - s3:*
               Resource:
-                - arn:aws:s3:::{{APP_NAME}}-*
-                - arn:aws:s3:::{{APP_NAME}}-*/*
+                - arn:aws:s3:::bonstart-template-replace-me-*
+                - arn:aws:s3:::bonstart-template-replace-me-*/*
                 - arn:aws:s3:::*-siteassetsbucket-*
                 - arn:aws:s3:::*-siteassetsbucket-*/*
 
@@ -76,7 +76,7 @@ Resources:
               Action:
                 - lambda:*
               Resource:
-                - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:{{APP_NAME}}-*'
+                - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:bonstart-template-replace-me-*'
                 - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:*EventsSubscriber*'
                 - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:*SiteRevalidation*'
                 - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:*SiteImage*'
@@ -96,21 +96,21 @@ Resources:
                 - sqs:*
               Resource:
                 - !Sub 'arn:aws:sqs:${AWS::Region}:${AWS::AccountId}:*-SiteRevalidationEventsQueue-*'
-                - !Sub 'arn:aws:sqs:${AWS::Region}:${AWS::AccountId}:{{APP_NAME}}-*'
+                - !Sub 'arn:aws:sqs:${AWS::Region}:${AWS::AccountId}:bonstart-template-replace-me-*'
 
             - Sid: SSTDynamo
               Effect: Allow
               Action:
                 - dynamodb:*
               Resource:
-                - !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/{{APP_NAME}}*'
+                - !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/bonstart-template-replace-me*'
 
 
             - Sid: PassRoleToLambda
               Effect: Allow
               Action: iam:PassRole
               Resource:
-                - !Sub 'arn:aws:iam::${AWS::AccountId}:role/{{APP_NAME}}-*'
+                - !Sub 'arn:aws:iam::${AWS::AccountId}:role/bonstart-template-replace-me-*'
                 - !Sub 'arn:aws:iam::${AWS::AccountId}:role/*EventsSubscriber*Role*'
                 - !Sub 'arn:aws:iam::${AWS::AccountId}:role/*SiteRevalidation*'
                 - !Sub 'arn:aws:iam::${AWS::AccountId}:role/*SiteImageOptimizerRole*'
