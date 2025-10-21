@@ -88,26 +88,39 @@ jobs:
         run: npm run typecheck
 
       - name: Deploy with SST
+        id: deploy_sst
         run: |
-          echo "=== Deployment Configuration ==="
-          echo "Stage: ${{ needs.select_environment.outputs.sst_stage }}"
-          echo "Environment: ${{ needs.select_environment.outputs.environment }}"
-          echo "Environment Type: ${{ needs.select_environment.outputs.environment_type }}"
-          echo "AWS Region: $AWS_REGION"
-          echo "AWS Account: $(aws sts get-caller-identity --query Account --output text 2>/dev/null || echo 'N/A')"
-          echo "Working Directory: $(pwd)"
-          echo "Node Version: $(node --version)"
-          echo "================================"
-          echo ""
           echo "Deploying to stage: ${{ needs.select_environment.outputs.sst_stage }}"
           echo "Resource naming: bonstart-template-replace-me-${{ needs.select_environment.outputs.sst_stage }}-*"
-          npx sst deploy --stage ${{ needs.select_environment.outputs.sst_stage }} --verbose --print-logs
+          # Use tee to capture output to file and still see it in logs
+          npx sst deploy --stage ${{ needs.select_environment.outputs.sst_stage }} | tee deploy_output.log
+          # Use SST exit code
+          exit ${PIPESTATUS[0]}
+
+      - name: Extract Site URL
+        id: extract_url
+        run: |
+          # Extract site URL from SST deploy output
+          SITE=$(grep -oP 'url: \K.*' deploy_output.log | head -n 1)
+          if [[ -z "$SITE" ]]; then
+            echo "::warning::Could not extract Site URL from SST output."
+            echo "url=" >> $GITHUB_OUTPUT
+          else
+            echo "🌐 Deployed to: $SITE"
+            echo "url=$SITE" >> $GITHUB_OUTPUT
+          fi
 
       - name: Create deployment summary
         run: |
           echo "# 🚀 Deployment Successful!" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [[ -n "${{ steps.extract_url.outputs.url }}" ]]; then
+            echo "🌐 **URL**: [${{ steps.extract_url.outputs.url }}](${{ steps.extract_url.outputs.url }})" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+          
           echo "**Environment:** ${{ needs.select_environment.outputs.environment }}" >> $GITHUB_STEP_SUMMARY
           echo "**SST Stage:** \`${{ needs.select_environment.outputs.sst_stage }}\`" >> $GITHUB_STEP_SUMMARY
           echo "**Branch:** \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
