@@ -1,0 +1,68 @@
+name: 'Comment PR with Deployment URL'
+description: 'Finds open PR for current branch and posts/updates deployment URL comment'
+
+inputs:
+  deployment-url:
+    description: 'The deployment URL to comment'
+    required: true
+  github-token:
+    description: 'GitHub token with PR write permissions'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Comment on PR
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ inputs.github-token }}
+        script: |
+          const branch = context.ref.replace('refs/heads/', '');
+          
+          // Find open PR for this branch
+          const { data: prs } = await github.rest.pulls.list({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            state: 'open',
+            head: `${context.repo.owner}:${branch}`
+          });
+          
+          if (prs.length === 0) {
+            console.log(`No open PR for branch ${branch}`);
+            return;
+          }
+          
+          const pr_number = prs[0].number;
+          const url = '${{ inputs.deployment-url }}';
+          const commentBody = `🚀 **Deployment URL**: ${url}`;
+          
+          // Get existing comments
+          const { data: comments } = await github.rest.issues.listComments({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: pr_number,
+          });
+          
+          // Find existing deployment comment
+          const existingComment = comments.find(c => 
+            c.body.startsWith('🚀 **Deployment URL**:')
+          );
+          
+          if (existingComment) {
+            await github.rest.issues.updateComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: existingComment.id,
+              body: commentBody,
+            });
+            console.log(`Updated comment on PR #${pr_number}`);
+          } else {
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr_number,
+              body: commentBody,
+            });
+            console.log(`Created comment on PR #${pr_number}`);
+          }
+
