@@ -1,0 +1,7 @@
+/**
+ * The @stylex directive serves as an entry point for the @stylexjs/postcss-plugin.
+ * It tells the PostCSS plugin where to inject all compiled StyleX CSS.
+ * This file is not actually replaced; instead, the plugin adds all
+ * the StyleX CSS at this point during build time.
+ */
+@stylex;

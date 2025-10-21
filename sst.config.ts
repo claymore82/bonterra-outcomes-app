@@ -33,7 +33,7 @@ export default $config({
 
     // Deploy the Next.js app
     const site = new sst.aws.Nextjs("Site", {
-      path: ".",
+      path: "packages/next",
       environment: {
         ...($dev && { APP_BASE_URL: config.APP_BASE_URL_LOCAL }),
       },

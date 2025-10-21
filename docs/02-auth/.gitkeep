@@ -1,0 +1,10 @@
+# Authentication & Authorization ITDs
+
+Place authentication and authorization decisions here:
+- Auth provider selection (e.g., `AUTH-001-auth0-integration.md`)
+- JWT strategies
+- Permission models
+- Session management
+
+**Naming**: Use `AUTH-XXX-descriptive-name.md` format
+
