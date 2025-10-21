@@ -51,6 +51,7 @@ jobs:
 
             const branchToEnvironment = {
                 'main': 'prod',
+                'staging': 'staging',
                 'develop': 'develop'
             };
 
