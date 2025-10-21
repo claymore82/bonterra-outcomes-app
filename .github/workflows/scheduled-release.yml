@@ -16,8 +16,8 @@
 name: Scheduled Release
 on:
   schedule:
-    # Runs at 10am, 2pm, and 4pm UTC Monday-Friday
-    - cron: '0 10,14,16 * * 1-5'
+    # Runs every hour
+    - cron: '0 * * * *'
   workflow_dispatch:
     inputs:
       skip_production:
