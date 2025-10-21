@@ -19,20 +19,20 @@ What project structure should bonstart use to best support both initial simplici
 
 ## Options Considered
 
-1. **Monorepo with packages/ directory**: npm workspaces with organized packages for core app, functions, and shared code
+1. **Monorepo with packages/ directory**: npm workspaces with organized packages for Next.js app, functions, and shared code
 2. Flat structure with single package.json: All code at root level, similar to create-next-app
 3. Separate repositories: Each service (frontend, functions, shared) in its own repo
 4. Monorepo with /apps and /packages separation: More complex structure distinguishing applications from libraries
 
 ## Reasoning
 
-The monorepo structure with `packages/` is the standard recommended by SST for serverless projects and provides the natural growth path teams need. When teams start with bonstart, they typically begin with just the Next.js app in `packages/core`, but within weeks they need to add standalone Lambda functions for cron jobs, event processors, or async workers. The monorepo structure accommodates this growth without requiring refactoring.
+The monorepo structure with `packages/` is the standard recommended by SST for serverless projects and provides the natural growth path teams need. When teams start with bonstart, they typically begin with just the Next.js app in `packages/next`, but within weeks they need to add standalone Lambda functions for cron jobs, event processors, or async workers. The monorepo structure accommodates this growth without requiring refactoring.
 
-Code sharing is critical for serverless applications. Teams need to share TypeScript types, validation schemas, and business logic between their frontend and Lambda functions. The `packages/` structure with npm workspaces makes this trivial - teams can create `packages/shared` and import it from both `packages/core` and `packages/functions` with proper type safety.
+Code sharing is critical for serverless applications. Teams need to share TypeScript types, validation schemas, and business logic between their frontend and Lambda functions. The `packages/` structure with npm workspaces makes this trivial - teams can create `packages/shared` and import it from both `packages/next` and `packages/functions` with proper type safety.
 
 SST's official documentation and examples use this monorepo structure. The framework expects packages for core shared code, functions for Lambda handlers, and organized infrastructure definitions. Following this convention means teams can reference SST documentation and examples directly without translation.
 
-Real-world validation: successful SST projects in the community consistently adopt this structure as they scale. The initial overhead of one extra directory level (`packages/core` vs `src`) is minimal compared to the refactoring cost of restructuring from flat to monorepo later.
+Real-world validation: successful SST projects in the community consistently adopt this structure as they scale. The initial overhead of one extra directory level (`packages/next` vs `src`) is minimal compared to the refactoring cost of restructuring from flat to monorepo later.
 
 *Flat structure with single package.json:* While simpler initially (and appropriate for the [frontend template](https://github.com/bonterratech/nextjs-frontend-template)), this creates significant friction when teams need their first standalone Lambda function. Where does it go? How do they share code without circular dependencies? Teams end up either cramming everything into the Next.js app (wrong architecture) or doing a painful refactoring to extract shared code. The simplicity is false economy for serverless projects. If a team wants flat structure, they should use the frontend template, not bonstart.
 
@@ -42,15 +42,15 @@ Real-world validation: successful SST projects in the community consistently ado
 
 ## Implications
 
-- Template includes `packages/` directory with `packages/core` for Next.js app from day one
+- Template includes `packages/` directory with `packages/next` for Next.js app from day one
 - Root `package.json` uses npm workspaces to manage packages
 - Documentation must explain when/how to add `packages/functions` and `packages/shared`
 - **Template selection guidance required**: 
   - [Frontend template](https://github.com/bonterratech/nextjs-frontend-template): Simple Next.js sites, marketing pages, no backend infrastructure
   - bonstart: SST serverless projects needing Lambda functions, AWS resources, infrastructure-as-code
 - README should include example growth path showing future packages structure
-- Scripts in root package.json delegate to workspace packages (`npm run dev -w packages/core`)
-- The one extra directory level (`packages/core` vs `src`) is the intentional cost of preparing for serverless growth
+- Scripts in root package.json delegate to workspace packages (`npm run dev -w packages/next`)
+- The one extra directory level (`packages/next` vs `src`) is the intentional cost of preparing for serverless growth
 
 ## References
 

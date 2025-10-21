@@ -10,9 +10,6 @@
     "prettier": "prettier . --write",
     "prettier:check": "prettier . --check",
     "typecheck": "tsc --noEmit",
-    "sst:dev": "sst dev",
-    "sst:deploy": "sst deploy",
-    "sst:deploy:production": "sst deploy --stage production",
     "prepare": "husky"
   },
   "dependencies": {
