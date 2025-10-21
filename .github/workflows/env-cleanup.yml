@@ -45,6 +45,7 @@ jobs:
   cleanup:
     name: Remove SST Stage and Environment
     needs: select_environment
+    environment: ${{ needs.select_environment.outputs.environment }}
     # Needed since delete covers more than just branches
     if: >-
       github.event_name == 'workflow_dispatch'
@@ -92,7 +93,7 @@ jobs:
           echo "Getting state bucket from bootstrap data"
           STATE_BUCKET=$(echo $BOOTSTRAP | jq -r ".Parameter.Value|fromjson|.state")
           echo "Using state bucket: $STATE_BUCKET"
-          if [[ $(aws s3 ls $STATE_BUCKET/app/bonstart-template-replace-me/${{ env.stage }}.json) ]]; then
+          if [[ $(aws s3 ls $STATE_BUCKET/app/bonstart/${{ env.stage }}.json) ]]; then
             echo "Stage exists"
             echo "stage_exists=1" >> $GITHUB_OUTPUT
           else

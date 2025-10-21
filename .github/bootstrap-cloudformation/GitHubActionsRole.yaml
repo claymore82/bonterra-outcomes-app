@@ -89,6 +89,7 @@ Resources:
                 - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:*SiteRevalidation*'
                 - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:*SiteImage*'
                 - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:*SiteServer*'
+                - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:*SiteDefault*'
                 - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:event-source-mapping:*'
 
             - Sid: SSTLogs
