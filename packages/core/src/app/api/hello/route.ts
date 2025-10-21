@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
 /**
  * Example API endpoint with query parameters
@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
  */
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  const name = searchParams.get("name") || "World";
+  const name = searchParams.get('name') || 'World';
 
   return NextResponse.json({
     message: `Hello, ${name}!`,
@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const name = body.name || "World";
+    const name = body.name || 'World';
 
     return NextResponse.json({
       message: `Hello, ${name}!`,
@@ -30,6 +30,6 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
     });
   } catch (_error) {
-    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
   }
 }

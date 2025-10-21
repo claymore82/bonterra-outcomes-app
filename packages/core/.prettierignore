@@ -16,6 +16,8 @@ out/
 # Generated files
 *.min.js
 *.bundle.js
+sst-env.d.ts
+next-env.d.ts
 
 # Lock files
 package-lock.json
