@@ -58,6 +58,12 @@ jobs:
           aws-region: ${{ vars.AWS_REGION }}
           role-session-name: GitHubActions-Deploy-${{ needs.select_environment.outputs.sst_stage_short }}
 
+      - name: Verify AWS credentials
+        run: |
+          echo "Testing AWS credentials..."
+          aws sts get-caller-identity
+          echo "AWS credentials working!"
+
       - name: Clean up existing .npmrc
         run: rm -f .npmrc
 
@@ -83,9 +89,19 @@ jobs:
 
       - name: Deploy with SST
         run: |
+          echo "=== Deployment Configuration ==="
+          echo "Stage: ${{ needs.select_environment.outputs.sst_stage }}"
+          echo "Environment: ${{ needs.select_environment.outputs.environment }}"
+          echo "Environment Type: ${{ needs.select_environment.outputs.environment_type }}"
+          echo "AWS Region: $AWS_REGION"
+          echo "AWS Account: $(aws sts get-caller-identity --query Account --output text 2>/dev/null || echo 'N/A')"
+          echo "Working Directory: $(pwd)"
+          echo "Node Version: $(node --version)"
+          echo "================================"
+          echo ""
           echo "Deploying to stage: ${{ needs.select_environment.outputs.sst_stage }}"
           echo "Resource naming: bonstart-template-replace-me-${{ needs.select_environment.outputs.sst_stage }}-*"
-          npx sst deploy --stage ${{ needs.select_environment.outputs.sst_stage }} --verbose
+          npx sst deploy --stage ${{ needs.select_environment.outputs.sst_stage }} --verbose --print-logs
 
       - name: Create deployment summary
         run: |
