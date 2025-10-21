@@ -32,7 +32,7 @@ jobs:
     name: Select Environment
     uses: ./.github/workflows/select-environment.yml
     secrets:
-      REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO_TOKEN: ${{ secrets.GHA_REPO_TOKEN }}
 
   deploy:
     name: Deploy
@@ -58,6 +58,9 @@ jobs:
           aws-region: ${{ vars.AWS_REGION }}
           role-session-name: GitHubActions-Deploy-${{ needs.select_environment.outputs.sst_stage_short }}
 
+      - name: Clean up existing .npmrc
+        run: rm -f .npmrc
+
       - name: Configure npm for private packages
         run: |
           echo "@bonterratech:registry=https://npm.pkg.github.com/" > .npmrc
@@ -68,6 +71,15 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Run Prettier check
+        run: npm run prettier:check
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run TypeScript check
+        run: npm run typecheck
 
       - name: Deploy with SST
         run: |

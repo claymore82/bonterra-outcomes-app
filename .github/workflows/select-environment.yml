@@ -44,7 +44,7 @@ jobs:
       - uses: actions/github-script@v7
         id: select-environment
         with:
-          github-token: ${{ secrets.GHA_REPO_TOKEN }}
+          github-token: ${{ secrets.REPO_TOKEN }}
           script: |
             core.info('Event name: ' + context.eventName);
             core.info('Context ref: ' + context.ref);
