@@ -1,8 +1,8 @@
-import type { Metadata } from "next";
-import "./globals.css";
+import type { Metadata } from 'next';
+import './globals.css';
 
 export const metadata: Metadata = {
-  title: "bonstart-template",
+  title: 'bonstart-template',
   description: "⚠️ Run 'npm run bonstart:init' to configure this project",
 };
 

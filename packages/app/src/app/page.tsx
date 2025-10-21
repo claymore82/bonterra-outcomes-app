@@ -7,10 +7,10 @@ export default function Home() {
           Setup Required
         </h1>
         <p className="mb-8 max-w-2xl text-xl text-gray-700">
-          Run{" "}
+          Run{' '}
           <code className="rounded bg-gray-100 px-2 py-1">
             npm run bonstart:init
-          </code>{" "}
+          </code>{' '}
           to configure your project
         </p>
 
@@ -20,21 +20,21 @@ export default function Home() {
           </h2>
           <div className="space-y-3 text-left text-gray-600">
             <p>
-              <strong>1. Install dependencies:</strong>{" "}
+              <strong>1. Install dependencies:</strong>{' '}
               <code className="rounded bg-gray-100 px-2 py-1">npm install</code>
             </p>
             <p>
-              <strong>2. Configure project:</strong>{" "}
+              <strong>2. Configure project:</strong>{' '}
               <code className="rounded bg-gray-100 px-2 py-1">
                 npm run bonstart:init
               </code>
             </p>
             <p>
-              <strong>3. Start developing:</strong>{" "}
+              <strong>3. Start developing:</strong>{' '}
               <code className="rounded bg-gray-100 px-2 py-1">npm run dev</code>
             </p>
             <p>
-              <strong>4. Deploy to AWS:</strong>{" "}
+              <strong>4. Deploy to AWS:</strong>{' '}
               <code className="rounded bg-gray-100 px-2 py-1">
                 npm run sst:deploy
               </code>
