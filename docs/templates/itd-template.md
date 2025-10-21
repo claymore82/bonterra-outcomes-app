@@ -23,10 +23,10 @@ Frame as a clear, answerable question:
 
 List all options you evaluated. Mark the selected option in bold:
 
-- **[Selected Option]**: Brief description of this approach
-- [Alternative Option 1]: Brief description of this approach
-- [Alternative Option 2]: Brief description of this approach
-- [Alternative Option 3]: Brief description of this approach
+1. **[Selected Option]**: Brief description of this approach
+2. [Alternative Option 1]: Brief description of this approach
+3. [Alternative Option 2]: Brief description of this approach
+4. [Alternative Option 3]: Brief description of this approach
 
 ## Reasoning
 

@@ -16,11 +16,11 @@ What framework stack should we use for the bonstart v2 template to provide the b
 
 ## Options Considered
 
-- **SST v3 + Next.js 15**: Infrastructure-as-code framework specifically designed for serverless apps on AWS, paired with modern React framework
-- AWS CDK + Next.js: Lower-level infrastructure framework with more control but higher complexity
-- Serverless Framework + Next.js: Popular serverless deployment tool with plugin ecosystem
-- AWS Amplify: Fully-managed AWS service for deploying web applications
-- SST v3 + Remix: SST paired with alternative React framework focused on web standards
+1. **SST v3 + Next.js 15**: Infrastructure-as-code framework specifically designed for serverless apps on AWS, paired with modern React framework
+2. AWS CDK + Next.js: Lower-level infrastructure framework with more control but higher complexity
+3. Serverless Framework + Next.js: Popular serverless deployment tool with plugin ecosystem
+4. AWS Amplify: Fully-managed AWS service for deploying web applications
+5. SST v3 + Remix: SST paired with alternative React framework focused on web standards
 
 ## Reasoning
 
