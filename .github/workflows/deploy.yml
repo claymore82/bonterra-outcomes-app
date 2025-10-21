@@ -64,7 +64,7 @@ jobs:
           echo "@fortawesome:registry=https://npm.fontawesome.com/" >> .npmrc
           echo "@awesome.me:registry=https://npm.fontawesome.com/" >> .npmrc
           echo "//npm.fontawesome.com/:_authToken=${{ secrets.FONT_AWESOME_NPM_TOKEN }}" >> .npmrc
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.STITCH_TOKEN }}" >> .npmrc
 
       - name: Install dependencies
         run: npm ci
