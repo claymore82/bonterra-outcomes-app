@@ -5,11 +5,23 @@ These CloudFormation templates set up the AWS infrastructure needed for bonstart
 ## Files
 
 - `GitHubActionsRole.yaml` - Creates IAM role for GitHub Actions with all necessary SST permissions
-- `CloudFrontCachePolicy.yaml` - Creates shared CloudFront cache policy to avoid naming conflicts
+
+## Overview
+
+This setup uses **OIDC (OpenID Connect)** to allow GitHub Actions to assume an IAM role in your AWS account without storing AWS credentials in GitHub. This is more secure than using long-lived access keys.
+
+**Flow**: GitHub Action → OIDC Token → AWS STS → Assume IAM Role → Deploy with SST
 
 ## Quick Setup
 
-### 1. Deploy OIDC Provider (one-time setup)
+### 1. Check if OIDC Provider exists (one-time per AWS account)
+
+```bash
+# Check if GitHub OIDC provider already exists
+aws iam list-open-id-connect-providers | grep token.actions.githubusercontent.com
+```
+
+If it doesn't exist, create it:
 ```bash
 aws iam create-open-id-connect-provider \
   --url https://token.actions.githubusercontent.com \
@@ -17,59 +29,158 @@ aws iam create-open-id-connect-provider \
   --thumbprint-list 6938fd4d98bab03faadb97b34396831e3780aea1
 ```
 
-### 2. Deploy Cache Policy (optional, one-time setup)
+### 2. Deploy GitHub Actions Role
+
+Deploy **one role per environment** in your AWS account. For most setups, you'll deploy to a **single AWS account** and use SST stages to isolate resources.
+
+**For single AWS account (recommended for most teams):**
+
 ```bash
-aws cloudformation deploy \
-  --template-file CloudFrontCachePolicy.yaml \
-  --stack-name bonstart-template-cache-policy
-```
+# Navigate to the CloudFormation template directory
+cd .github/bootstrap-cloudformation
 
-### 3. Deploy GitHub Actions Roles
-
-Deploy **one role per AWS account**:
-
-#### Development/Staging Account
-```bash
+# Deploy the role (replace YOUR_ORG/YOUR_REPO with your actual GitHub repo)
 aws cloudformation deploy \
   --template-file GitHubActionsRole.yaml \
-  --stack-name {{APP_NAME}}-dev-github-role \
-  --parameter-overrides \
-    GitHubRepo={{GITHUB_ORG}}/{{REPO_NAME}} \
-  --capabilities CAPABILITY_NAMED_IAM
+  --stack-name bonstart-github-actions-role \
+  --parameter-overrides GitHubRepo=bonterratech/your-project-name \
+  --capabilities CAPABILITY_NAMED_IAM \
+  --region us-east-1
+
+# Get the role ARN (you'll need this for GitHub)
+aws cloudformation describe-stacks \
+  --stack-name bonstart-github-actions-role \
+  --query 'Stacks[0].Outputs[?OutputKey==`GitHubActionsRoleARN`].OutputValue' \
+  --output text
 ```
 
-#### Production Account (different AWS account)
-```bash
-aws cloudformation deploy \
-  --template-file GitHubActionsRole.yaml \
-  --stack-name {{APP_NAME}}-prod-github-role \
-  --parameter-overrides \
-    GitHubRepo={{GITHUB_ORG}}/{{REPO_NAME}} \
-  --capabilities CAPABILITY_NAMED_IAM
-```
+**For multi-account setup (prod in separate account):**
 
-### 4. Create GitHub Environments & Configure Variables
+Deploy separate roles in each AWS account with the same repo parameter.
+
+### 3. Configure GitHub Repository
+
+#### Step 1: Create GitHub Environments
+
+Go to your GitHub repo → **Settings** → **Environments** → **New environment**
+
+Create these three environments:
+- `prod` (for main branch)
+- `develop` (for develop branch)
+- `ephemeral` (for feature branches)
+
+#### Step 2: Add Environment Variables
 
 **IMPORTANT**: You must create these environments in your GitHub repository settings (Settings → Environments) or deployments will fail.
 
 #### Current Branch Mapping:
-- **`main` branch** → `prod` environment → **Production AWS account**
-- **`develop` branch** → `develop` environment → Development AWS account
-- **All other branches** → `ephemeral` environment → Development AWS account
+- **`main` branch** → `prod` environment → Production AWS resources
+- **`develop` branch** → `develop` environment → Development AWS resources
+- **All other branches** → `ephemeral` environment → Temporary AWS resources
 
-Configure these environment variables in GitHub:
+For each environment, add these **Variables** (not secrets):
 
-#### Production Environment (`prod`)
-- **AWS_ROLE**: `arn:aws:iam::{{PROD_ACCOUNT_ID}}:role/{{APP_NAME}}-prod-github-role-GithubActionsRole`
+**All environments** (if using single AWS account):
+- **AWS_ROLE**: `arn:aws:iam::123456789012:role/bonstart-github-actions-role-GithubActionsRole`
 - **AWS_REGION**: `us-east-1`
 
-#### Development Environment (`develop`)
-- **AWS_ROLE**: `arn:aws:iam::{{DEV_ACCOUNT_ID}}:role/{{APP_NAME}}-dev-github-role-GithubActionsRole`
-- **AWS_REGION**: `us-east-1`
+Replace `123456789012` with your actual AWS account ID (from the CloudFormation output above).
 
-#### Ephemeral Environment (`ephemeral`)
-- **AWS_ROLE**: `arn:aws:iam::{{DEV_ACCOUNT_ID}}:role/{{APP_NAME}}-dev-github-role-GithubActionsRole`
-- **AWS_REGION**: `us-east-1`
+**If using separate AWS accounts:**
+- `prod`: Use prod account role ARN
+- `develop` & `ephemeral`: Use dev account role ARN
+
+## Testing Your Setup
+
+### Test 1: Verify CloudFormation Deployment
+
+```bash
+# Check stack status
+aws cloudformation describe-stacks --stack-name bonstart-github-actions-role
+
+# Verify role exists
+aws iam get-role --role-name bonstart-github-actions-role-GithubActionsRole
+```
+
+### Test 2: Test Local Deployment (before GitHub Actions)
+
+```bash
+# Set up AWS credentials locally (not needed for GitHub Actions)
+aws configure --profile your-profile
+
+# Test SST deployment
+npm run sst:deploy -- --stage your-name-test
+
+# This tests that:
+# - SST can deploy to AWS
+# - All required services (S3, Lambda, CloudFront) work
+# - Resource naming is correct
+```
+
+### Test 3: Test GitHub Actions Deployment
+
+**Push to a feature branch** and watch the GitHub Actions workflow:
+
+```bash
+git checkout -b test-deployment
+git commit --allow-empty -m "Test GitHub Actions deployment"
+git push origin test-deployment
+```
+
+**Monitor**: Go to GitHub → Actions tab → Watch the "Deploy" workflow
+
+**Expected flow:**
+1. ✅ Select environment: `ephemeral`
+2. ✅ Configure AWS Credentials (assumes role via OIDC)
+3. ✅ Install dependencies
+4. ✅ Deploy with SST (creates resources with stage name from branch)
+5. ✅ Deployment summary shows CloudFront URL
+
+### Test 4: Verify AWS Resources
+
+```bash
+# List S3 buckets created by SST
+aws s3 ls | grep bonstart-template-replace-me
+
+# List Lambda functions
+aws lambda list-functions --query 'Functions[?contains(FunctionName, `bonstart-template-replace-me`)]'
+
+# List CloudFront distributions
+aws cloudfront list-distributions --query 'DistributionList.Items[].{Id:Id,Domain:DomainName,Comment:Comment}' --output table
+```
+
+## Troubleshooting
+
+### "User is not authorized to perform: sts:AssumeRoleWithWebIdentity"
+
+**Cause**: OIDC provider doesn't exist or GitHub repo parameter is wrong.
+
+**Fix**:
+```bash
+# Verify OIDC provider exists
+aws iam list-open-id-connect-providers
+
+# Verify role trust policy has correct repo
+aws iam get-role --role-name bonstart-github-actions-role-GithubActionsRole \
+  --query 'Role.AssumeRolePolicyDocument'
+```
+
+### "Error: Could not assume role"
+
+**Cause**: Environment variables not set in GitHub or wrong ARN.
+
+**Fix**: 
+- Check GitHub repo → Settings → Environments → Variables
+- Verify `AWS_ROLE` matches CloudFormation output exactly
+
+### "AccessDenied" during deployment
+
+**Cause**: IAM role missing permissions.
+
+**Fix**: Check CloudFormation template permissions match what SST needs. Common missing permissions:
+- `cloudfront:CreateCachePolicy` (if creating custom policies)
+- `dynamodb:*` (if using DynamoDB)
+- `ssm:PutParameter` (for SST state)
 
 ## URLs and Domains
 
@@ -135,15 +246,13 @@ The current setup only includes `prod`, `develop`, and `ephemeral` environments.
        'develop': 'develop'
    };
    ```
-3. **Create staging GitHub environment** with the same AWS role ARN (no additional CloudFormation needed)
+3. **Deploy staging CloudFormation stack**:
+   ```bash
+   aws cloudformation deploy \
+     --template-file GitHubActionsRole.yaml \
+     --stack-name bonstart-template-staging-github-role \
+     --parameter-overrides GitHubRepo=YOUR_ORG/bonstart \
+     --capabilities CAPABILITY_NAMED_IAM
+   ```
+4. **Create staging GitHub environment** with staging AWS role ARN
 
-## Cleanup
-
-To remove resources:
-```bash
-# Remove GitHub Actions role
-aws cloudformation delete-stack --stack-name bonstart-template-github-role
-
-# Remove shared cache policy (optional)
-aws cloudformation delete-stack --stack-name bonstart-template-cache-policy
-```

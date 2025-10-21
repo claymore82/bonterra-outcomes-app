@@ -26,6 +26,12 @@ export default $config({
     };
   },
   async run() {
+    const longLivedEnvs = ["prod", "staging", "develop"];
+    
+    // AWS managed CloudFront cache policy IDs
+    // See: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html
+    const AWS_MANAGED_CACHING_DISABLED_POLICY_ID = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad";
+
     // Stage-based configuration
     const config = {
       APP_BASE_URL_LOCAL: "http://localhost:3000",
@@ -37,6 +43,12 @@ export default $config({
       environment: {
         ...($dev && { APP_BASE_URL: config.APP_BASE_URL_LOCAL }),
       },
+      // CloudFront cache policy strategy:
+      // - Long-lived envs (prod/staging/develop): SST creates dedicated cache policies (3 total)
+      // - Ephemeral branches: Use AWS managed "CachingDisabled" policy (doesn't count against quota, ensures streaming works)
+      ...(!longLivedEnvs.includes($app.stage)
+        ? { cachePolicy: AWS_MANAGED_CACHING_DISABLED_POLICY_ID }
+        : {}),
     });
 
     // Return outputs
