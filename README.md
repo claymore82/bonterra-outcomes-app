@@ -1,6 +1,6 @@
 # Bonstart v2
 
-> Modern SST v3 + Next.js template for Bonterra projects
+> Production-ready SST v3 + Next.js starter template for Bonterra projects
 
 ## ⚠️ First-Time Setup Required
 
@@ -25,41 +25,83 @@ The `bonstart:init` script will prompt you for:
 - **AWS region** (default: us-east-1)
 - **AWS profile** (optional, uses default if not specified)
 
-## 📦 What's Included
+## 🚀 What's Included
 
-- **SST v3**: Modern infrastructure as code for AWS
-- **Next.js 15**: React framework with App Router
-- **Tailwind CSS**: Utility-first styling
-- **Stitch Design System**: Bonterra's design system (Step 2)
-- **Auth0 Integration**: Authentication boilerplate (Step 4)
-- **TypeScript**: Full type safety
-- **Node 22**: Latest LTS
+- **SST v3**: Modern serverless infrastructure for AWS
+- **Next.js 15**: React framework with App Router and server components
+- **TypeScript**: Full type safety across frontend and backend
+- **Node 22**: Latest LTS with modern JavaScript features
+- **ESLint + Prettier**: Automated code quality and formatting
+- **ITD Documentation**: Architecture decision framework and templates
 
-## 🛠️ Development Status
+## 📚 Architecture Documentation
 
-This is **Step 1** of the bonstart v2 template.
+This template includes the **ITD (Implementation/Technical Decision)** framework for documenting technical decisions:
 
-### ✅ Completed
-- Basic SST + Next.js structure
-- Tailwind CSS setup
-- Development scripts
-- Placeholder system
+```bash
+docs/
+├── README.md                   # Documentation guidelines
+├── templates/                  # ITD and data structure templates
+├── examples/                   # Example ITDs
+│   └── 01-general/
+│       ├── GENERAL-001-framework-selection.md
+│       └── GENERAL-002-monorepo-structure.md
+├── 01-general/                 # System-wide decisions
+├── 02-auth/                    # Authentication decisions
+└── core-data-structures/       # Data models
+```
 
-### 🚧 Coming Soon
-- Stitch design system integration
-- Auth0 boilerplate
-- Setup script (bonstart:init)
-- Comprehensive documentation
+**Example ITDs:**
+- [Framework Selection (SST v3 + Next.js)](docs/examples/01-general/GENERAL-001-framework-selection.md)
+- [Monorepo Structure](docs/examples/01-general/GENERAL-002-monorepo-structure.md)
 
-## 📚 Documentation
+**Quick Start:**
+1. Copy a template from `docs/templates/`
+2. Document your decision with context, alternatives, and reasoning
+3. Name with category prefix (e.g., `GENERAL-001-your-decision.md`)
+4. Save in the appropriate category folder (e.g., `docs/01-general/`)
 
-Full documentation coming in Step 8.
+See [docs/README.md](docs/README.md) for full guidelines.
+
+## 🎨 Stitch Design System
+
+This template includes the [Stitch Design System](https://github.com/bonterratech/stitch) - Bonterra's accessible React component library.
+
+### Setup
+
+1. **Configure npm registries** (required for private packages):
+   ```bash
+   # Copy the example file
+   cp .npmrc.example .npmrc
+
+   # Add your tokens:
+   # - Font Awesome token: https://fontawesome.com/account
+   # - GitHub token: https://github.com/settings/tokens (with read:packages scope)
+   ```
+
+2. **Use Stitch components**:
+   ```tsx
+   import { Button, Stack, Text } from '@bonterratech/stitch-extension';
+
+   export default function MyPage() {
+     return (
+       <Stack space="400">
+         <Text variant="lg">Hello World</Text>
+         <Button variant="primary">Click me</Button>
+       </Stack>
+     );
+   }
+   ```
+
+### Resources
+
+- [Storybook](https://main.d2txqofa7g657p.amplifyapp.com/) - Component API & examples
+- [Design Guidelines](https://zeroheight.com/635ad7a5d/p/0424a6-stitch-design-system)
+- [GitHub Repo](https://github.com/bonterratech/stitch)
+- [Slack Support](https://bonterra.enterprise.slack.com/archives/C070GH413L3) - #stitch channel
+
 
 ## 🤝 Contributing
 
 This is a Bonterra internal template. Follow Bonterra development standards.
-
----
-
-Built with ❤️ for Bonterra
 

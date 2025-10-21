@@ -1,0 +1,10 @@
+# Copy this to .npmrc and add your tokens
+# .npmrc is in .gitignore to prevent committing secrets
+
+@fortawesome:registry=https://npm.fontawesome.com/
+@awesome.me:registry=https://npm.fontawesome.com/
+//npm.fontawesome.com/:_authToken=YOUR_FONTAWESOME_TOKEN_HERE
+
+@bonterratech:registry=https://npm.pkg.github.com/
+//npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN_HERE
+
