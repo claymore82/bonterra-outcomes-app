@@ -60,7 +60,7 @@ jobs:
 
       - name: Verify AWS credentials
         run: |
-          echo "Testing AWS credentials..."
+          echo "Testing AWS credentials... role to assume: ${{ vars.AWS_ROLE }}"
           aws sts get-caller-identity
           echo "AWS credentials working!"
 

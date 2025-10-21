@@ -66,8 +66,15 @@ Resources:
               Action:
                 - s3:*
               Resource:
+                # SST bootstrap buckets (state and assets)
+                - arn:aws:s3:::sst-state-*
+                - arn:aws:s3:::sst-state-*/*
+                - arn:aws:s3:::sst-asset-*
+                - arn:aws:s3:::sst-asset-*/*
+                # App-specific buckets
                 - arn:aws:s3:::bonstart-template-replace-me-*
                 - arn:aws:s3:::bonstart-template-replace-me-*/*
+                # Next.js site asset buckets
                 - arn:aws:s3:::*-siteassetsbucket-*
                 - arn:aws:s3:::*-siteassetsbucket-*/*
 
