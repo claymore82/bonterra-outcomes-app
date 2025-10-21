@@ -71,9 +71,9 @@ Resources:
                 - arn:aws:s3:::sst-state-*/*
                 - arn:aws:s3:::sst-asset-*
                 - arn:aws:s3:::sst-asset-*/*
-                # App-specific buckets
-                - arn:aws:s3:::bonstart-template-replace-me-*
-                - arn:aws:s3:::bonstart-template-replace-me-*/*
+                # App-specific buckets (use broader pattern for truncated names)
+                - arn:aws:s3:::bonstart-template-*
+                - arn:aws:s3:::bonstart-template-*/*
                 # Next.js site asset buckets
                 - arn:aws:s3:::*-siteassetsbucket-*
                 - arn:aws:s3:::*-siteassetsbucket-*/*
@@ -83,7 +83,8 @@ Resources:
               Action:
                 - lambda:*
               Resource:
-                - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:bonstart-template-replace-me-*'
+                # Use broader pattern to catch truncated app names (Lambda has 64-char limit)
+                - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:bonstart-template-*'
                 - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:*EventsSubscriber*'
                 - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:*SiteRevalidation*'
                 - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:*SiteImage*'
@@ -103,21 +104,21 @@ Resources:
                 - sqs:*
               Resource:
                 - !Sub 'arn:aws:sqs:${AWS::Region}:${AWS::AccountId}:*-SiteRevalidationEventsQueue-*'
-                - !Sub 'arn:aws:sqs:${AWS::Region}:${AWS::AccountId}:bonstart-template-replace-me-*'
+                - !Sub 'arn:aws:sqs:${AWS::Region}:${AWS::AccountId}:bonstart-template-*'
 
             - Sid: SSTDynamo
               Effect: Allow
               Action:
                 - dynamodb:*
               Resource:
-                - !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/bonstart-template-replace-me*'
+                - !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/bonstart-template-*'
 
 
             - Sid: PassRoleToLambda
               Effect: Allow
               Action: iam:PassRole
               Resource:
-                - !Sub 'arn:aws:iam::${AWS::AccountId}:role/bonstart-template-replace-me-*'
+                - !Sub 'arn:aws:iam::${AWS::AccountId}:role/bonstart-template-*'
                 - !Sub 'arn:aws:iam::${AWS::AccountId}:role/*EventsSubscriber*Role*'
                 - !Sub 'arn:aws:iam::${AWS::AccountId}:role/*SiteRevalidation*'
                 - !Sub 'arn:aws:iam::${AWS::AccountId}:role/*SiteImageOptimizerRole*'
