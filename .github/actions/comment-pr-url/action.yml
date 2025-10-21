@@ -34,7 +34,7 @@ runs:
           
           const pr_number = prs[0].number;
           const url = '${{ inputs.deployment-url }}';
-          const commentBody = `🚀 **Deployment URL**: ${url}`;
+          const commentBody = `🚀 **Deployment URL**: [${url}](${url})`;
           
           // Get existing comments
           const { data: comments } = await github.rest.issues.listComments({
