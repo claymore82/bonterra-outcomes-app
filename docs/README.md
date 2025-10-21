@@ -15,12 +15,20 @@ This directory contains Implementation/Technical Decisions (ITDs) and data struc
 Document significant technical choices with full context, alternatives, and reasoning.
 
 **Template**: [ITD Template](templates/itd-template.md)  
-**Example**: [Example ITD](examples/itd-example.md)
+**Examples**: 
+- [GENERAL-001: Framework Selection](examples/01-general/GENERAL-001-framework-selection.md)
+- [GENERAL-002: Monorepo Structure](examples/01-general/GENERAL-002-monorepo-structure.md)
 
 ### Data Structure Documentation
 Define data models, schemas, and architectural data decisions with ERD diagrams.
 
 **Template**: [Data Structure Template](templates/data-structure-template.md)
+
+### Architecture Documentation
+High-level system architecture covering components, data flow, deployment, and quality attributes.
+
+**Template**: [Architecture Template](templates/architecture-template.md)  
+**Example**: [bonstart Architecture](examples/ARCHITECTURE.md)
 
 ## Organization Structure
 
@@ -28,13 +36,17 @@ Define data models, schemas, and architectural data decisions with ERD diagrams.
 docs/
 ├── README.md                    # This file
 ├── templates/                   # Templates for new docs
+│   ├── itd-template.md
+│   ├── data-structure-template.md
+│   └── architecture-template.md
 ├── examples/                    # Example documentation
-├── 01-general/                  # System-wide decisions
-│   └── GENERAL-001-example.md
+│   ├── ARCHITECTURE.md
+│   └── 01-general/
+│       ├── GENERAL-001-framework-selection.md
+│       └── GENERAL-002-monorepo-structure.md
+├── 01-general/                  # System-wide decisions (for real ITDs)
 ├── 02-auth/                     # Authentication decisions
-│   └── AUTH-001-example.md
 └── core-data-structures/        # Data models
-    └── DS-001-example.md
 ```
 
 ## Naming Convention

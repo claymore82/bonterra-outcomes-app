@@ -42,16 +42,24 @@ This template includes the **ITD (Implementation/Technical Decision)** framework
 docs/
 ├── README.md                   # Documentation guidelines
 ├── templates/                  # ITD and data structure templates
-├── examples/                   # Example decisions
+├── examples/                   # Example ITDs
+│   └── 01-general/
+│       ├── GENERAL-001-framework-selection.md
+│       └── GENERAL-002-monorepo-structure.md
 ├── 01-general/                 # System-wide decisions
 ├── 02-auth/                    # Authentication decisions
 └── core-data-structures/       # Data models
 ```
 
+**Example ITDs:**
+- [Framework Selection (SST v3 + Next.js)](docs/examples/01-general/GENERAL-001-framework-selection.md)
+- [Monorepo Structure](docs/examples/01-general/GENERAL-002-monorepo-structure.md)
+
 **Quick Start:**
 1. Copy a template from `docs/templates/`
 2. Document your decision with context, alternatives, and reasoning
 3. Name with category prefix (e.g., `GENERAL-001-your-decision.md`)
+4. Save in the appropriate category folder (e.g., `docs/01-general/`)
 
 See [docs/README.md](docs/README.md) for full guidelines.
 
