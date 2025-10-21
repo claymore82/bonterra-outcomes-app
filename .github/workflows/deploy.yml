@@ -87,6 +87,11 @@ jobs:
       - name: Run TypeScript check
         run: npm run typecheck
 
+      - name: Unlock SST Stage (if locked)
+        run: |
+          echo "Attempting to unlock stage: ${{ needs.select_environment.outputs.sst_stage }}"
+          npx sst unlock --stage ${{ needs.select_environment.outputs.sst_stage }} || echo "No lock to remove or unlock failed (this is fine)"
+
       - name: Deploy with SST
         id: deploy_sst
         run: |
