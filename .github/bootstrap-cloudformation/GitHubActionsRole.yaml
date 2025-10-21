@@ -71,7 +71,8 @@ Resources:
                 - arn:aws:s3:::sst-state-*/*
                 - arn:aws:s3:::sst-asset-*
                 - arn:aws:s3:::sst-asset-*/*
-                # App-specific buckets (use broader pattern for all truncation variations)
+                # App-specific buckets (broad pattern to catch all name truncation variations)
+                # Note: SST may truncate long app+stage names. After init, update 'bonstart' to match your app name prefix
                 - arn:aws:s3:::bonstart-*
                 - arn:aws:s3:::bonstart-*/*
                 # Next.js site asset buckets

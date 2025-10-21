@@ -14,8 +14,9 @@ export default $config({
 
     return {
       // Resource naming: All AWS resources will be prefixed with this name + stage
-      // e.g. "my-project-dev-Site" for dev stage, "my-project-prod-Site" for prod
-      name: "bonstart-template-replace-me",
+      // e.g. "bonstart-dev-Site" for dev stage, "bonstart-prod-Site" for prod
+      // Keep this short (<15 chars) to avoid AWS resource name truncation
+      name: "bonstart",
       removal: longLivedEnvs.includes(input?.stage) ? "retain" : "remove",
       protect: longLivedEnvs.includes(input?.stage),
       home: "aws",
