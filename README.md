@@ -46,68 +46,28 @@ npm run sst:deploy
 
 ## 📚 Architecture Documentation
 
-This template includes the **ITD (Implementation/Technical Decision)** framework for documenting technical decisions:
+This template includes the **ITD (Implementation/Technical Decision)** framework for documenting technical decisions.
 
-```bash
-docs/
-├── README.md                   # Documentation guidelines
-├── templates/                  # ITD and data structure templates
-├── examples/                   # Example ITDs
-│   └── 01-general/
-│       ├── GENERAL-001-framework-selection.md
-│       └── GENERAL-002-monorepo-structure.md
-├── 01-general/                 # System-wide decisions
-├── 02-auth/                    # Authentication decisions
-└── core-data-structures/       # Data models
-```
+**👉 See [docs/README.md](docs/README.md) for templates, examples, and guidelines.**
 
 **Example ITDs:**
 - [Framework Selection (SST v3 + Next.js)](docs/examples/01-general/GENERAL-001-framework-selection.md)
 - [Monorepo Structure](docs/examples/01-general/GENERAL-002-monorepo-structure.md)
 
-**Quick Start:**
-1. Copy a template from `docs/templates/`
-2. Document your decision with context, alternatives, and reasoning
-3. Name with category prefix (e.g., `GENERAL-001-your-decision.md`)
-4. Save in the appropriate category folder (e.g., `docs/01-general/`)
-
-See [docs/README.md](docs/README.md) for full guidelines.
-
 ## 🎨 Stitch Design System
 
 This template includes the [Stitch Design System](https://github.com/bonterratech/stitch) - Bonterra's accessible React component library.
 
-### Setup
+### ⚠️ Setup Required
 
-1. **Configure npm registries** (required for private packages):
-   ```bash
-   # Copy the example file
-   cp .npmrc.example .npmrc
+Stitch requires authentication tokens for private package access.
 
-   # Add your tokens:
-   # - Font Awesome token: https://fontawesome.com/account
-   # - GitHub token: https://github.com/settings/tokens (with read:packages scope)
-   ```
-
-2. **Use Stitch components**:
-   ```tsx
-   import { Button, Stack, Text } from '@bonterratech/stitch-extension';
-
-   export default function MyPage() {
-     return (
-       <Stack space="400">
-         <Text variant="lg">Hello World</Text>
-         <Button variant="primary">Click me</Button>
-       </Stack>
-     );
-   }
-   ```
+**👉 See [docs/guides/stitch-setup.md](docs/guides/stitch-setup.md) for setup instructions.**
 
 ### Resources
 
 - [Storybook](https://main.d2txqofa7g657p.amplifyapp.com/) - Component API & examples
 - [Design Guidelines](https://zeroheight.com/635ad7a5d/p/0424a6-stitch-design-system)
-- [GitHub Repo](https://github.com/bonterratech/stitch)
 - [Slack Support](https://bonterra.enterprise.slack.com/archives/C070GH413L3) - #stitch channel
 
 
