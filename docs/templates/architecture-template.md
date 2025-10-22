@@ -20,54 +20,37 @@
 
 ## Architecture Overview
 
-**Architecture Style**: [Monolith / Microservices / Serverless / Event-Driven / etc.]
+**Style**: [Monolith / Microservices / Serverless / Event-Driven]
 
 **Key Characteristics**:
 - [Defining characteristic 1]
 - [Defining characteristic 2]
 - [Defining characteristic 3]
 
-**Design Philosophy**: [What principles guided the architectural decisions?]
+## Components
 
-## Component Architecture
+### [Component Name]
 
-### Component: [Name]
+[Brief description of what it does, the tech stack, and key responsibilities]
 
-**Responsibility**: [What does this component do? What problems does it solve?]
+**Related Decisions**: [Compelling sentence] → [Link to ITD]
 
-**Technology**: [Tech stack, runtime, framework]
+[Repeat for each component]
 
-**Key Interfaces**:
-- Exposes: [What APIs/interfaces?]
-- Consumes: [What does it depend on?]
-
-**ITD References**: [Link to relevant ITDs]
-
-[Repeat for each major component]
-
-### Component Interactions
-
-```mermaid
-[Diagram showing how components interact]
-```
-
-**Key Interaction Patterns**:
+**Key Interactions**:
 1. [Pattern 1 - what triggers it, what's exchanged]
 2. [Pattern 2 - sync vs async, protocol]
 
-## Data Architecture
+## Data & State Management
 
-[What are the main data stores and entities? How does data flow through the system?]
+[What are the main data stores, files, or state? How does data flow through the system?]
 
-```mermaid
-erDiagram
-    [If helpful, add ER diagram of core entities]
-```
+**Data Stores**: [Databases, file systems, caches, message queues—anything that persists or transfers data]
 
 **Data Flow**:
 - [Input → Processing → Storage → Output]
 
-**ITD References**: [Link to data modeling ITDs]
+**Related Decisions**: [Interesting sentence about data choices] → [Link to ITD]
 
 ## APIs / Interfaces
 
@@ -78,38 +61,20 @@ erDiagram
 
 **External Integrations**: [What external systems? Auth providers, payment gateways, etc.]
 
-**ITD References**: [Link to API design ITDs]
+**Related Decisions**: [Interesting sentence about API choices] → [Link to ITD]
 
 ## Key Technical Decisions
 
-[List major architectural decisions with links to ITDs. Each decision should include brief context.]
+**[Decision Name]**: [One compelling sentence that makes someone curious to read the ITD] → [Link to ITD](../[category]/[FILE].md)
 
-### [CATEGORY]-[NUMBER]: [Decision Title]
-**Decision**: [One sentence]  
-→ [Link to ITD](../[category]/[FILE].md)
+**[Decision Name]**: [Another compelling sentence] → [Link to ITD](../[category]/[FILE].md)
 
 [Repeat for each major decision]
 
 ## Constraints & Trade-offs
 
-**Technical Constraints**: [What limitations does the architecture have?]
+[List key constraints and conscious trade-offs as bullets - mix technical, business, and architectural choices]
 
-**Business Constraints**: [What business requirements constrained choices?]
-
-**Key Trade-offs**: [What was deliberately sacrificed and what was gained?]
-
-## References
-
-### Documentation
-- [Link to main README]
-- [Link to docs README]
-
-### Related ITDs
-- [List all ITDs]
-
-### Code Repositories
-- [Main repo]
-
-### External Resources
-- [Technology docs]
-- [Inspirations]
+- [Technical constraint or limitation]
+- [Business requirement that constrained choices]
+- [Conscious trade-off - what was sacrificed vs gained]
