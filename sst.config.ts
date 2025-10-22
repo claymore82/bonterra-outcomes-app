@@ -1,7 +1,7 @@
 /// <reference path="./.sst/platform/config.d.ts" />
 
 /**
- * SST v3 configuration for bonstart-template-replace-me
+ * SST v3 configuration for bonstart
  * This defines how the app is deployed to AWS using SST's Nextjs component
  */
 export default $config({

@@ -2,12 +2,13 @@
 
 /**
  * Bonstart initialization script
- * Replaces "bonstart-template" with your project name and cleans up
+ * Replaces "bonstart" with your project name and configures CI/CD
  */
 
 const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
+const { execSync } = require('child_process');
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -41,7 +42,7 @@ function walkDirectory(dir, callback, exclude = []) {
     const filePath = path.join(dir, file);
     const stat = fs.statSync(filePath);
     
-    // Skip excluded directories
+    // Skip excluded directories and files
     if (exclude.some(ex => filePath.includes(ex))) continue;
     
     if (stat.isDirectory()) {
@@ -49,6 +50,28 @@ function walkDirectory(dir, callback, exclude = []) {
     } else {
       callback(filePath);
     }
+  }
+}
+
+function getGitHubInfo() {
+  try {
+    const remoteUrl = execSync('git remote get-url origin', { encoding: 'utf8' }).trim();
+    
+    // Parse GitHub URL (supports both HTTPS and SSH)
+    // https://github.com/org/repo.git or git@github.com:org/repo.git
+    let match;
+    if (remoteUrl.includes('github.com')) {
+      match = remoteUrl.match(/github\.com[:/]([^/]+)\/(.+?)(\.git)?$/);
+      if (match) {
+        return {
+          org: match[1],
+          repo: match[2],
+        };
+      }
+    }
+    return null;
+  } catch (error) {
+    return null;
   }
 }
 
@@ -63,17 +86,65 @@ async function main() {
     rl.close();
     process.exit(1);
   }
+
+  // Auto-detect GitHub info or ask
+  const gitInfo = getGitHubInfo();
+  let githubOrg, repoName;
+
+  if (gitInfo) {
+    console.log(`\n📋 Detected GitHub: ${gitInfo.org}/${gitInfo.repo}`);
+    const useDetected = await question('Use this for CI/CD? (y/n): ');
+    
+    if (useDetected.toLowerCase() === 'y' || useDetected.toLowerCase() === 'yes' || useDetected === '') {
+      githubOrg = gitInfo.org;
+      repoName = gitInfo.repo;
+    }
+  }
+
+  if (!githubOrg) {
+    githubOrg = await question('\nGitHub organization/username: ');
+    repoName = await question(`Repository name (or press Enter for "${projectName}"): `) || projectName;
+  }
+
+  if (!githubOrg) {
+    console.error('\n❌ GitHub organization is required for CI/CD setup.');
+    rl.close();
+    process.exit(1);
+  }
   
   rl.close();
   
-  console.log('\n📝 Replacing "bonstart-template" with "' + projectName + '"...\n');
+  console.log('\n📝 Replacing "bonstart" with "' + projectName + '"...\n');
   
   let filesChanged = 0;
   const rootDir = path.join(__dirname, '..');
-  const exclude = ['node_modules', '.next', '.sst', '.git', 'dist', 'build'];
+  const exclude = [
+    'node_modules', 
+    '.next', 
+    '.sst', 
+    '.git', 
+    'dist', 
+    'build',
+    'docs',        // Don't replace in documentation
+    'README.md',   // Don't replace in main README
+    'scripts/setup.js'  // Don't replace in this script
+  ];
   
+  // Define all replacements
+  const replacements = [
+    ['bonstart', projectName],
+    ['YOUR-ORG/YOUR-REPO', `${githubOrg}/${repoName}`],
+    ['YOUR_ORG', githubOrg]
+  ];
+
   walkDirectory(rootDir, (filePath) => {
-    if (replaceInFile(filePath, 'bonstart-template', projectName)) {
+    let fileChanged = false;
+    for (const [search, replace] of replacements) {
+      if (replaceInFile(filePath, search, replace)) {
+        fileChanged = true;
+      }
+    }
+    if (fileChanged) {
       console.log('  ✓', path.relative(rootDir, filePath));
       filesChanged++;
     }
@@ -106,6 +177,7 @@ async function main() {
   
   const filesToDelete = [
     'scripts/setup.js',
+    'scripts/init-ci.js',  // Remove old CI init script too
   ];
   
   for (const file of filesToDelete) {
@@ -120,23 +192,25 @@ async function main() {
     }
   }
   
-  // Remove bonstart:init script from package.json
+  // Remove bonstart:init and bonstart:init-ci scripts from package.json
   try {
     const packageJsonPath = path.join(__dirname, '..', 'package.json');
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
     
     delete packageJson.scripts['bonstart:init'];
+    delete packageJson.scripts['bonstart:init-ci'];
     
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n', 'utf8');
-    console.log('  ✓ Removed bonstart:init from package.json');
+    console.log('  ✓ Removed init scripts from package.json');
   } catch (error) {
     console.error('  ✗ Failed to update package.json:', error.message);
   }
   
   console.log('\n✅ Setup complete! Your project is ready.\n');
   console.log('Next steps:');
-  console.log('  1. Run: npm run dev');
-  console.log('  2. Run: npm run sst:deploy\n');
+  console.log('  1. Review CI/CD setup: .github/bootstrap-cloudformation/README.md');
+  console.log('  2. Run: npm run dev');
+  console.log('  3. Run: npm run sst:deploy\n');
 }
 
 main().catch((error) => {

@@ -1,5 +1,5 @@
 {
-  "name": "bonstart-template",
+  "name": "bonstart",
   "version": "2.0.0",
   "private": true,
   "description": "⚠️ Run 'npm run bonstart:init' to configure this project",
