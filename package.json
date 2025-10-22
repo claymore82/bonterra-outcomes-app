@@ -17,6 +17,7 @@
     "typecheck": "npm run typecheck -w packages/next",
     "bonstart:init": "node scripts/setup.js",
     "bonstart:init-ci": "node scripts/init-ci.js",
+    "postinstall": "node scripts/copy-stitch-docs.mjs",
     "prepare": "node scripts/setup-hooks.js"
   },
   "engines": {

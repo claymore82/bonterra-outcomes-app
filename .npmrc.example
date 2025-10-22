@@ -1,10 +1,9 @@
-# Copy this to .npmrc and add your tokens
-# .npmrc is in .gitignore to prevent committing secrets
-
-@fortawesome:registry=https://npm.fontawesome.com/
-@awesome.me:registry=https://npm.fontawesome.com/
-//npm.fontawesome.com/:_authToken=YOUR_FONTAWESOME_TOKEN_HERE
-
-@bonterratech:registry=https://npm.pkg.github.com/
-//npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN_HERE
-
+# ⚠️ DO NOT ADD TOKENS TO THIS FILE OR .npmrc!
+#
+# The project .npmrc already has registry configs.
+# Add your authentication tokens to ~/.npmrc in your HOME directory:
+#
+# //npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN_HERE
+# //npm.fontawesome.com/:_authToken=YOUR_FONTAWESOME_TOKEN_HERE
+#
+# See docs/guides/stitch-setup.md for detailed instructions.
