@@ -5,7 +5,7 @@ import './globals.css';
 import { NextLinkProvider } from '../components/NextLinkProvider';
 
 export const metadata: Metadata = {
-  title: 'bonstart-template',
+  title: 'bonstart',
   description: 'Full stack starter template for Bonterra projects',
 };
 
