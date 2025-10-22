@@ -175,7 +175,6 @@ async function main() {
   
   const filesToDelete = [
     'scripts/setup.js',
-    'scripts/init-ci.js',  // Remove old CI init script too
   ];
   
   for (const file of filesToDelete) {
@@ -190,16 +189,15 @@ async function main() {
     }
   }
   
-  // Remove bonstart:init and bonstart:init-ci scripts from package.json
+  // Remove bonstart:init script from package.json
   try {
     const packageJsonPath = path.join(__dirname, '..', 'package.json');
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
     
     delete packageJson.scripts['bonstart:init'];
-    delete packageJson.scripts['bonstart:init-ci'];
     
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n', 'utf8');
-    console.log('  ✓ Removed init scripts from package.json');
+    console.log('  ✓ Removed bonstart:init from package.json');
   } catch (error) {
     console.error('  ✗ Failed to update package.json:', error.message);
   }
