@@ -47,4 +47,7 @@ coverage/
 # OS
 Thumbs.db
 
+# Stitch AI assets (copied from node_modules during postinstall)
+stitch-ai-assets/
+
 packages/app/.open-next/
