@@ -125,12 +125,18 @@ async function main() {
     'build',
     'docs/',       // Don't replace in documentation
     'README.md',   // Don't replace in main README
-    'scripts/setup.js'  // Don't replace in this script
+    'scripts/setup.js',  // Don't replace in this script
+    'package.json',      // Handle package.json separately
+    'packages/next/src/app/page.tsx'  // Handle homepage separately
   ];
   
   // Define all replacements
+  // Capitalize first letter for display names
+  const capitalizedName = projectName.charAt(0).toUpperCase() + projectName.slice(1);
+  
   const replacements = [
-    ['bonstart', projectName],
+    ['Bonstart', capitalizedName],  // Replace capitalized version first
+    ['bonstart', projectName],       // Then lowercase version
     ['YOUR-ORG/YOUR-REPO', `${githubOrg}/${repoName}`],
     ['YOUR_ORG', githubOrg]
   ];
@@ -151,21 +157,40 @@ async function main() {
   console.log('\n✅ Configuration complete!');
   console.log(`   Updated ${filesChanged} file(s)`);
   
-  // Remove setup warning from homepage
-  console.log('\n🎨 Removing setup warning from homepage...\n');
+  // Update homepage separately
+  console.log('\n🎨 Cleaning up homepage...\n');
   const homePagePath = path.join(rootDir, 'packages/next/src/app/page.tsx');
   
   try {
     let content = fs.readFileSync(homePagePath, 'utf8');
     
-    // Remove the entire warning section (emoji + heading + description)
+    // Change "Welcome to Bonstart" to just "Welcome"
     content = content.replace(
-      /\s*<div className="mb-6 text-6xl">⚠️<\/div>[\s\S]*?to configure your project\s*<\/p>/,
+      'Welcome to Bonstart',
+      'Welcome'
+    );
+    
+    // Remove the entire "Setup Warning" Card section
+    content = content.replace(
+      /\s*\{\/\* Setup Warning \*\/\}\s*<Card>[\s\S]*?<\/Card>/,
       ''
     );
     
+    // Clean up the description text
+    content = content.replace(
+      'Platform starter template with Stitch design system. Get started\n                by configuring your project and exploring the available\n                resources.',
+      'Platform starter template with Stitch design system. Get started\n                by exploring the available resources.'
+    );
+    
+    // Replace other bonstart references
+    content = content.replace(/bonstart/g, projectName);
+    content = content.replace(/Bonstart/g, capitalizedName);
+    
     fs.writeFileSync(homePagePath, content, 'utf8');
-    console.log('  ✓ Removed warning section');
+    console.log('  ✓ Removed setup warning');
+    console.log('  ✓ Changed title to "Welcome"');
+    console.log('  ✓ Updated branding');
+    filesChanged++;
   } catch (error) {
     console.error('  ✗ Failed to update homepage:', error.message);
   }
@@ -189,15 +214,23 @@ async function main() {
     }
   }
   
-  // Remove bonstart:init script from package.json
+  // Update package.json
+  console.log('\n📦 Updating package.json...\n');
   try {
     const packageJsonPath = path.join(__dirname, '..', 'package.json');
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
     
+    // Remove init script
     delete packageJson.scripts['bonstart:init'];
     
+    // Update package name and description
+    packageJson.name = projectName;
+    packageJson.description = '';
+    
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n', 'utf8');
-    console.log('  ✓ Removed bonstart:init from package.json');
+    console.log('  ✓ Updated package name');
+    console.log('  ✓ Removed bonstart:init script');
+    filesChanged++;
   } catch (error) {
     console.error('  ✗ Failed to update package.json:', error.message);
   }
