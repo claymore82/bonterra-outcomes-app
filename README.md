@@ -25,15 +25,12 @@ npm run sst:deploy
 
 ### Setup Scripts
 
-**`bonstart:init`** - Initial project configuration:
-- **Project name** (replaces "bonstart-template" everywhere)
+**`bonstart:init`** - Project initialization (merged setup):
+- **Project name** (replaces "bonstart" everywhere)
+- **GitHub org/repo** (auto-detected from git remote)
+- Updates CI/CD workflows and CloudFormation templates
 - Removes setup warnings and template files
-
-**`bonstart:init-ci`** - CI/CD configuration:
-- **GitHub organization/username** (for GitHub Actions)
-- **Repository name** (defaults to project name)
-- **AWS Account IDs** (optional, for CloudFormation templates)
-- Configures GitHub Actions workflows and CloudFormation templates
+- See [.github/bootstrap-cloudformation/README.md](.github/bootstrap-cloudformation/README.md) for AWS setup
 
 ## 🚀 What's Included
 
