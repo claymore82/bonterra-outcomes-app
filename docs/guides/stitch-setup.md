@@ -26,9 +26,8 @@ npm install
 3. Add to `~/.npmrc`: `//npm.pkg.github.com/:_authToken=TOKEN`
 
 **Font Awesome Token** (for `@fortawesome/*` packages):
-1. Log in to https://fontawesome.com → Account → Kits
-2. Copy your Pro token
-3. Add to `~/.npmrc`: `//npm.fontawesome.com/:_authToken=TOKEN`
+1. Obtain Font Awesome token from your team lead
+2. Add to `~/.npmrc`: `//npm.fontawesome.com/:_authToken=TOKEN`
 
 ## Why Home Directory?
 
