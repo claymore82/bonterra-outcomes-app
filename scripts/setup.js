@@ -87,29 +87,19 @@ async function main() {
     process.exit(1);
   }
 
-  // Auto-detect GitHub info or ask
+  // Auto-detect GitHub info from git remote
   const gitInfo = getGitHubInfo();
   let githubOrg, repoName;
 
   if (gitInfo) {
-    console.log(`\n📋 Detected GitHub: ${gitInfo.org}/${gitInfo.repo}`);
-    const useDetected = await question('Use this for CI/CD? (y/n): ');
-    
-    if (useDetected.toLowerCase() === 'y' || useDetected.toLowerCase() === 'yes' || useDetected === '') {
-      githubOrg = gitInfo.org;
-      repoName = gitInfo.repo;
-    }
-  }
-
-  if (!githubOrg) {
-    githubOrg = await question('\nGitHub organization/username: ');
-    repoName = await question(`Repository name (or press Enter for "${projectName}"): `) || projectName;
-  }
-
-  if (!githubOrg) {
-    console.error('\n❌ GitHub organization is required for CI/CD setup.');
-    rl.close();
-    process.exit(1);
+    githubOrg = gitInfo.org;
+    repoName = gitInfo.repo;
+    console.log(`\n📋 Detected GitHub: ${githubOrg}/${repoName}`);
+  } else {
+    // Default to bonterratech if can't detect
+    githubOrg = 'bonterratech';
+    repoName = projectName;
+    console.log(`\n📋 Using GitHub: ${githubOrg}/${repoName} (update .github/ files if different)`);
   }
   
   rl.close();
