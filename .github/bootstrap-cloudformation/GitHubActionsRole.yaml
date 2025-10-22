@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'CloudFormation template for GitHub Actions AWS IAM Role for bonstart-template-replace-me deployments. Source: https://github.com/YOUR-ORG/YOUR-REPO/blob/main/.github/bootstrap-cloudformation/GitHubActionsRole.yaml.'
+Description: 'CloudFormation template for GitHub Actions AWS IAM Role for bonstart deployments. Source: https://github.com/YOUR-ORG/YOUR-REPO/blob/main/.github/bootstrap-cloudformation/GitHubActionsRole.yaml.'
 
 Parameters:
   GitHubRepo:
