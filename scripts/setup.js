@@ -42,8 +42,16 @@ function walkDirectory(dir, callback, exclude = []) {
     const filePath = path.join(dir, file);
     const stat = fs.statSync(filePath);
     
-    // Skip excluded directories and files
-    if (exclude.some(ex => filePath.includes(ex))) continue;
+    // Skip excluded directories and files (use path separator for exact matching)
+    const relativePath = path.relative(path.join(__dirname, '..'), filePath);
+    if (exclude.some(ex => {
+      // Exact file match
+      if (!ex.endsWith('/') && relativePath === ex) return true;
+      // Directory match - check if path starts with directory
+      if (ex.endsWith('/') && relativePath.startsWith(ex)) return true;
+      // Legacy: check if path contains the exclude string (for things like node_modules)
+      return filePath.includes(path.sep + ex + path.sep) || filePath.endsWith(path.sep + ex);
+    })) continue;
     
     if (stat.isDirectory()) {
       walkDirectory(filePath, callback, exclude);
@@ -112,10 +120,10 @@ async function main() {
     'node_modules', 
     '.next', 
     '.sst', 
-    '.git', 
+    '.git/',       // Exclude .git directory but not .github
     'dist', 
     'build',
-    'docs',        // Don't replace in documentation
+    'docs/',       // Don't replace in documentation
     'README.md',   // Don't replace in main README
     'scripts/setup.js'  // Don't replace in this script
   ];
