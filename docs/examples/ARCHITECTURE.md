@@ -29,7 +29,7 @@ graph TB
         SSTConfig[sst.config.ts - Infrastructure definition]
     end
     
-    CFN[AWS CloudFormation - Per-stage stacks]
+    SST[SST v3 - Pulumi-based IaC]
     
     subgraph aws[AWS Production Environment]
         CF[CloudFront CDN]
@@ -38,8 +38,8 @@ graph TB
     end
     
     Dev -->|npm run dev / sst deploy| system
-    system -->|SST CLI| CFN
-    CFN -->|Provisions| aws
+    system -->|SST CLI| SST
+    SST -->|Provisions| aws
     
     CF --> Lambda
     CF --> S3
@@ -48,7 +48,7 @@ graph TB
     style aws fill:#fff,stroke:#ff9900,stroke-width:2px
 ```
 
-**System Boundary**: The dashed box represents what is included in the bonstart template (code, configuration). Everything outside (AWS services, CloudFormation) is provisioned/managed by SST but not part of the template itself.
+**System Boundary**: The dashed box represents what is included in the bonstart template (code, configuration). Everything outside (AWS services, SST/Pulumi) is provisioned/managed by SST but not part of the template itself.
 
 ## Architecture Overview
 
@@ -94,7 +94,7 @@ The main application handles frontend rendering and API routes. Built with Next.
 
 ### Component 2: SST Infrastructure
 
-Defines all AWS resources declaratively in `sst.config.ts`. Each stage (`--stage <name>`) creates a completely isolated CloudFormation stack—enabling per-developer sandboxes, per-branch previews, and multi-environment deployments.
+Defines all AWS resources declaratively in `sst.config.ts`. SST v3 uses Pulumi under the hood for infrastructure provisioning. Each stage (`--stage <name>`) creates a completely isolated stack—enabling per-developer sandboxes, per-branch previews, and multi-environment deployments.
 
 **Related Decisions**: Monorepo structure prepares for standalone Lambda functions without painful refactoring → [GENERAL-002](01-general/GENERAL-002-monorepo-structure.md)
 
