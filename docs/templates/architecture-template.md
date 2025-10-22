@@ -53,7 +53,13 @@
 
 ## Components
 
-### [Component Name]
+### Component 1: [Component Name]
+
+[Brief description of what it does, the tech stack, and key responsibilities]
+
+**Related Decisions**: [Compelling sentence] → [Link to ITD]
+
+### Component 2: [Component Name]
 
 [Brief description of what it does, the tech stack, and key responsibilities]
 

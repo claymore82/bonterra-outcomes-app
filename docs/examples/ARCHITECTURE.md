@@ -105,7 +105,7 @@ Automated deployment workflows handle the full lifecycle:
 - **Pre-deployment checks**: Linting, Prettier, and TypeScript validation
 - **Environment cleanup**: Ephemeral environments auto-delete when branches close
 - **Stage locking**: Prevents deployment conflicts
-- **AWS OIDC auth**: No long-lived credentials
+- **AWS OIDC auth**: No long-lived credentials (uses GitHub's OIDC provider for temporary credentials)
 
 **Environments:**
 
@@ -114,8 +114,6 @@ Automated deployment workflows handle the full lifecycle:
 | Personal dev | `<your-name>` | Individual development (`sst dev`) |
 | Per-branch | `pr-<number>` | CI preview environments |
 | Shared | `dev`, `staging`, `prod` | Team environments |
-
-**AWS Services**: CloudFront (CDN), Lambda (Next.js SSR + API routes), S3 (static assets), CloudFormation (infrastructure management)
 
 **Key Interactions**:
 1. **User → Next.js Pages**: Browser requests trigger server-side rendering in Lambda, returns HTML
