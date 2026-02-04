@@ -1,0 +1,56 @@
+# ==============================================================================
+# Confluence Preview Cleanup - Template (consumer repos)
+# ==============================================================================
+#
+# Deletes preview pages under the Drafts container when a PR is closed.
+# Runtime tooling is downloaded from a pinned bon-architect release.
+#
+# ============================================================================== 
+
+name: Confluence Preview Cleanup
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: read
+
+jobs:
+  cleanup:
+    name: Cleanup Preview Pages
+    runs-on: ubuntu-latest
+
+    env:
+      BON_DOCS_TOOLCHAIN_VERSION: v0.1.5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+
+      - name: Acquire docs runtime bundle
+        uses: bonterratech/bon-architect/.github/actions/bonterra-docs-runtime@v0.1.5
+        with:
+          out_dir: /tmp/bonterra-docs-runtime
+
+      - name: Install Python dependencies (runtime bundle)
+        working-directory: /tmp/bonterra-docs-runtime/tooling/scripts/confluence
+        run: uv sync --locked
+
+      - name: Delete preview pages
+        env:
+          CONFLUENCE_API_TOKEN: ${{ secrets.CONFLUENCE_API_TOKEN }}
+          CONFLUENCE_SPACE_KEY: ${{ vars.CONFLUENCE_SPACE_KEY }}
+          CONFLUENCE_EMAIL: ${{ vars.CONFLUENCE_EMAIL }}
+        run: |
+          # Delete pages by prefix (PR number)
+          PREFIX="[PR-${{ github.event.pull_request.number }}]"
+          uv run --project /tmp/bonterra-docs-runtime/tooling/scripts/confluence \
+            python3 /tmp/bonterra-docs-runtime/tooling/scripts/confluence/delete-by-prefix.py \
+              --space-key "${{ vars.CONFLUENCE_SPACE_KEY }}" \
+              --prefix "$PREFIX" || true

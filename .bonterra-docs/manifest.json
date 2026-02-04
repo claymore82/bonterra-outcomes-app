@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "tool": "bonterra-docs",
+  "sourceRepo": "bonterratech/bon-architect",
+  "installedByVersion": "0.1.0",
+  "installedAt": "2026-02-04T10:48:31.496Z",
+  "mode": "lite",
+  "docsDir": "docs",
+  "managedFiles": {
+    ".github/workflows/sync-confluence.yml": {
+      "sha256": "2c162800f67645b8db595d2ef092b1b6953f605e831bf51b05aa875a561f4cbf"
+    },
+    ".github/workflows/sync-confluence-preview.yml": {
+      "sha256": "05e4c53c61a2c6fafeecc6f8eb8656e28bd8bc8f1e301366b14d806505ea2371"
+    },
+    ".github/workflows/sync-confluence-cleanup.yml": {
+      "sha256": "20d761eacecbda6515c202b0af412ef8def0a2cc25fcc914d988816f832dcc58"
+    },
+    "tooling/.markdownlint.json": {
+      "sha256": "58d316c892e81cfb4a216ae42b4acf15db4761e3521ca9ea7b9e9d71e19bc14a"
+    },
+    "tooling/lint-rules/ds-required-sections.js": {
+      "sha256": "b7d130bc1af4d71430fd7f3c312a56bde20478359ebeb9d0f428984b8ba82d20"
+    },
+    "tooling/lint-rules/itd-naming-convention.js": {
+      "sha256": "d67cbb2f937ebe4905fac646de5adf3eee3c256f43d0724dd19de67b3443d6ec"
+    },
+    "tooling/lint-rules/itd-required-sections.js": {
+      "sha256": "cf82be8bf96be8b183f5e9200c84958d49cbc797c7bb807d383b18828c497b56"
+    },
+    "tooling/lint-rules/itd-single-selected-option.js": {
+      "sha256": "9bd7f6db0245964217b26401d8fb290c6106e04f2135bed692eb10dbcda34b4d"
+    },
+    "tooling/lint-rules/itd-valid-sections.js": {
+      "sha256": "065468fa46f85517ecc464842cb234bb7643effa175ae421d612be22a6186f5d"
+    },
+    "tooling/vale-styles/config/vocabularies/Bonterra/.gitkeep": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tooling/scripts/run-vale.sh": {
+      "sha256": "d5367d660d688fa54d32589647f9ef61928f1f40aad4f4d8491ea7733e05bc4a"
+    },
+    "tooling/scripts/build-vocab.sh": {
+      "sha256": "535c051a6aa76151877795f1e8393dafa6e8be3f435245459d72dd4145297ea6"
+    },
+    ".vale.ini": {
+      "sha256": "0b931d35b27d1ed94ff050cbf6f9f9d2769eb40cd1d83b3d0b619705fc92a029"
+    },
+    "docs/01-general/.gitkeep": {
+      "sha256": "a51f6c542419d5bbe9998cd3ac0b329a8c814115e91b3bb75eeae5c79cdec6d6"
+    },
+    "docs/02-auth/.gitkeep": {
+      "sha256": "5fbca7974f4b837f8c54463d208e911c4f66d0cd59a27b5f3917510f4d5a266d"
+    },
+    "docs/README.md": {
+      "sha256": "32bc0cb3f8cbe5fe40b455406937a8f59b1e367ebaa37235b1520d6686ec6933"
+    },
+    "docs/core-data-structures/.gitkeep": {
+      "sha256": "ddd6f37a9483cc6441c1fd45e5a94a18bff9356bacaf792d39b08b7c59c35cb2"
+    },
+    "docs/examples/01-general/GENERAL-001-framework-selection.md": {
+      "sha256": "27362e15aeee2b3aa7dae8a1b4b92c8a0446ececfd45c835e58a45d324e2c353"
+    },
+    "docs/examples/01-general/GENERAL-002-monorepo-structure.md": {
+      "sha256": "76da4eb650e23d5e82924a219b25374b90734e5a4d84358f9bc43339c283a9f9"
+    },
+    "docs/examples/ARCHITECTURE.md": {
+      "sha256": "8ba660a4dd2f70fa27d7bdb3617642dcd4ae8957175852ed9a5559b5922cacf2"
+    },
+    "docs/guides/stitch-setup.md": {
+      "sha256": "94b8eecef00e780f8f6382cb0e9bb4953dede1cb61f9864cc4d557fa26dae5cb"
+    },
+    "docs/templates/architecture-template.md": {
+      "sha256": "bf043bc92f05c10406a0a9607cfb18b05806766d1fa3d043f9ea5e849e46a39a"
+    },
+    "docs/templates/data-structure-template.md": {
+      "sha256": "5537600af89fe476658cc7c18ee0f2ef3ec30c65193ef077444ea8fbd782067a"
+    },
+    "docs/templates/itd-template.md": {
+      "sha256": "1eb7251546c52e6da6a82748c51e2a21860e7eb32d4d94ee30452bbaf738e3d0"
+    }
+  }
+}

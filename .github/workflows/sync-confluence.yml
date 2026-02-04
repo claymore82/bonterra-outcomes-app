@@ -1,0 +1,119 @@
+# ==============================================================================
+# Confluence Sync Workflow (Production) - Template (consumer repos)
+# ==============================================================================
+#
+# This workflow is managed by bonterra-docs (SDD-001).
+# It downloads a pinned bon-architect runtime bundle (no vendored sync scripts).
+#
+# Required Configuration:
+#   Secrets:
+#     - CONFLUENCE_API_TOKEN
+#   Variables:
+#     - CONFLUENCE_EMAIL
+#     - CONFLUENCE_SPACE_KEY
+#     - CONFLUENCE_PARENT_ID
+#
+# ============================================================================== 
+
+name: Sync to Confluence
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'framework/**'
+      - 'tooling/**'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Run in dry-run mode (no actual changes)'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  sync:
+    name: Sync Framework Docs
+    runs-on: ubuntu-latest
+
+    env:
+      # Pin the runtime bundle. Update via bonterra-docs upgrade or manual edit.
+      BON_DOCS_TOOLCHAIN_VERSION: v0.1.5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Cache Mermaid CLI
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-mermaid-cli-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-mermaid-cli-
+
+      - name: Install Pandoc
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc
+
+      - name: Install Mermaid CLI
+        run: npm install -g @mermaid-js/mermaid-cli
+
+      # NOTE: No npm ci here. Docs workflows should not require application deps.
+
+      - name: Docs quality gates
+        uses: bonterratech/bon-architect/.github/actions/bonterra-docs-quality-gates@v0.1.5
+        with:
+          docs_dir: docs
+
+      - name: Validate configuration
+        run: |
+          missing=""
+          [[ -z "${{ secrets.CONFLUENCE_API_TOKEN }}" ]] && missing="$missing CONFLUENCE_API_TOKEN(secret)"
+          [[ -z "${{ vars.CONFLUENCE_EMAIL }}" ]] && missing="$missing CONFLUENCE_EMAIL(var)"
+          [[ -z "${{ vars.CONFLUENCE_SPACE_KEY }}" ]] && missing="$missing CONFLUENCE_SPACE_KEY(var)"
+          [[ -z "${{ vars.CONFLUENCE_PARENT_ID }}" ]] && missing="$missing CONFLUENCE_PARENT_ID(var)"
+
+          if [[ -n "$missing" ]]; then
+            echo "❌ Missing required configuration:$missing"
+            echo "   Configure in: Settings → Secrets and variables → Actions"
+            exit 1
+          fi
+          echo "✅ All required configuration is set"
+
+      - name: Acquire docs runtime bundle
+        uses: bonterratech/bon-architect/.github/actions/bonterra-docs-runtime@v0.1.5
+        with:
+          out_dir: /tmp/bonterra-docs-runtime
+
+      - name: Install Python dependencies (runtime bundle)
+        working-directory: /tmp/bonterra-docs-runtime/tooling/scripts/confluence
+        run: uv sync --locked
+
+      - name: Sync to Confluence
+        env:
+          CONFLUENCE_API_TOKEN: ${{ secrets.CONFLUENCE_API_TOKEN }}
+          CONFLUENCE_SPACE_KEY: ${{ vars.CONFLUENCE_SPACE_KEY }}
+          CONFLUENCE_EMAIL: ${{ vars.CONFLUENCE_EMAIL }}
+        run: |
+          DRY_RUN_FLAG=""
+          if [[ "${{ github.event.inputs.dry_run }}" == "true" ]]; then
+            DRY_RUN_FLAG="--dry-run"
+          fi
+
+          /tmp/bonterra-docs-runtime/tooling/scripts/sync-to-confluence.sh \
+            --parent-id "${{ vars.CONFLUENCE_PARENT_ID }}" \
+            --docs-dir docs \
+            $DRY_RUN_FLAG
