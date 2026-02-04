@@ -7,6 +7,7 @@ bonstart is positioned as Bonterra's SST serverless template for AWS-hosted appl
 As teams adopt bonstart for serverless projects, they typically need to add standalone Lambda functions (cron jobs, event processors, async workers), shared code libraries (types, validation, utilities), and additional AWS resources beyond just the Next.js application. The question is whether bonstart should start with a monorepo structure or a flat structure like the frontend template.
 
 **Constraints:**
+
 - Must support SST's infrastructure-as-code patterns
 - Should accommodate growth from simple to complex serverless applications
 - Need to enable code sharing between frontend and backend Lambda functions
@@ -45,7 +46,7 @@ Real-world validation: successful SST projects in the community consistently ado
 - Template includes `packages/` directory with `packages/next` for Next.js app from day one
 - Root `package.json` uses npm workspaces to manage packages
 - Documentation must explain when/how to add `packages/functions` and `packages/shared`
-- **Template selection guidance required**: 
+- **Template selection guidance required**:
   - [Frontend template](https://github.com/bonterratech/nextjs-frontend-template): Simple Next.js sites, marketing pages, no backend infrastructure
   - bonstart: SST serverless projects needing Lambda functions, AWS resources, infrastructure-as-code
 - README should include example growth path showing future packages structure
@@ -58,4 +59,3 @@ Real-world validation: successful SST projects in the community consistently ado
 - [SST Project Structure Guide](https://guide.sst.dev/archives/organizing-serverless-projects.html)
 - [npm Workspaces Documentation](https://docs.npmjs.com/cli/v10/using-npm/workspaces)
 - [Bonterra Next.js Frontend Template](https://github.com/bonterratech/nextjs-frontend-template) - For simple sites without serverless infrastructure
-

@@ -19,11 +19,13 @@
 **THE PROBLEM**: [What question does this decision answer?]
 
 **OPTIONS CONSIDERED**:
+
 1. **[Option 1]** (Selected)
 2. [Option 2]
 3. [Option 3]
 
 **REASONING**:
+
 - Why option 1 was selected
 - Why other options were rejected
 - Performance/scale considerations
@@ -83,6 +85,7 @@ interface YourDataStructure {
 **When**: [Describe when records are created]
 
 **Implementation:**
+
 ```typescript
 async function createRecord(data: Partial<YourDataStructure>): Promise<YourDataStructure> {
   const record: YourDataStructure = {
@@ -100,11 +103,13 @@ async function createRecord(data: Partial<YourDataStructure>): Promise<YourDataS
 ### Read
 
 **Access Patterns:**
+
 - [Pattern 1]: Query by X
 - [Pattern 2]: Filter by Y
 - [Pattern 3]: Time-based access
 
 **Query Examples:**
+
 ```typescript
 // Get by ID
 const record = await db.get({ id: 'xxx' });
@@ -119,9 +124,11 @@ const records = await db.query({
 ### Update
 
 **Update Strategy:**
+
 - [Describe update approach - full replacement, partial updates, immutable, etc.]
 
 **Implementation:**
+
 ```typescript
 async function updateRecord(id: string, updates: Partial<YourDataStructure>): Promise<void> {
   await db.update({
@@ -135,6 +142,7 @@ async function updateRecord(id: string, updates: Partial<YourDataStructure>): Pr
 ### Delete
 
 **Deletion Strategy:**
+
 - [Hard delete, soft delete, TTL-based, etc.]
 - [Retention period if applicable]
 
@@ -185,10 +193,12 @@ class YourService {
 ## Monitoring and Observability
 
 ### Key Metrics
+
 - [Metric 1]: [What to measure]
 - [Metric 2]: [What to measure]
 
 ### Alerting Thresholds
+
 - [Alert 1]: [When to alert]
 - [Alert 2]: [When to alert]
 
@@ -197,4 +207,3 @@ class YourService {
 - [Related ITD-XXX]
 - [Related DS-XXX]
 - [External documentation]
-

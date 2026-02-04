@@ -5,6 +5,7 @@
 Building a new project template for Bonterra teams that need to quickly spin up AWS-hosted web applications. Teams currently struggle with initial infrastructure setup, taking 1-2 weeks to configure CI/CD, authentication, and AWS resources. Need a modern, maintainable starting point that follows Bonterra standards.
 
 **Constraints:**
+
 - Must deploy to AWS (company standard)
 - Node 22 LTS requirement (security policy)
 - TypeScript for type safety
@@ -54,4 +55,3 @@ Real-world validation from the Bongentic project shows this stack works reliably
 - [Next.js 15 Documentation](https://nextjs.org/docs)
 - [Bongentic project](https://github.com/bonterratech/bongentic) - Reference implementation
 - [SST Next.js Component](https://sst.dev/docs/component/aws/nextjs)
-
