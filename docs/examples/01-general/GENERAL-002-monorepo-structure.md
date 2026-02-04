@@ -37,7 +37,7 @@ Real-world validation: successful SST projects in the community consistently ado
 
 *Flat structure with single package.json:* While simpler initially (and appropriate for the [frontend template](https://github.com/bonterratech/nextjs-frontend-template)), this creates significant friction when teams need their first standalone Lambda function. Where does it go? How do they share code without circular dependencies? Teams end up either cramming everything into the Next.js app (wrong architecture) or doing a painful refactoring to move shared code into a separate package. The simplicity is false economy for serverless projects. If a team wants flat structure, they should use the frontend template, not bonstart.
 
-*Separate repositories:* This creates versioning hell and deployment complexity. When a team needs to update a shared type, they have to coordinate releases across multiple repos. CI/CD becomes fragmented. SST's strength is unified infrastructure-as-code, which works best in a monorepo.
+*Separate repositories:* This creates versioning hell and deployment complexity. When a team needs to update a shared type, they have to coordinate releases across multiple repos. CI/CD becomes fragmented. SST's strength comes from unified infrastructure-as-code, which works best in a monorepo.
 
 *Monorepo with /apps and /packages separation:* This structure is better for organizations with many distinct applications. For a starter template, it adds unnecessary complexity. Teams using bonstart are building one primary application that might spawn additional services - they don't need the apps/packages distinction.
 

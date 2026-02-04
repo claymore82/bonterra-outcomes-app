@@ -50,7 +50,7 @@ graph TB
     style aws fill:#fff,stroke:#ff9900,stroke-width:2px
 ```
 
-**System Boundary**: The dashed box represents what the bonstart template includes (code, configuration). Everything outside (AWS services, SST/Pulumi) is managed by SST but not part of the template itself.
+**System Boundary**: The dashed box represents what the bonstart template includes (code, configuration). SST manages everything outside that boundary (AWS services, SST/Pulumi), but those components are not part of the template itself.
 
 ## Architecture Overview
 
