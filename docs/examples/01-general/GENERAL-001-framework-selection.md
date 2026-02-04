@@ -5,6 +5,7 @@
 Building a new project template for Bonterra teams that need to quickly spin up AWS-hosted web applications. Teams currently struggle with initial infrastructure setup, taking 1-2 weeks to configure CI/CD, authentication, and AWS resources. Need a modern, maintainable starting point that follows Bonterra standards.
 
 **Constraints:**
+
 - Must deploy to AWS (company standard)
 - Node 22 LTS requirement (security policy)
 - TypeScript for type safety
@@ -26,7 +27,7 @@ What framework stack should we use for the bonstart v2 template to provide the b
 
 SST v3 provides the right level of abstraction for infrastructure-as-code. Unlike raw CloudFormation or CDK, developers can understand and modify the infrastructure without deep AWS expertise. The `sst dev` command creates an excellent local development experience, and the framework handles per-developer staging environments automatically. Type-safe resource references across infrastructure and application code prevent common configuration errors.
 
-Next.js 15 is the industry-standard React framework with a strong ecosystem and excellent TypeScript support. The App Router provides modern routing with server components, and built-in API routes eliminate the need for a separate backend. The framework integrates naturally with SST's deployment model.
+Next.js 15 is the industry-standard React framework with a strong ecosystem and excellent TypeScript support. The App Router provides modern routing with server components, and built-in API routes remove the need for a separate backend. The framework integrates naturally with SST's deployment model.
 
 Real-world validation from the Bongentic project shows this stack works reliably in production with acceptable deployment times (~5-8 minutes for CI/CD).
 
@@ -54,4 +55,3 @@ Real-world validation from the Bongentic project shows this stack works reliably
 - [Next.js 15 Documentation](https://nextjs.org/docs)
 - [Bongentic project](https://github.com/bonterratech/bongentic) - Reference implementation
 - [SST Next.js Component](https://sst.dev/docs/component/aws/nextjs)
-

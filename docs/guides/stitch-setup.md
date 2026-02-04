@@ -21,17 +21,20 @@ npm install
 ## Getting Your Tokens
 
 **GitHub Token** (for `@bonterratech/stitch-*` packages):
-1. Go to https://github.com/settings/tokens
+
+1. Go to <https://github.com/settings/tokens>
 2. Generate new token (classic) with `read:packages` scope
 3. Add to `~/.npmrc`: `//npm.pkg.github.com/:_authToken=TOKEN`
 
 **Font Awesome Token** (for `@fortawesome/*` packages):
+
 1. Obtain Font Awesome token from your team lead
 2. Add to `~/.npmrc`: `//npm.fontawesome.com/:_authToken=TOKEN`
 
 ## Why Home Directory?
 
 Using `~/.npmrc` instead of project `.npmrc`:
+
 - ✅ Works across all projects
 - ✅ Zero risk of committing secrets to git
 - ✅ Easier to manage and rotate tokens
@@ -41,7 +44,8 @@ Using `~/.npmrc` instead of project `.npmrc`:
 Running `npm install` automatically copies Stitch documentation to `stitch-ai-assets/` for Cursor IDE integration.
 
 Reference components in Cursor:
-```
+
+```text
 @Button - show me how to create a primary button
 @Stack - help me layout these components
 ```
@@ -55,7 +59,7 @@ Reference components in Cursor:
 ## Troubleshooting
 
 **401 Unauthorized during `npm install`:**
+
 - Verify tokens in `~/.npmrc` are correct and not expired
 - Ensure GitHub token has `read:packages` scope
 - Check Font Awesome Pro subscription is active
-

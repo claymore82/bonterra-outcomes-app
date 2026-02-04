@@ -1,0 +1,9 @@
+# bonterra-docs output structure
+# Used by Confluence preview/sync workflows to locate/create the parent page and naming prefix.
+
+# Format:
+# parent: <ignored>:<Confluence Parent Page Title>
+# child_prefix:<PREFIX>
+
+parent: title: bonstart (Docs) - Sandbox
+child_prefix: BONSTART

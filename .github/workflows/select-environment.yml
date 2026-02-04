@@ -82,8 +82,13 @@ jobs:
             } else {
               core.info('Using ephemeral environment based on branch');
               // No slashes in the environment name (GitHub requirement)
-              // No underscores in the environment name (SST requirement)
-              sst_stage = ref.replaceAll('/', '-').replaceAll('_', '-');
+              // SST stage must be alphanumeric + hyphens only.
+              // Replace common separators with hyphens and strip anything else.
+              sst_stage = ref
+                .replaceAll('/', '-')
+                .replaceAll('_', '-')
+                .replaceAll('.', '-')
+                .replace(/[^A-Za-z0-9-]/g, '-');
             }
 
             const sst_stage_short = sst_stage.substring(0, 16);

@@ -12,19 +12,23 @@ This directory contains Implementation/Technical Decisions (ITDs) and data struc
 ## Document Types
 
 ### Implementation/Technical Decisions (ITDs)
+
 Document significant technical choices with full context, alternatives, and reasoning.
 
 **Template**: [ITD Template](templates/itd-template.md)  
-**Examples**: 
+**Examples**:
+
 - [GENERAL-001: Framework Selection](examples/01-general/GENERAL-001-framework-selection.md)
 - [GENERAL-002: Monorepo Structure](examples/01-general/GENERAL-002-monorepo-structure.md)
 
 ### Data Structure Documentation
+
 Define data models, schemas, and architectural data decisions with ERD diagrams.
 
 **Template**: [Data Structure Template](templates/data-structure-template.md)
 
 ### Architecture Documentation
+
 High-level system architecture covering components, data flow, deployment, and quality attributes.
 
 **Template**: [Architecture Template](templates/architecture-template.md)  
@@ -32,7 +36,7 @@ High-level system architecture covering components, data flow, deployment, and q
 
 ## Organization Structure
 
-```
+```text
 docs/
 ├── README.md                    # This file
 ├── templates/                   # Templates for new docs
@@ -61,6 +65,7 @@ Use **category prefix** to avoid numbering confusion across folders:
 - `DS-XXX` - Data structure documentation
 
 **Examples:**
+
 - `GENERAL-001-framework-selection.md`
 - `AUTH-001-jwt-based-access.md`
 - `API-001-rest-conventions.md`
@@ -72,7 +77,7 @@ Use **category prefix** to avoid numbering confusion across folders:
 - ✅ All data structures have ERD diagrams
 - ✅ Cross-reference related documents
 - ✅ Include implementation examples in TypeScript
-- ✅ Document alternatives and why they were rejected
+- ✅ Document alternatives and explain why you rejected them
 - ✅ Add new ITDs when decisions change (don't edit old ones)
 
 ## Getting Started
@@ -84,10 +89,10 @@ Use **category prefix** to avoid numbering confusion across folders:
 
 ## AI-Assisted Documentation
 
-**Using AI is encouraged** to help draft ITDs. AI can help with:
+**You can use AI** to help draft ITDs. AI can help with:
+
 - Structuring reasoning and alternatives
 - Generating code examples and schemas
 - Improving clarity and completeness
 
 **Authors and reviewers remain fully accountable** for all technical decisions and content accuracy.
-
