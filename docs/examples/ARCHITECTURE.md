@@ -50,7 +50,7 @@ graph TB
     style aws fill:#fff,stroke:#ff9900,stroke-width:2px
 ```
 
-**System Boundary**: The dashed box represents what is included in the bonstart template (code, configuration). Everything outside (AWS services, SST/Pulumi) is provisioned/managed by SST but not part of the template itself.
+**System Boundary**: The dashed box represents what the bonstart template includes (code, configuration). Everything outside (AWS services, SST/Pulumi) is managed by SST but not part of the template itself.
 
 ## Architecture Overview
 
@@ -125,7 +125,7 @@ Automated deployment workflows handle the full lifecycle:
 
 1. **User → Next.js Pages**: Browser requests trigger server-side rendering in Lambda, returns HTML
 2. **User → API Routes**: Client-side code calls `/api/*` endpoints which execute in Lambda
-3. **SST Config → Application**: Infrastructure resources are imported as type-safe objects
+3. **SST Config → Application**: The app imports infrastructure resources as type-safe objects
 
 ## APIs / Interfaces
 

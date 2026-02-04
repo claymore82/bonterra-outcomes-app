@@ -77,7 +77,7 @@ Use **category prefix** to avoid numbering confusion across folders:
 - ✅ All data structures have ERD diagrams
 - ✅ Cross-reference related documents
 - ✅ Include implementation examples in TypeScript
-- ✅ Document alternatives and why they were rejected
+- ✅ Document alternatives and explain why you rejected them
 - ✅ Add new ITDs when decisions change (don't edit old ones)
 
 ## Getting Started
@@ -89,7 +89,7 @@ Use **category prefix** to avoid numbering confusion across folders:
 
 ## AI-Assisted Documentation
 
-**Using AI is encouraged** to help draft ITDs. AI can help with:
+**You can use AI** to help draft ITDs. AI can help with:
 
 - Structuring reasoning and alternatives
 - Generating code examples and schemas

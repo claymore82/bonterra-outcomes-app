@@ -27,7 +27,7 @@ What framework stack should we use for the bonstart v2 template to provide the b
 
 SST v3 provides the right level of abstraction for infrastructure-as-code. Unlike raw CloudFormation or CDK, developers can understand and modify the infrastructure without deep AWS expertise. The `sst dev` command creates an excellent local development experience, and the framework handles per-developer staging environments automatically. Type-safe resource references across infrastructure and application code prevent common configuration errors.
 
-Next.js 15 is the industry-standard React framework with a strong ecosystem and excellent TypeScript support. The App Router provides modern routing with server components, and built-in API routes eliminate the need for a separate backend. The framework integrates naturally with SST's deployment model.
+Next.js 15 is the industry-standard React framework with a strong ecosystem and excellent TypeScript support. The App Router provides modern routing with server components, and built-in API routes remove the need for a separate backend. The framework integrates naturally with SST's deployment model.
 
 Real-world validation from the Bongentic project shows this stack works reliably in production with acceptable deployment times (~5-8 minutes for CI/CD).
 
