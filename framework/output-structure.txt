@@ -5,5 +5,5 @@
 # parent: <ignored>:<Confluence Parent Page Title>
 # child_prefix:<PREFIX>
 
-parent: title: bonstart (Docs)
+parent: title: bonstart (Docs) - Sandbox
 child_prefix: BONSTART
