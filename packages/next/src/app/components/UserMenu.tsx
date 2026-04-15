@@ -104,6 +104,7 @@ export default function UserMenu() {
         <div
           style={{
             position: 'absolute',
+            top: '100%',
             right: 0,
             marginTop: '8px',
             width: '256px',

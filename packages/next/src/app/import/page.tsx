@@ -740,7 +740,7 @@ export default function BulkImportPage() {
                 </Button>
                 <Button
                   variant="primary"
-                  onPress={() => router.push('/individuals')}
+                  onPress={() => router.push('/participants')}
                 >
                   View Participants
                 </Button>
