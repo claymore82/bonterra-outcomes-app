@@ -1,4 +1,13 @@
-import { Participant, EnrolledParticipant, Program, Site, Enrollment, ServiceReceived, Touchpoint, TouchpointExtraction } from '@/types/poc';
+import {
+  Participant,
+  EnrolledParticipant,
+  Program,
+  Site,
+  Enrollment,
+  ServiceReceived,
+  Touchpoint,
+  TouchpointExtraction,
+} from '@/types/poc';
 import { CustomField } from '@/types/customFields';
 import { Assessment, AssessmentTemplate, Goal } from '@/types/assessments';
 
@@ -141,12 +150,28 @@ export const mockPrograms: Program[] = [
   {
     id: 'PROG-001',
     name: 'Emergency Shelter',
-    description: '24/7 emergency shelter providing immediate housing for individuals experiencing homelessness',
+    description:
+      '24/7 emergency shelter providing immediate housing for individuals experiencing homelessness',
     programType: 'emergency_shelter',
-    eligibilityCriteria: 'Currently experiencing homelessness, adults 18+, no substance use on premises',
-    servicesOffered: ['Emergency housing', 'Meals', 'Case management', 'Housing navigation', 'Basic hygiene facilities'],
-    enrollmentRequirements: ['Photo ID or other identification', 'Intake assessment', 'Background check'],
-    outcomeGoals: ['Secure permanent housing', 'Employment or income source', 'Connect to health services'],
+    eligibilityCriteria:
+      'Currently experiencing homelessness, adults 18+, no substance use on premises',
+    servicesOffered: [
+      'Emergency housing',
+      'Meals',
+      'Case management',
+      'Housing navigation',
+      'Basic hygiene facilities',
+    ],
+    enrollmentRequirements: [
+      'Photo ID or other identification',
+      'Intake assessment',
+      'Background check',
+    ],
+    outcomeGoals: [
+      'Secure permanent housing',
+      'Employment or income source',
+      'Connect to health services',
+    ],
     capacity: 50,
     currentEnrollment: 42,
     status: 'active',
@@ -158,12 +183,28 @@ export const mockPrograms: Program[] = [
   {
     id: 'PROG-002',
     name: 'Rapid Rehousing',
-    description: 'Short-term rental assistance and case management to help individuals quickly exit homelessness',
+    description:
+      'Short-term rental assistance and case management to help individuals quickly exit homelessness',
     programType: 'rapid_rehousing',
-    eligibilityCriteria: 'Literally homeless or at imminent risk, income below 30% AMI, able to maintain housing with support',
-    servicesOffered: ['Rental assistance up to 12 months', 'Security deposits', 'Case management', 'Housing search assistance', 'Financial literacy'],
-    enrollmentRequirements: ['Housing assessment', 'Income verification', 'Landlord references'],
-    outcomeGoals: ['Maintain stable housing for 12+ months', 'Increase income', 'Build savings'],
+    eligibilityCriteria:
+      'Literally homeless or at imminent risk, income below 30% AMI, able to maintain housing with support',
+    servicesOffered: [
+      'Rental assistance up to 12 months',
+      'Security deposits',
+      'Case management',
+      'Housing search assistance',
+      'Financial literacy',
+    ],
+    enrollmentRequirements: [
+      'Housing assessment',
+      'Income verification',
+      'Landlord references',
+    ],
+    outcomeGoals: [
+      'Maintain stable housing for 12+ months',
+      'Increase income',
+      'Build savings',
+    ],
     capacity: 30,
     currentEnrollment: 28,
     status: 'active',
@@ -175,12 +216,25 @@ export const mockPrograms: Program[] = [
   {
     id: 'PROG-003',
     name: 'Job Training & Placement',
-    description: 'Comprehensive job skills training, career counseling, and employment placement services',
+    description:
+      'Comprehensive job skills training, career counseling, and employment placement services',
     programType: 'job_training',
-    eligibilityCriteria: 'Adults 18+, authorized to work in the US, committed to program completion',
-    servicesOffered: ['Vocational training', 'Resume writing', 'Interview skills', 'Job placement', 'Work clothing', 'Transportation assistance'],
+    eligibilityCriteria:
+      'Adults 18+, authorized to work in the US, committed to program completion',
+    servicesOffered: [
+      'Vocational training',
+      'Resume writing',
+      'Interview skills',
+      'Job placement',
+      'Work clothing',
+      'Transportation assistance',
+    ],
     enrollmentRequirements: ['Application', 'Interview', 'Skills assessment'],
-    outcomeGoals: ['Complete training program', 'Secure employment', 'Retain job for 90+ days'],
+    outcomeGoals: [
+      'Complete training program',
+      'Secure employment',
+      'Retain job for 90+ days',
+    ],
     capacity: 25,
     currentEnrollment: 19,
     status: 'active',
@@ -192,12 +246,30 @@ export const mockPrograms: Program[] = [
   {
     id: 'PROG-004',
     name: 'Mental Health Support Services',
-    description: 'Comprehensive mental health counseling and support services for individuals in crisis or ongoing care',
+    description:
+      'Comprehensive mental health counseling and support services for individuals in crisis or ongoing care',
     programType: 'mental_health_services',
-    eligibilityCriteria: 'Adults experiencing mental health challenges, referral from medical provider helpful but not required',
-    servicesOffered: ['Individual therapy', 'Group counseling', 'Crisis intervention', 'Medication management', 'Peer support groups', 'Family therapy'],
-    enrollmentRequirements: ['Mental health screening', 'Release of information forms', 'Treatment goals discussion'],
-    outcomeGoals: ['Symptom reduction', 'Improved daily functioning', 'Medication adherence', 'Crisis prevention skills'],
+    eligibilityCriteria:
+      'Adults experiencing mental health challenges, referral from medical provider helpful but not required',
+    servicesOffered: [
+      'Individual therapy',
+      'Group counseling',
+      'Crisis intervention',
+      'Medication management',
+      'Peer support groups',
+      'Family therapy',
+    ],
+    enrollmentRequirements: [
+      'Mental health screening',
+      'Release of information forms',
+      'Treatment goals discussion',
+    ],
+    outcomeGoals: [
+      'Symptom reduction',
+      'Improved daily functioning',
+      'Medication adherence',
+      'Crisis prevention skills',
+    ],
     capacity: 40,
     currentEnrollment: 35,
     status: 'active',
@@ -209,12 +281,28 @@ export const mockPrograms: Program[] = [
   {
     id: 'PROG-005',
     name: 'Educational Support Program',
-    description: 'GED preparation, adult literacy, and continuing education support',
+    description:
+      'GED preparation, adult literacy, and continuing education support',
     programType: 'educational_support',
-    eligibilityCriteria: 'Adults 18+ seeking to complete high school education or improve literacy',
-    servicesOffered: ['GED classes', 'Tutoring', 'Computer skills', 'Study materials', 'Test fees covered'],
-    enrollmentRequirements: ['Educational assessment', 'Commitment letter', 'Regular attendance'],
-    outcomeGoals: ['Pass GED exam', 'Improve reading level', 'Complete certification program'],
+    eligibilityCriteria:
+      'Adults 18+ seeking to complete high school education or improve literacy',
+    servicesOffered: [
+      'GED classes',
+      'Tutoring',
+      'Computer skills',
+      'Study materials',
+      'Test fees covered',
+    ],
+    enrollmentRequirements: [
+      'Educational assessment',
+      'Commitment letter',
+      'Regular attendance',
+    ],
+    outcomeGoals: [
+      'Pass GED exam',
+      'Improve reading level',
+      'Complete certification program',
+    ],
     capacity: 35,
     currentEnrollment: 22,
     status: 'active',
@@ -226,12 +314,29 @@ export const mockPrograms: Program[] = [
   {
     id: 'PROG-006',
     name: 'Transitional Housing - Youth',
-    description: 'Transitional housing program for young adults aging out of foster care',
+    description:
+      'Transitional housing program for young adults aging out of foster care',
     programType: 'transitional_housing',
-    eligibilityCriteria: 'Ages 18-24, exited foster care, not currently enrolled in other housing program',
-    servicesOffered: ['Housing up to 24 months', 'Life skills training', 'Educational support', 'Employment services', 'Financial coaching'],
-    enrollmentRequirements: ['Foster care verification', 'Background check', 'Program agreement'],
-    outcomeGoals: ['Complete education/training', 'Secure employment', 'Transition to permanent housing', 'Build life skills'],
+    eligibilityCriteria:
+      'Ages 18-24, exited foster care, not currently enrolled in other housing program',
+    servicesOffered: [
+      'Housing up to 24 months',
+      'Life skills training',
+      'Educational support',
+      'Employment services',
+      'Financial coaching',
+    ],
+    enrollmentRequirements: [
+      'Foster care verification',
+      'Background check',
+      'Program agreement',
+    ],
+    outcomeGoals: [
+      'Complete education/training',
+      'Secure employment',
+      'Transition to permanent housing',
+      'Build life skills',
+    ],
     capacity: 15,
     currentEnrollment: 12,
     status: 'active',
@@ -264,7 +369,11 @@ export const mockSites: Site[] = [
     active: true,
     status: 'active',
     hoursOfOperation: '24/7 - Open daily',
-    accessibilityFeatures: ['Wheelchair accessible', 'ADA compliant bathrooms', 'Elevator access'],
+    accessibilityFeatures: [
+      'Wheelchair accessible',
+      'ADA compliant bathrooms',
+      'Elevator access',
+    ],
     contactPerson: 'David Williams',
     createdAt: new Date('2025-01-10'),
     updatedAt: new Date('2026-03-15'),
@@ -283,7 +392,11 @@ export const mockSites: Site[] = [
     active: true,
     status: 'active',
     hoursOfOperation: 'Mon-Fri 8am-6pm, Sat 9am-3pm',
-    accessibilityFeatures: ['Wheelchair accessible', 'Accessible parking', 'Sign language interpreters available'],
+    accessibilityFeatures: [
+      'Wheelchair accessible',
+      'Accessible parking',
+      'Sign language interpreters available',
+    ],
     contactPerson: 'Sarah Johnson',
     createdAt: new Date('2025-02-05'),
     updatedAt: new Date('2026-03-10'),
@@ -301,7 +414,11 @@ export const mockSites: Site[] = [
     programIds: ['PROG-004'], // Mental Health Services
     status: 'active',
     hoursOfOperation: 'Mon-Thu 9am-8pm, Fri 9am-5pm',
-    accessibilityFeatures: ['Wheelchair accessible', 'Sensory-friendly spaces', 'Gender-neutral restrooms'],
+    accessibilityFeatures: [
+      'Wheelchair accessible',
+      'Sensory-friendly spaces',
+      'Gender-neutral restrooms',
+    ],
     contactPerson: 'Emily Rodriguez',
     createdAt: new Date('2025-01-20'),
     updatedAt: new Date('2026-03-20'),
@@ -319,7 +436,11 @@ export const mockSites: Site[] = [
     programIds: ['PROG-002', 'PROG-006'], // Rapid Rehousing & Transitional Housing
     status: 'active',
     hoursOfOperation: 'Mon-Fri 9am-5pm, Emergency line 24/7',
-    accessibilityFeatures: ['Wheelchair accessible', 'Accessible units available', 'Service animals welcome'],
+    accessibilityFeatures: [
+      'Wheelchair accessible',
+      'Accessible units available',
+      'Service animals welcome',
+    ],
     contactPerson: 'Michael Chen',
     createdAt: new Date('2025-03-01'),
     updatedAt: new Date('2026-03-05'),
@@ -337,7 +458,11 @@ export const mockSites: Site[] = [
     programIds: ['PROG-006'], // Transitional Housing - Youth
     status: 'active',
     hoursOfOperation: 'Mon-Fri 8am-6pm, Weekend programs vary',
-    accessibilityFeatures: ['Wheelchair accessible', 'Youth-friendly spaces', 'Private counseling rooms'],
+    accessibilityFeatures: [
+      'Wheelchair accessible',
+      'Youth-friendly spaces',
+      'Private counseling rooms',
+    ],
     contactPerson: 'Sarah Johnson',
     createdAt: new Date('2025-04-15'),
     updatedAt: new Date('2026-02-28'),
@@ -377,7 +502,10 @@ export const mockEnrollments: Enrollment[] = [
     startDate: new Date('2025-01-15'),
     endDate: new Date('2025-03-30'),
     status: 'completed',
-    outcomes: ['Found permanent housing', 'Connected to Rapid Rehousing program'],
+    outcomes: [
+      'Found permanent housing',
+      'Connected to Rapid Rehousing program',
+    ],
     servicesReceived: [
       {
         id: 'SVC-001',
@@ -386,7 +514,7 @@ export const mockEnrollments: Enrollment[] = [
         amount: 75,
         unit: 'nights',
         providedBy: 'Downtown Emergency Shelter',
-        notes: 'Safe overnight accommodation'
+        notes: 'Safe overnight accommodation',
       },
       {
         id: 'SVC-002',
@@ -395,7 +523,7 @@ export const mockEnrollments: Enrollment[] = [
         amount: 15,
         unit: 'sessions',
         providedBy: 'David Williams',
-        notes: 'Weekly case management meetings'
+        notes: 'Weekly case management meetings',
       },
       {
         id: 'SVC-003',
@@ -404,8 +532,8 @@ export const mockEnrollments: Enrollment[] = [
         amount: 225,
         unit: 'meals',
         providedBy: 'Downtown Emergency Shelter',
-        notes: '3 meals per day for 75 days'
-      }
+        notes: '3 meals per day for 75 days',
+      },
     ],
     outcomeGoals: ['Secure permanent housing', 'Employment or income source'],
     notes: 'Successfully transitioned to Rapid Rehousing after 75 days',
@@ -424,7 +552,11 @@ export const mockEnrollments: Enrollment[] = [
     startDate: new Date('2025-02-15'),
     endDate: new Date('2025-05-20'),
     status: 'completed',
-    outcomes: ['Completed training program', 'Employed at local cafe', 'Retained job for 90+ days'],
+    outcomes: [
+      'Completed training program',
+      'Employed at local cafe',
+      'Retained job for 90+ days',
+    ],
     servicesReceived: [
       {
         id: 'SVC-004',
@@ -433,7 +565,7 @@ export const mockEnrollments: Enrollment[] = [
         amount: 12,
         unit: 'weeks',
         providedBy: 'Northside Community Center',
-        notes: 'Food service training program'
+        notes: 'Food service training program',
       },
       {
         id: 'SVC-005',
@@ -442,7 +574,7 @@ export const mockEnrollments: Enrollment[] = [
         amount: 1,
         unit: 'placement',
         providedBy: 'Sarah Johnson',
-        notes: 'Connected with local employer'
+        notes: 'Connected with local employer',
       },
       {
         id: 'SVC-006',
@@ -451,10 +583,14 @@ export const mockEnrollments: Enrollment[] = [
         amount: 150,
         unit: 'dollars',
         providedBy: 'Northside Community Center',
-        notes: 'Professional attire for new job'
-      }
+        notes: 'Professional attire for new job',
+      },
     ],
-    outcomeGoals: ['Complete training program', 'Secure employment', 'Retain job for 90+ days'],
+    outcomeGoals: [
+      'Complete training program',
+      'Secure employment',
+      'Retain job for 90+ days',
+    ],
     notes: 'Participant excelled in training and secured employment quickly',
     createdAt: new Date('2025-02-15'),
     updatedAt: new Date('2025-05-20'),
@@ -480,7 +616,7 @@ export const mockEnrollments: Enrollment[] = [
         amount: 2000,
         unit: 'dollars',
         providedBy: 'Hope Housing Services',
-        notes: 'Security deposit for new apartment'
+        notes: 'Security deposit for new apartment',
       },
       {
         id: 'SVC-008',
@@ -489,7 +625,7 @@ export const mockEnrollments: Enrollment[] = [
         amount: 1200,
         unit: 'dollars',
         providedBy: 'Hope Housing Services',
-        notes: 'Monthly rent assistance - month 1'
+        notes: 'Monthly rent assistance - month 1',
       },
       {
         id: 'SVC-009',
@@ -498,7 +634,7 @@ export const mockEnrollments: Enrollment[] = [
         amount: 1200,
         unit: 'dollars',
         providedBy: 'Hope Housing Services',
-        notes: 'Monthly rent assistance - month 2'
+        notes: 'Monthly rent assistance - month 2',
       },
       {
         id: 'SVC-010',
@@ -507,10 +643,14 @@ export const mockEnrollments: Enrollment[] = [
         amount: 12,
         unit: 'sessions',
         providedBy: 'Sarah Johnson',
-        notes: 'Financial literacy and tenancy skills'
-      }
+        notes: 'Financial literacy and tenancy skills',
+      },
     ],
-    outcomeGoals: ['Maintain stable housing for 12+ months', 'Increase income', 'Build savings'],
+    outcomeGoals: [
+      'Maintain stable housing for 12+ months',
+      'Increase income',
+      'Build savings',
+    ],
     notes: 'Ongoing rental assistance, participant is stable and employed',
     nextCheckIn: new Date('2026-04-16T14:00:00'), // Tomorrow at 2pm
     createdAt: new Date('2025-10-01'),
@@ -529,7 +669,8 @@ export const mockEnrollments: Enrollment[] = [
     startDate: new Date('2025-10-15'),
     endDate: new Date('2026-02-01'),
     status: 'transferred',
-    dismissalReason: 'Transferred to Job Training program - ready for next level of support',
+    dismissalReason:
+      'Transferred to Job Training program - ready for next level of support',
     outcomes: ['Stabilized housing situation', 'Ready for job training'],
     servicesReceived: [
       {
@@ -539,7 +680,7 @@ export const mockEnrollments: Enrollment[] = [
         amount: 109,
         unit: 'nights',
         providedBy: 'Downtown Emergency Shelter',
-        notes: 'Shelter stay before transfer'
+        notes: 'Shelter stay before transfer',
       },
       {
         id: 'SVC-022',
@@ -548,8 +689,8 @@ export const mockEnrollments: Enrollment[] = [
         amount: 16,
         unit: 'sessions',
         providedBy: 'David Williams',
-        notes: 'Weekly support meetings'
-      }
+        notes: 'Weekly support meetings',
+      },
     ],
     outcomeGoals: ['Stabilize situation', 'Prepare for employment'],
     notes: 'Successful transition to job training program',
@@ -577,7 +718,7 @@ export const mockEnrollments: Enrollment[] = [
         amount: 8,
         unit: 'weeks',
         providedBy: 'Northside Community Center',
-        notes: 'IT certification program - ongoing'
+        notes: 'IT certification program - ongoing',
       },
       {
         id: 'SVC-012',
@@ -586,10 +727,14 @@ export const mockEnrollments: Enrollment[] = [
         amount: 200,
         unit: 'dollars',
         providedBy: 'Northside Community Center',
-        notes: 'Monthly bus pass'
-      }
+        notes: 'Monthly bus pass',
+      },
     ],
-    outcomeGoals: ['Complete training program', 'Secure employment', 'Retain job for 90+ days'],
+    outcomeGoals: [
+      'Complete training program',
+      'Secure employment',
+      'Retain job for 90+ days',
+    ],
     notes: 'Participant showing strong progress in IT training',
     nextCheckIn: new Date('2026-04-15T10:30:00'), // Today at 10:30am
     nextCheckInZoomLink: 'https://zoom.us/j/123456789', // Virtual check-in
@@ -609,7 +754,8 @@ export const mockEnrollments: Enrollment[] = [
     startDate: new Date('2025-11-01'),
     endDate: new Date('2025-12-15'),
     status: 'dismissed',
-    dismissalReason: 'Repeated violations of shelter rules - substance use on premises',
+    dismissalReason:
+      'Repeated violations of shelter rules - substance use on premises',
     outcomes: ['Connected to substance abuse treatment program'],
     servicesReceived: [
       {
@@ -619,7 +765,7 @@ export const mockEnrollments: Enrollment[] = [
         amount: 44,
         unit: 'nights',
         providedBy: 'Downtown Emergency Shelter',
-        notes: 'Shelter stay before dismissal'
+        notes: 'Shelter stay before dismissal',
       },
       {
         id: 'SVC-020',
@@ -628,11 +774,12 @@ export const mockEnrollments: Enrollment[] = [
         amount: 1,
         unit: 'referral',
         providedBy: 'David Williams',
-        notes: 'Connected to substance abuse treatment'
-      }
+        notes: 'Connected to substance abuse treatment',
+      },
     ],
     outcomeGoals: ['Secure permanent housing', 'Address substance use'],
-    notes: 'Participant dismissed but successfully connected to appropriate treatment services',
+    notes:
+      'Participant dismissed but successfully connected to appropriate treatment services',
     createdAt: new Date('2025-11-01'),
     updatedAt: new Date('2025-12-15'),
   },
@@ -657,7 +804,7 @@ export const mockEnrollments: Enrollment[] = [
         amount: 20,
         unit: 'sessions',
         providedBy: 'Westside Health & Wellness Hub',
-        notes: 'Weekly therapy sessions'
+        notes: 'Weekly therapy sessions',
       },
       {
         id: 'SVC-014',
@@ -666,7 +813,7 @@ export const mockEnrollments: Enrollment[] = [
         amount: 8,
         unit: 'sessions',
         providedBy: 'Westside Health & Wellness Hub',
-        notes: 'Peer support group meetings'
+        notes: 'Peer support group meetings',
       },
       {
         id: 'SVC-015',
@@ -675,11 +822,16 @@ export const mockEnrollments: Enrollment[] = [
         amount: 3,
         unit: 'appointments',
         providedBy: 'Westside Health & Wellness Hub',
-        notes: 'Psychiatric consultations'
-      }
+        notes: 'Psychiatric consultations',
+      },
     ],
-    outcomeGoals: ['Symptom reduction', 'Improved daily functioning', 'Medication adherence'],
-    notes: 'Participant showing significant improvement in mental health stability',
+    outcomeGoals: [
+      'Symptom reduction',
+      'Improved daily functioning',
+      'Medication adherence',
+    ],
+    notes:
+      'Participant showing significant improvement in mental health stability',
     nextCheckIn: new Date('2026-04-14T09:00:00'), // Yesterday at 9am (overdue)
     createdAt: new Date('2026-01-20'),
     updatedAt: new Date('2026-03-25'),
@@ -706,7 +858,7 @@ export const mockEnrollments: Enrollment[] = [
         amount: 80,
         unit: 'hours',
         providedBy: 'Northside Community Center',
-        notes: 'GED preparation course'
+        notes: 'GED preparation course',
       },
       {
         id: 'SVC-017',
@@ -715,7 +867,7 @@ export const mockEnrollments: Enrollment[] = [
         amount: 12,
         unit: 'sessions',
         providedBy: 'Northside Community Center',
-        notes: 'One-on-one math tutoring'
+        notes: 'One-on-one math tutoring',
       },
       {
         id: 'SVC-018',
@@ -724,10 +876,14 @@ export const mockEnrollments: Enrollment[] = [
         amount: 150,
         unit: 'dollars',
         providedBy: 'Educational Support Program',
-        notes: 'GED exam fees covered'
-      }
+        notes: 'GED exam fees covered',
+      },
     ],
-    outcomeGoals: ['Pass GED exam', 'Improve reading level', 'Enroll in community college'],
+    outcomeGoals: [
+      'Pass GED exam',
+      'Improve reading level',
+      'Enroll in community college',
+    ],
     notes: 'Participant scheduled to take GED exam in April 2026',
     nextCheckIn: new Date('2026-04-22T15:30:00'), // Next week Tuesday at 3:30pm
     createdAt: new Date('2026-02-10'),
@@ -756,7 +912,7 @@ export const mockEnrollments: Enrollment[] = [
         amount: 10,
         unit: 'sessions',
         providedBy: 'Sarah Johnson',
-        notes: 'Family-level support and coordination'
+        notes: 'Family-level support and coordination',
       },
       {
         id: 'SVC-031',
@@ -765,11 +921,16 @@ export const mockEnrollments: Enrollment[] = [
         amount: 3500,
         unit: 'dollars',
         providedBy: 'Hope Housing Services',
-        notes: 'First month rent + security deposit for family'
-      }
+        notes: 'First month rent + security deposit for family',
+      },
     ],
-    outcomeGoals: ['Maintain stable housing', 'Increase family income', 'Children succeed in school'],
-    notes: 'Family-level enrollment provides coordinated support for entire household',
+    outcomeGoals: [
+      'Maintain stable housing',
+      'Increase family income',
+      'Children succeed in school',
+    ],
+    notes:
+      'Family-level enrollment provides coordinated support for entire household',
     createdAt: new Date('2026-01-10'),
     updatedAt: new Date('2026-03-25'),
   },
@@ -795,7 +956,7 @@ export const mockEnrollments: Enrollment[] = [
         amount: 24,
         unit: 'meetings',
         providedBy: 'Sarah Johnson',
-        notes: 'Quarterly partnership meetings and coordination'
+        notes: 'Quarterly partnership meetings and coordination',
       },
       {
         id: 'SVC-033',
@@ -804,11 +965,16 @@ export const mockEnrollments: Enrollment[] = [
         amount: 5,
         unit: 'sessions',
         providedBy: 'Northside Community Center',
-        notes: 'Staff training on referral processes'
-      }
+        notes: 'Staff training on referral processes',
+      },
     ],
-    outcomeGoals: ['Strengthen partnership', 'Increase student referrals', 'Improve educational outcomes'],
-    notes: 'Institutional partnership with Seattle Public Schools for student support services',
+    outcomeGoals: [
+      'Strengthen partnership',
+      'Increase student referrals',
+      'Improve educational outcomes',
+    ],
+    notes:
+      'Institutional partnership with Seattle Public Schools for student support services',
     createdAt: new Date('2025-09-01'),
     updatedAt: new Date('2026-03-20'),
   },
@@ -823,7 +989,8 @@ export const mockTouchpoints: Touchpoint[] = [
     participantId: 'P-001',
     caseWorkerId: '1', // Sarah Johnson
     touchpointType: 'in-person',
-    content: 'Met with John today at the Hope Housing office. He has been in his new apartment for 2 weeks now and things are going well. We discussed his budget and he showed me his work schedule - he is working 30 hours per week at the cafe making $15/hour. He paid his first month of utilities on time. We reviewed his savings goal and he has saved $200 so far. He seems hopeful and motivated. Scheduled follow-up for next Tuesday.',
+    content:
+      'Met with John today at the Hope Housing office. He has been in his new apartment for 2 weeks now and things are going well. We discussed his budget and he showed me his work schedule - he is working 30 hours per week at the cafe making $15/hour. He paid his first month of utilities on time. We reviewed his savings goal and he has saved $200 so far. He seems hopeful and motivated. Scheduled follow-up for next Tuesday.',
     duration: 45,
     location: 'SITE-004',
     extractedData: {
@@ -883,7 +1050,8 @@ export const mockTouchpoints: Touchpoint[] = [
     participantId: 'P-001',
     caseWorkerId: '1',
     touchpointType: 'phone',
-    content: 'Quick check-in call with John. He mentioned he is having some minor issues with his upstairs neighbor making noise late at night. I advised him on how to address this with his landlord professionally. Also confirmed he received his rental assistance payment for this month. Call lasted about 15 minutes.',
+    content:
+      'Quick check-in call with John. He mentioned he is having some minor issues with his upstairs neighbor making noise late at night. I advised him on how to address this with his landlord professionally. Also confirmed he received his rental assistance payment for this month. Call lasted about 15 minutes.',
     duration: 15,
     extractedData: {
       servicesProvided: [
@@ -936,7 +1104,8 @@ export const mockTouchpoints: Touchpoint[] = [
     participantId: 'P-004',
     caseWorkerId: '1',
     touchpointType: 'in-person',
-    content: 'Maria came in for her weekly check-in. She just completed her GED practice test and scored 85% - she is ready for the real exam! We scheduled her official GED test for April 15th. She is very excited and nervous. I provided her with $150 to cover the test fees. She mentioned she has been talking to the community college advisor about enrolling in their healthcare program in the fall. This is a huge milestone for her.',
+    content:
+      'Maria came in for her weekly check-in. She just completed her GED practice test and scored 85% - she is ready for the real exam! We scheduled her official GED test for April 15th. She is very excited and nervous. I provided her with $150 to cover the test fees. She mentioned she has been talking to the community college advisor about enrolling in their healthcare program in the fall. This is a huge milestone for her.',
     duration: 60,
     location: 'SITE-002',
     extractedData: {
@@ -961,13 +1130,15 @@ export const mockTouchpoints: Touchpoint[] = [
         {
           goal: 'Complete GED',
           status: 'positive',
-          notes: 'Scored 85% on practice test, scheduled for real exam April 15',
+          notes:
+            'Scored 85% on practice test, scheduled for real exam April 15',
           percentComplete: 90,
         },
         {
           goal: 'Enroll in community college',
           status: 'positive',
-          notes: 'Talking with community college advisor about healthcare program',
+          notes:
+            'Talking with community college advisor about healthcare program',
           percentComplete: 30,
         },
       ],
@@ -1015,7 +1186,8 @@ export const mockTouchpoints: Touchpoint[] = [
     participantId: 'P-002',
     caseWorkerId: '2', // Michael Chen
     touchpointType: 'in-person',
-    content: 'Jane attended her IT training session today. She has completed 6 out of 10 modules for her certification. Instructor reports she is doing excellent work. Jane mentioned she is struggling with transportation costs - her monthly bus pass ran out and she needs help getting to class. I provided her with $200 for another monthly pass and some gas cards. We also discussed resume building and she will attend our resume workshop next week.',
+    content:
+      'Jane attended her IT training session today. She has completed 6 out of 10 modules for her certification. Instructor reports she is doing excellent work. Jane mentioned she is struggling with transportation costs - her monthly bus pass ran out and she needs help getting to class. I provided her with $200 for another monthly pass and some gas cards. We also discussed resume building and she will attend our resume workshop next week.',
     duration: 40,
     location: 'SITE-002',
     extractedData: {
@@ -1077,7 +1249,8 @@ export const mockTouchpoints: Touchpoint[] = [
     participantId: 'P-003',
     caseWorkerId: '3', // Emily Rodriguez
     touchpointType: 'in-person',
-    content: 'Emergency session with Michael today. He called saying he was having a crisis and thoughts of self-harm. Saw him immediately at the wellness center. We talked for 90 minutes. He has been struggling with managing his medication - he ran out 3 days ago and did not call to refill. I helped him contact the pharmacy and his psychiatrist for an emergency refill. We also developed a crisis safety plan together. He agreed to check in daily this week. Psychiatrist wants to see him tomorrow for medication management.',
+    content:
+      'Emergency session with Michael today. He called saying he was having a crisis and thoughts of self-harm. Saw him immediately at the wellness center. We talked for 90 minutes. He has been struggling with managing his medication - he ran out 3 days ago and did not call to refill. I helped him contact the pharmacy and his psychiatrist for an emergency refill. We also developed a crisis safety plan together. He agreed to check in daily this week. Psychiatrist wants to see him tomorrow for medication management.',
     duration: 90,
     location: 'SITE-003',
     extractedData: {
@@ -1159,7 +1332,8 @@ export const mockTouchpoints: Touchpoint[] = [
     participantId: 'P-001',
     caseWorkerId: '4', // David Williams
     touchpointType: 'in-person',
-    content: 'John completed his housing application today! We worked together on the paperwork for rapid rehousing program. He has all the required documents including pay stubs from his new job at the cafe. He will start work next week. The housing coordinator reviewed his application and approved him for the rapid rehousing program starting March 30. John is relieved and excited to have his own place.',
+    content:
+      'John completed his housing application today! We worked together on the paperwork for rapid rehousing program. He has all the required documents including pay stubs from his new job at the cafe. He will start work next week. The housing coordinator reviewed his application and approved him for the rapid rehousing program starting March 30. John is relieved and excited to have his own place.',
     duration: 75,
     location: 'SITE-001',
     extractedData: {
@@ -1241,7 +1415,13 @@ export const mockCustomFields: CustomField[] = [
     label: 'Veteran Status',
     fieldType: 'dropdown',
     required: false,
-    options: ['Yes', 'No', "Client doesn't know", 'Client prefers not to answer', 'Data not collected'],
+    options: [
+      'Yes',
+      'No',
+      "Client doesn't know",
+      'Client prefers not to answer',
+      'Data not collected',
+    ],
     helpText: 'U.S. military veteran status',
     visibleInIntake: true,
     visibleInProfile: true,
@@ -1287,7 +1467,12 @@ export const mockCustomFields: CustomField[] = [
     label: 'Ethnicity',
     fieldType: 'dropdown',
     required: false,
-    options: ['Hispanic/Latina/e/o', 'Non-Hispanic/Non-Latina/e/o', 'Client prefers not to answer', 'Data not collected'],
+    options: [
+      'Hispanic/Latina/e/o',
+      'Non-Hispanic/Non-Latina/e/o',
+      'Client prefers not to answer',
+      'Data not collected',
+    ],
     helpText: 'HMIS standard ethnicity field',
     visibleInIntake: true,
     visibleInProfile: true,
@@ -1358,7 +1543,7 @@ export const mockCustomFields: CustomField[] = [
     programSpecific: true,
     programIds: ['PROG-002', 'PROG-006'],
     hmisCompliant: false,
-    appliesTo: "individual" as const,
+    appliesTo: 'individual' as const,
     profiles: [],
     synonyms: [],
     order: 6,
@@ -1418,7 +1603,7 @@ export const mockCustomFields: CustomField[] = [
     programSpecific: true,
     programIds: ['PROG-001', 'PROG-002', 'PROG-006'],
     hmisCompliant: true,
-    appliesTo: "individual" as const,
+    appliesTo: 'individual' as const,
     profiles: [],
     synonyms: [],
     order: 8,
@@ -1447,7 +1632,7 @@ export const mockCustomFields: CustomField[] = [
     programSpecific: true,
     programIds: ['PROG-003'],
     hmisCompliant: false,
-    appliesTo: "individual" as const,
+    appliesTo: 'individual' as const,
     profiles: [],
     synonyms: [],
     order: 9,
@@ -1475,7 +1660,7 @@ export const mockCustomFields: CustomField[] = [
     programSpecific: true,
     programIds: ['PROG-005'],
     hmisCompliant: false,
-    appliesTo: "individual" as const,
+    appliesTo: 'individual' as const,
     profiles: [],
     synonyms: [],
     order: 10,
@@ -1506,7 +1691,7 @@ export const mockCustomFields: CustomField[] = [
     programSpecific: true,
     programIds: ['PROG-002'],
     hmisCompliant: false,
-    appliesTo: "individual" as const,
+    appliesTo: 'individual' as const,
     profiles: [],
     synonyms: [],
     order: 11,

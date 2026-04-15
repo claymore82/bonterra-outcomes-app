@@ -21,28 +21,39 @@ export async function POST(request: NextRequest) {
   (async () => {
     try {
       const body = await request.json();
-      const { messages, availablePrograms = [], availableCaseWorkers = [], customFields = [], enrolleeType = 'participant' } = body;
+      const {
+        messages,
+        availablePrograms = [],
+        availableCaseWorkers = [],
+        customFields = [],
+        enrolleeType = 'participant',
+      } = body;
 
       // Build program list
-      const programList = availablePrograms.length > 0
-        ? `\n\nAvailable programs:\n${availablePrograms.map((p: any) => `- ${p.name}`).join('\n')}`
-        : '';
+      const programList =
+        availablePrograms.length > 0
+          ? `\n\nAvailable programs:\n${availablePrograms.map((p: any) => `- ${p.name}`).join('\n')}`
+          : '';
 
       // Build case worker list
-      const caseWorkerList = availableCaseWorkers.length > 0
-        ? `\n\nAvailable case workers:\n${availableCaseWorkers.map((cw: any) => `- ${cw.name}`).join('\n')}`
-        : '';
+      const caseWorkerList =
+        availableCaseWorkers.length > 0
+          ? `\n\nAvailable case workers:\n${availableCaseWorkers.map((cw: any) => `- ${cw.name}`).join('\n')}`
+          : '';
 
       // Build custom fields description
-      const customFieldsDesc = customFields.length > 0
-        ? `\n\nProgram-specific demographics to extract:\n${customFields
-            .map((f: any) => {
-              const opts = f.options ? ` (options: ${f.options.join(', ')})` : '';
-              const req = f.required ? ' [REQUIRED]' : ' [OPTIONAL]';
-              return `- ${f.label} (${f.fieldType})${opts}${req}`;
-            })
-            .join('\n')}`
-        : '';
+      const customFieldsDesc =
+        customFields.length > 0
+          ? `\n\nProgram-specific demographics to extract:\n${customFields
+              .map((f: any) => {
+                const opts = f.options
+                  ? ` (options: ${f.options.join(', ')})`
+                  : '';
+                const req = f.required ? ' [REQUIRED]' : ' [OPTIONAL]';
+                return `- ${f.label} (${f.fieldType})${opts}${req}`;
+              })
+              .join('\n')}`
+          : '';
 
       // Build system prompt based on enrollee type
       let systemPrompt = '';
@@ -281,9 +292,14 @@ CONVERSATION RULES:
                 const parsed = JSON.parse(jsonMatch[1]);
 
                 // Look up program ID if program name is provided
-                if (parsed.program && !parsed.programId && availablePrograms.length > 0) {
+                if (
+                  parsed.program &&
+                  !parsed.programId &&
+                  availablePrograms.length > 0
+                ) {
                   const matchedProgram = availablePrograms.find(
-                    (p: any) => p.name.toLowerCase() === parsed.program.toLowerCase()
+                    (p: any) =>
+                      p.name.toLowerCase() === parsed.program.toLowerCase(),
                   );
                   if (matchedProgram) {
                     parsed.programId = matchedProgram.id;
@@ -291,9 +307,14 @@ CONVERSATION RULES:
                 }
 
                 // Look up case worker ID if case worker name is provided
-                if (parsed.caseWorker && !parsed.caseWorkerId && availableCaseWorkers.length > 0) {
+                if (
+                  parsed.caseWorker &&
+                  !parsed.caseWorkerId &&
+                  availableCaseWorkers.length > 0
+                ) {
                   const matchedCaseWorker = availableCaseWorkers.find(
-                    (cw: any) => cw.name.toLowerCase() === parsed.caseWorker.toLowerCase()
+                    (cw: any) =>
+                      cw.name.toLowerCase() === parsed.caseWorker.toLowerCase(),
                   );
                   if (matchedCaseWorker) {
                     parsed.caseWorkerId = matchedCaseWorker.id;

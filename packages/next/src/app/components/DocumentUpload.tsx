@@ -24,7 +24,12 @@ interface DocumentExtractionResult {
   documentNumber?: ExtractedField;
 }
 
-export default function DocumentUpload({ onExtract, disabled, isVisible = true, onToggleVisibility }: DocumentUploadProps) {
+export default function DocumentUpload({
+  onExtract,
+  disabled,
+  isVisible = true,
+  onToggleVisibility,
+}: DocumentUploadProps) {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [isExtracting, setIsExtracting] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -80,65 +85,72 @@ export default function DocumentUpload({ onExtract, disabled, isVisible = true, 
     }
   }, []);
 
-  const extractDocument = useCallback(async (imageData: string) => {
-    setIsExtracting(true);
-    setError(null);
+  const extractDocument = useCallback(
+    async (imageData: string) => {
+      setIsExtracting(true);
+      setError(null);
 
-    try {
-      const response = await fetch('/api/extract-document', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          image: imageData,
-        }),
-      });
+      try {
+        const response = await fetch('/api/extract-document', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            image: imageData,
+          }),
+        });
 
-      if (!response.ok) {
-        throw new Error('Failed to extract data');
+        if (!response.ok) {
+          throw new Error('Failed to extract data');
+        }
+
+        const result: DocumentExtractionResult = await response.json();
+
+        console.log('Document extraction result:', result);
+
+        // Convert to intake data format
+        const extracted: any = {
+          confidence: {},
+        };
+
+        if (result.firstName) {
+          extracted.firstName = result.firstName.value;
+          extracted.confidence.firstName = result.firstName.confidence;
+        }
+
+        if (result.lastName) {
+          extracted.lastName = result.lastName.value;
+          extracted.confidence.lastName = result.lastName.confidence;
+        }
+
+        if (result.dateOfBirth) {
+          extracted.dateOfBirth = result.dateOfBirth.value;
+          extracted.confidence.dateOfBirth = result.dateOfBirth.confidence;
+        }
+
+        if (result.address) {
+          extracted.address = result.address.value;
+          extracted.confidence.address = result.address.confidence;
+        }
+
+        console.log('Extracted data to pass:', extracted);
+
+        onExtract(extracted);
+        setShowModal(false);
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : 'Failed to extract document data',
+        );
+        console.error(err);
+      } finally {
+        setIsExtracting(false);
       }
-
-      const result: DocumentExtractionResult = await response.json();
-
-      console.log('Document extraction result:', result);
-
-      // Convert to intake data format
-      const extracted: any = {
-        confidence: {},
-      };
-
-      if (result.firstName) {
-        extracted.firstName = result.firstName.value;
-        extracted.confidence.firstName = result.firstName.confidence;
-      }
-
-      if (result.lastName) {
-        extracted.lastName = result.lastName.value;
-        extracted.confidence.lastName = result.lastName.confidence;
-      }
-
-      if (result.dateOfBirth) {
-        extracted.dateOfBirth = result.dateOfBirth.value;
-        extracted.confidence.dateOfBirth = result.dateOfBirth.confidence;
-      }
-
-      if (result.address) {
-        extracted.address = result.address.value;
-        extracted.confidence.address = result.address.confidence;
-      }
-
-      console.log('Extracted data to pass:', extracted);
-
-      onExtract(extracted);
-      setShowModal(false);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to extract document data');
-      console.error(err);
-    } finally {
-      setIsExtracting(false);
-    }
-  }, [onExtract]);
+    },
+    [onExtract],
+  );
 
   const handleDrop = useCallback(
     async (e: React.DragEvent) => {
@@ -150,7 +162,7 @@ export default function DocumentUpload({ onExtract, disabled, isVisible = true, 
         await processFile(files[0]);
       }
     },
-    [processFile]
+    [processFile],
   );
 
   const handleFileSelect = useCallback(
@@ -160,7 +172,7 @@ export default function DocumentUpload({ onExtract, disabled, isVisible = true, 
         await processFile(files[0]);
       }
     },
-    [processFile]
+    [processFile],
   );
 
   return (
@@ -182,7 +194,10 @@ export default function DocumentUpload({ onExtract, disabled, isVisible = true, 
             opacity: disabled ? 0.5 : 1,
             transition: 'all 0.2s',
           }}
-          onClick={() => !disabled && document.getElementById('document-upload-intake')?.click()}
+          onClick={() =>
+            !disabled &&
+            document.getElementById('document-upload-intake')?.click()
+          }
         >
           <input
             type="file"
@@ -215,7 +230,11 @@ export default function DocumentUpload({ onExtract, disabled, isVisible = true, 
 
           {/* Upload Text */}
           <Text style={{ marginBottom: '8px' }}>
-            <span style={{ color: '#2563eb', fontWeight: '600', cursor: 'pointer' }}>Click to upload</span>
+            <span
+              style={{ color: '#2563eb', fontWeight: '600', cursor: 'pointer' }}
+            >
+              Click to upload
+            </span>
             <span style={{ color: '#6b7280' }}> or drag and drop</span>
           </Text>
 
@@ -288,7 +307,13 @@ export default function DocumentUpload({ onExtract, disabled, isVisible = true, 
             onClick={(e) => e.stopPropagation()}
           >
             <Stack space="400">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
                 <Text weight="600" style={{ fontSize: '18px' }}>
                   Document Upload
                 </Text>
@@ -303,12 +328,21 @@ export default function DocumentUpload({ onExtract, disabled, isVisible = true, 
                     }}
                   >
                     <svg
-                      style={{ width: '24px', height: '24px', color: '#6b7280' }}
+                      style={{
+                        width: '24px',
+                        height: '24px',
+                        color: '#6b7280',
+                      }}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
                     </svg>
                   </button>
                 )}
@@ -348,7 +382,9 @@ export default function DocumentUpload({ onExtract, disabled, isVisible = true, 
                       animation: 'spin 1s linear infinite',
                     }}
                   />
-                  <Text style={{ marginTop: '16px' }}>Extracting data with AI...</Text>
+                  <Text style={{ marginTop: '16px' }}>
+                    Extracting data with AI...
+                  </Text>
                 </div>
               )}
 

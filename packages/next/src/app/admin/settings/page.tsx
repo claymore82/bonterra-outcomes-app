@@ -22,7 +22,9 @@ export default function SettingsPage() {
             <Text color="link">← Back to Home</Text>
           </Link>
           <Heading level={1}>Settings</Heading>
-          <Text>Configure programs, participants, and system-wide settings</Text>
+          <Text>
+            Configure programs, participants, and system-wide settings
+          </Text>
         </Stack>
 
         {/* Data Management */}
@@ -34,41 +36,51 @@ export default function SettingsPage() {
             </InlineStack>
 
             <TileLayout columns="2" columnsSM="1" space="400">
-              <Link href="/admin/demographics" style={{ textDecoration: 'none' }}>
+              <Link
+                href="/admin/demographics"
+                style={{ textDecoration: 'none' }}
+              >
                 <div
                   style={{
                     padding: '24px',
                     border: '2px solid #E5E7EB',
                     borderRadius: '12px',
-                    background: 'linear-gradient(135deg, #FFFFFF 0%, #F9FAFB 100%)',
+                    background:
+                      'linear-gradient(135deg, #FFFFFF 0%, #F9FAFB 100%)',
                     cursor: 'pointer',
                     transition: 'all 0.2s',
                     height: '100%',
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.borderColor = '#7C3AED';
-                    e.currentTarget.style.background = 'linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%)';
+                    e.currentTarget.style.background =
+                      'linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%)';
                     e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow = '0 8px 16px rgba(124, 58, 237, 0.2)';
+                    e.currentTarget.style.boxShadow =
+                      '0 8px 16px rgba(124, 58, 237, 0.2)';
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.borderColor = '#E5E7EB';
-                    e.currentTarget.style.background = 'linear-gradient(135deg, #FFFFFF 0%, #F9FAFB 100%)';
+                    e.currentTarget.style.background =
+                      'linear-gradient(135deg, #FFFFFF 0%, #F9FAFB 100%)';
                     e.currentTarget.style.transform = 'translateY(0)';
                     e.currentTarget.style.boxShadow = 'none';
                   }}
                 >
                   <Stack space="300">
-                    <div style={{
-                      width: '56px',
-                      height: '56px',
-                      borderRadius: '16px',
-                      background: 'linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      boxShadow: '0 4px 12px rgba(124, 58, 237, 0.25)',
-                    }}>
+                    <div
+                      style={{
+                        width: '56px',
+                        height: '56px',
+                        borderRadius: '16px',
+                        background:
+                          'linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: '0 4px 12px rgba(124, 58, 237, 0.25)',
+                      }}
+                    >
                       <div style={{ fontSize: '28px' }}>📋</div>
                     </div>
                     <Heading level={3}>Demographic Fields</Heading>
@@ -79,41 +91,51 @@ export default function SettingsPage() {
                 </div>
               </Link>
 
-              <Link href="/admin/touchpoint-fields" style={{ textDecoration: 'none' }}>
+              <Link
+                href="/admin/touchpoint-fields"
+                style={{ textDecoration: 'none' }}
+              >
                 <div
                   style={{
                     padding: '24px',
                     border: '2px solid #E5E7EB',
                     borderRadius: '12px',
-                    background: 'linear-gradient(135deg, #FFFFFF 0%, #F9FAFB 100%)',
+                    background:
+                      'linear-gradient(135deg, #FFFFFF 0%, #F9FAFB 100%)',
                     cursor: 'pointer',
                     transition: 'all 0.2s',
                     height: '100%',
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.borderColor = '#7C3AED';
-                    e.currentTarget.style.background = 'linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%)';
+                    e.currentTarget.style.background =
+                      'linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%)';
                     e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow = '0 8px 16px rgba(124, 58, 237, 0.2)';
+                    e.currentTarget.style.boxShadow =
+                      '0 8px 16px rgba(124, 58, 237, 0.2)';
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.borderColor = '#E5E7EB';
-                    e.currentTarget.style.background = 'linear-gradient(135deg, #FFFFFF 0%, #F9FAFB 100%)';
+                    e.currentTarget.style.background =
+                      'linear-gradient(135deg, #FFFFFF 0%, #F9FAFB 100%)';
                     e.currentTarget.style.transform = 'translateY(0)';
                     e.currentTarget.style.boxShadow = 'none';
                   }}
                 >
                   <Stack space="300">
-                    <div style={{
-                      width: '56px',
-                      height: '56px',
-                      borderRadius: '16px',
-                      background: 'linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      boxShadow: '0 4px 12px rgba(245, 158, 11, 0.25)',
-                    }}>
+                    <div
+                      style={{
+                        width: '56px',
+                        height: '56px',
+                        borderRadius: '16px',
+                        background:
+                          'linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: '0 4px 12px rgba(245, 158, 11, 0.25)',
+                      }}
+                    >
                       <div style={{ fontSize: '28px' }}>✨</div>
                     </div>
                     <Heading level={3}>Smart Fields</Heading>
@@ -142,35 +164,42 @@ export default function SettingsPage() {
                     padding: '24px',
                     border: '2px solid #E5E7EB',
                     borderRadius: '12px',
-                    background: 'linear-gradient(135deg, #FFFFFF 0%, #F9FAFB 100%)',
+                    background:
+                      'linear-gradient(135deg, #FFFFFF 0%, #F9FAFB 100%)',
                     cursor: 'pointer',
                     transition: 'all 0.2s',
                     height: '100%',
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.borderColor = '#10B981';
-                    e.currentTarget.style.background = 'linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%)';
+                    e.currentTarget.style.background =
+                      'linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%)';
                     e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow = '0 8px 16px rgba(16, 185, 129, 0.2)';
+                    e.currentTarget.style.boxShadow =
+                      '0 8px 16px rgba(16, 185, 129, 0.2)';
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.borderColor = '#E5E7EB';
-                    e.currentTarget.style.background = 'linear-gradient(135deg, #FFFFFF 0%, #F9FAFB 100%)';
+                    e.currentTarget.style.background =
+                      'linear-gradient(135deg, #FFFFFF 0%, #F9FAFB 100%)';
                     e.currentTarget.style.transform = 'translateY(0)';
                     e.currentTarget.style.boxShadow = 'none';
                   }}
                 >
                   <Stack space="300">
-                    <div style={{
-                      width: '56px',
-                      height: '56px',
-                      borderRadius: '16px',
-                      background: 'linear-gradient(135deg, #10B981 0%, #34D399 100%)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      boxShadow: '0 4px 12px rgba(16, 185, 129, 0.25)',
-                    }}>
+                    <div
+                      style={{
+                        width: '56px',
+                        height: '56px',
+                        borderRadius: '16px',
+                        background:
+                          'linear-gradient(135deg, #10B981 0%, #34D399 100%)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: '0 4px 12px rgba(16, 185, 129, 0.25)',
+                      }}
+                    >
                       <div style={{ fontSize: '28px' }}>🎯</div>
                     </div>
                     <Heading level={3}>Programs</Heading>
@@ -187,35 +216,42 @@ export default function SettingsPage() {
                     padding: '24px',
                     border: '2px solid #E5E7EB',
                     borderRadius: '12px',
-                    background: 'linear-gradient(135deg, #FFFFFF 0%, #F9FAFB 100%)',
+                    background:
+                      'linear-gradient(135deg, #FFFFFF 0%, #F9FAFB 100%)',
                     cursor: 'pointer',
                     transition: 'all 0.2s',
                     height: '100%',
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.borderColor = '#10B981';
-                    e.currentTarget.style.background = 'linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%)';
+                    e.currentTarget.style.background =
+                      'linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%)';
                     e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow = '0 8px 16px rgba(16, 185, 129, 0.2)';
+                    e.currentTarget.style.boxShadow =
+                      '0 8px 16px rgba(16, 185, 129, 0.2)';
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.borderColor = '#E5E7EB';
-                    e.currentTarget.style.background = 'linear-gradient(135deg, #FFFFFF 0%, #F9FAFB 100%)';
+                    e.currentTarget.style.background =
+                      'linear-gradient(135deg, #FFFFFF 0%, #F9FAFB 100%)';
                     e.currentTarget.style.transform = 'translateY(0)';
                     e.currentTarget.style.boxShadow = 'none';
                   }}
                 >
                   <Stack space="300">
-                    <div style={{
-                      width: '56px',
-                      height: '56px',
-                      borderRadius: '16px',
-                      background: 'linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      boxShadow: '0 4px 12px rgba(59, 130, 246, 0.25)',
-                    }}>
+                    <div
+                      style={{
+                        width: '56px',
+                        height: '56px',
+                        borderRadius: '16px',
+                        background:
+                          'linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: '0 4px 12px rgba(59, 130, 246, 0.25)',
+                      }}
+                    >
                       <div style={{ fontSize: '28px' }}>📍</div>
                     </div>
                     <Heading level={3}>Sites</Heading>
@@ -232,35 +268,42 @@ export default function SettingsPage() {
                     padding: '24px',
                     border: '2px solid #E5E7EB',
                     borderRadius: '12px',
-                    background: 'linear-gradient(135deg, #FFFFFF 0%, #F9FAFB 100%)',
+                    background:
+                      'linear-gradient(135deg, #FFFFFF 0%, #F9FAFB 100%)',
                     cursor: 'pointer',
                     transition: 'all 0.2s',
                     height: '100%',
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.borderColor = '#10B981';
-                    e.currentTarget.style.background = 'linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%)';
+                    e.currentTarget.style.background =
+                      'linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%)';
                     e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow = '0 8px 16px rgba(16, 185, 129, 0.2)';
+                    e.currentTarget.style.boxShadow =
+                      '0 8px 16px rgba(16, 185, 129, 0.2)';
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.borderColor = '#E5E7EB';
-                    e.currentTarget.style.background = 'linear-gradient(135deg, #FFFFFF 0%, #F9FAFB 100%)';
+                    e.currentTarget.style.background =
+                      'linear-gradient(135deg, #FFFFFF 0%, #F9FAFB 100%)';
                     e.currentTarget.style.transform = 'translateY(0)';
                     e.currentTarget.style.boxShadow = 'none';
                   }}
                 >
                   <Stack space="300">
-                    <div style={{
-                      width: '56px',
-                      height: '56px',
-                      borderRadius: '16px',
-                      background: 'linear-gradient(135deg, #06B6D4 0%, #22D3EE 100%)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      boxShadow: '0 4px 12px rgba(6, 182, 212, 0.25)',
-                    }}>
+                    <div
+                      style={{
+                        width: '56px',
+                        height: '56px',
+                        borderRadius: '16px',
+                        background:
+                          'linear-gradient(135deg, #06B6D4 0%, #22D3EE 100%)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: '0 4px 12px rgba(6, 182, 212, 0.25)',
+                      }}
+                    >
                       <div style={{ fontSize: '28px' }}>🛠️</div>
                     </div>
                     <Heading level={3}>Services</Heading>
@@ -283,7 +326,10 @@ export default function SettingsPage() {
             </InlineStack>
 
             <TileLayout columns="3" columnsSM="1" space="400">
-              <Link href="/admin/case-workers" style={{ textDecoration: 'none' }}>
+              <Link
+                href="/admin/case-workers"
+                style={{ textDecoration: 'none' }}
+              >
                 <div
                   style={{
                     padding: '24px',
@@ -298,7 +344,8 @@ export default function SettingsPage() {
                     e.currentTarget.style.borderColor = '#7C3AED';
                     e.currentTarget.style.backgroundColor = '#F5F3FF';
                     e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(124, 58, 237, 0.15)';
+                    e.currentTarget.style.boxShadow =
+                      '0 4px 12px rgba(124, 58, 237, 0.15)';
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.borderColor = '#E5E7EB';
@@ -308,15 +355,17 @@ export default function SettingsPage() {
                   }}
                 >
                   <Stack space="300">
-                    <div style={{
-                      width: '48px',
-                      height: '48px',
-                      borderRadius: '12px',
-                      backgroundColor: '#F3F4F6',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}>
+                    <div
+                      style={{
+                        width: '48px',
+                        height: '48px',
+                        borderRadius: '12px',
+                        backgroundColor: '#F3F4F6',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
                       <Icon name="user-tie" size="large" />
                     </div>
                     <Heading level={3}>Case Workers</Heading>

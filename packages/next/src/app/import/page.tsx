@@ -42,9 +42,16 @@ export default function BulkImportPage() {
   const [isDragging, setIsDragging] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [parsedData, setParsedData] = useState<ParsedParticipant[]>([]);
-  const [columnMapping, setColumnMapping] = useState<Record<string, string>>({});
-  const [step, setStep] = useState<'upload' | 'map' | 'preview' | 'complete'>('upload');
-  const [importResults, setImportResults] = useState<{ success: number; failed: number }>({ success: 0, failed: 0 });
+  const [columnMapping, setColumnMapping] = useState<Record<string, string>>(
+    {},
+  );
+  const [step, setStep] = useState<'upload' | 'map' | 'preview' | 'complete'>(
+    'upload',
+  );
+  const [importResults, setImportResults] = useState<{
+    success: number;
+    failed: number;
+  }>({ success: 0, failed: 0 });
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -66,22 +73,25 @@ export default function BulkImportPage() {
     }
   }, []);
 
-  const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    if (files.length > 0) {
-      setFile(files[0]);
-    }
-  }, []);
+  const handleFileSelect = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const files = Array.from(e.target.files || []);
+      if (files.length > 0) {
+        setFile(files[0]);
+      }
+    },
+    [],
+  );
 
   const parseCSV = useCallback((text: string): ParsedParticipant[] => {
-    const lines = text.split('\n').filter(line => line.trim());
+    const lines = text.split('\n').filter((line) => line.trim());
     if (lines.length < 2) return [];
 
-    const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+    const headers = lines[0].split(',').map((h) => h.trim().replace(/"/g, ''));
     const data: ParsedParticipant[] = [];
 
     for (let i = 1; i < lines.length; i++) {
-      const values = lines[i].split(',').map(v => v.trim().replace(/"/g, ''));
+      const values = lines[i].split(',').map((v) => v.trim().replace(/"/g, ''));
       const row: ParsedParticipant = { rowNumber: i };
 
       headers.forEach((header, index) => {
@@ -107,18 +117,24 @@ export default function BulkImportPage() {
       setParsedData(parsed);
 
       // Auto-detect column mapping
-      const headers = Object.keys(parsed[0] || {}).filter(k => k !== 'rowNumber');
+      const headers = Object.keys(parsed[0] || {}).filter(
+        (k) => k !== 'rowNumber',
+      );
       const mapping: Record<string, string> = {};
 
-      headers.forEach(header => {
+      headers.forEach((header) => {
         const lower = header.toLowerCase();
-        if (lower.includes('first') && lower.includes('name')) mapping[header] = 'firstName';
-        else if (lower.includes('last') && lower.includes('name')) mapping[header] = 'lastName';
-        else if (lower.includes('dob') || lower.includes('birth')) mapping[header] = 'dateOfBirth';
+        if (lower.includes('first') && lower.includes('name'))
+          mapping[header] = 'firstName';
+        else if (lower.includes('last') && lower.includes('name'))
+          mapping[header] = 'lastName';
+        else if (lower.includes('dob') || lower.includes('birth'))
+          mapping[header] = 'dateOfBirth';
         else if (lower.includes('email')) mapping[header] = 'email';
         else if (lower.includes('phone')) mapping[header] = 'phoneNumber';
         else if (lower.includes('address')) mapping[header] = 'address';
-        else if (lower.includes('gender') || lower.includes('sex')) mapping[header] = 'gender';
+        else if (lower.includes('gender') || lower.includes('sex'))
+          mapping[header] = 'gender';
       });
 
       setColumnMapping(mapping);
@@ -170,10 +186,13 @@ export default function BulkImportPage() {
           let genderCode: 0 | 1 | 2 | 3 | 4 | 5 | 99 = 99;
           if (mappedData.gender) {
             const genderLower = mappedData.gender.toLowerCase();
-            if (genderLower.includes('f') || genderLower === 'woman') genderCode = 0;
-            else if (genderLower.includes('m') || genderLower === 'man') genderCode = 1;
+            if (genderLower.includes('f') || genderLower === 'woman')
+              genderCode = 0;
+            else if (genderLower.includes('m') || genderLower === 'man')
+              genderCode = 1;
             else if (genderLower.includes('trans')) genderCode = 2;
-            else if (genderLower.includes('non') || genderLower.includes('nb')) genderCode = 3;
+            else if (genderLower.includes('non') || genderLower.includes('nb'))
+              genderCode = 3;
           }
 
           // Create participant
@@ -214,7 +233,15 @@ export default function BulkImportPage() {
     } finally {
       setIsProcessing(false);
     }
-  }, [parsedData, columnMapping, currentProgramId, currentSiteId, currentTenantId, createParticipant, createEnrollment]);
+  }, [
+    parsedData,
+    columnMapping,
+    currentProgramId,
+    currentSiteId,
+    currentTenantId,
+    createParticipant,
+    createEnrollment,
+  ]);
 
   return (
     <PageLayout>
@@ -231,60 +258,95 @@ export default function BulkImportPage() {
         {/* Step Indicator */}
         <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: '50%',
-              backgroundColor: step === 'upload' ? '#7c3aed' : '#10b981',
-              color: 'white',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontWeight: '600',
-            }}>
+            <div
+              style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: '50%',
+                backgroundColor: step === 'upload' ? '#7c3aed' : '#10b981',
+                color: 'white',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: '600',
+              }}
+            >
               1
             </div>
             <Text weight={step === 'upload' ? '600' : '400'}>Upload</Text>
           </div>
 
-          <div style={{ width: '40px', height: '2px', backgroundColor: step === 'upload' ? '#e5e7eb' : '#10b981' }} />
+          <div
+            style={{
+              width: '40px',
+              height: '2px',
+              backgroundColor: step === 'upload' ? '#e5e7eb' : '#10b981',
+            }}
+          />
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: '50%',
-              backgroundColor: step === 'upload' ? '#e5e7eb' : step === 'map' ? '#7c3aed' : '#10b981',
-              color: step === 'upload' ? '#9ca3af' : 'white',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontWeight: '600',
-            }}>
+            <div
+              style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: '50%',
+                backgroundColor:
+                  step === 'upload'
+                    ? '#e5e7eb'
+                    : step === 'map'
+                      ? '#7c3aed'
+                      : '#10b981',
+                color: step === 'upload' ? '#9ca3af' : 'white',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: '600',
+              }}
+            >
               2
             </div>
-            <Text weight={step === 'map' ? '600' : '400'} color={step === 'upload' ? 'subdued' : 'default'}>
+            <Text
+              weight={step === 'map' ? '600' : '400'}
+              color={step === 'upload' ? 'subdued' : 'default'}
+            >
               Map Columns
             </Text>
           </div>
 
-          <div style={{ width: '40px', height: '2px', backgroundColor: ['preview', 'complete'].includes(step) ? '#10b981' : '#e5e7eb' }} />
+          <div
+            style={{
+              width: '40px',
+              height: '2px',
+              backgroundColor: ['preview', 'complete'].includes(step)
+                ? '#10b981'
+                : '#e5e7eb',
+            }}
+          />
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: '50%',
-              backgroundColor: ['upload', 'map'].includes(step) ? '#e5e7eb' : step === 'preview' ? '#7c3aed' : '#10b981',
-              color: ['upload', 'map'].includes(step) ? '#9ca3af' : 'white',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontWeight: '600',
-            }}>
+            <div
+              style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: '50%',
+                backgroundColor: ['upload', 'map'].includes(step)
+                  ? '#e5e7eb'
+                  : step === 'preview'
+                    ? '#7c3aed'
+                    : '#10b981',
+                color: ['upload', 'map'].includes(step) ? '#9ca3af' : 'white',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: '600',
+              }}
+            >
               3
             </div>
-            <Text weight={step === 'preview' ? '600' : '400'} color={['upload', 'map'].includes(step) ? 'subdued' : 'default'}>
+            <Text
+              weight={step === 'preview' ? '600' : '400'}
+              color={['upload', 'map'].includes(step) ? 'subdued' : 'default'}
+            >
               Preview & Import
             </Text>
           </div>
@@ -303,14 +365,18 @@ export default function BulkImportPage() {
                   onDrop={handleDrop}
                   style={{
                     padding: '48px 24px',
-                    border: isDragging ? '2px dashed #2563eb' : '2px dashed #d1d5db',
+                    border: isDragging
+                      ? '2px dashed #2563eb'
+                      : '2px dashed #d1d5db',
                     borderRadius: '12px',
                     backgroundColor: isDragging ? '#eff6ff' : '#ffffff',
                     textAlign: 'center',
                     cursor: 'pointer',
                     transition: 'all 0.2s',
                   }}
-                  onClick={() => document.getElementById('bulk-upload')?.click()}
+                  onClick={() =>
+                    document.getElementById('bulk-upload')?.click()
+                  }
                 >
                   <input
                     type="file"
@@ -320,9 +386,17 @@ export default function BulkImportPage() {
                     onChange={handleFileSelect}
                   />
 
-                  <div style={{ fontSize: '64px', marginBottom: '16px' }}>📊</div>
+                  <div style={{ fontSize: '64px', marginBottom: '16px' }}>
+                    📊
+                  </div>
                   <Text style={{ marginBottom: '8px' }}>
-                    <span style={{ color: '#2563eb', fontWeight: '600', cursor: 'pointer' }}>
+                    <span
+                      style={{
+                        color: '#2563eb',
+                        fontWeight: '600',
+                        cursor: 'pointer',
+                      }}
+                    >
                       Click to upload
                     </span>
                     <span style={{ color: '#6b7280' }}> or drag and drop</span>
@@ -333,12 +407,14 @@ export default function BulkImportPage() {
                 </div>
               ) : (
                 <div>
-                  <div style={{
-                    padding: '16px',
-                    backgroundColor: '#f9fafb',
-                    borderRadius: '8px',
-                    border: '1px solid #e5e7eb',
-                  }}>
+                  <div
+                    style={{
+                      padding: '16px',
+                      backgroundColor: '#f9fafb',
+                      borderRadius: '8px',
+                      border: '1px solid #e5e7eb',
+                    }}
+                  >
                     <InlineStack gap="300" verticalAlign="center">
                       <div style={{ fontSize: '32px' }}>📄</div>
                       <div style={{ flex: 1 }}>
@@ -369,16 +445,25 @@ export default function BulkImportPage() {
                 </div>
               )}
 
-              <div style={{
-                padding: '16px',
-                backgroundColor: '#eff6ff',
-                borderRadius: '8px',
-                border: '1px solid #bfdbfe',
-              }}>
-                <Text weight="600" style={{ marginBottom: '8px' }}>Expected CSV Format:</Text>
-                <Text variant="sm" color="subdued" style={{ fontFamily: 'monospace', whiteSpace: 'pre' }}>
+              <div
+                style={{
+                  padding: '16px',
+                  backgroundColor: '#eff6ff',
+                  borderRadius: '8px',
+                  border: '1px solid #bfdbfe',
+                }}
+              >
+                <Text weight="600" style={{ marginBottom: '8px' }}>
+                  Expected CSV Format:
+                </Text>
+                <Text
+                  variant="sm"
+                  color="subdued"
+                  style={{ fontFamily: 'monospace', whiteSpace: 'pre' }}
+                >
                   First Name,Last Name,Date of Birth,Email,Phone,Address{'\n'}
-                  John,Smith,1985-03-15,john@email.com,555-1234,123 Main St{'\n'}
+                  John,Smith,1985-03-15,john@email.com,555-1234,123 Main St
+                  {'\n'}
                   Jane,Doe,1990-07-22,jane@email.com,555-5678,456 Oak Ave
                 </Text>
               </div>
@@ -393,25 +478,32 @@ export default function BulkImportPage() {
               <Heading level={2}>Map Columns</Heading>
               <Text>Match your CSV columns to participant fields</Text>
 
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '16px',
-                padding: '16px',
-                backgroundColor: '#f9fafb',
-                borderRadius: '8px',
-              }}>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  gap: '16px',
+                  padding: '16px',
+                  backgroundColor: '#f9fafb',
+                  borderRadius: '8px',
+                }}
+              >
                 <Text weight="600">Your Column</Text>
                 <Text weight="600">Maps To</Text>
 
                 {Object.keys(parsedData[0] || {})
-                  .filter(k => k !== 'rowNumber')
-                  .map(column => (
+                  .filter((k) => k !== 'rowNumber')
+                  .map((column) => (
                     <React.Fragment key={column}>
                       <Text>{column}</Text>
                       <select
                         value={columnMapping[column] || ''}
-                        onChange={(e) => setColumnMapping({ ...columnMapping, [column]: e.target.value })}
+                        onChange={(e) =>
+                          setColumnMapping({
+                            ...columnMapping,
+                            [column]: e.target.value,
+                          })
+                        }
                         style={{
                           padding: '8px',
                           borderRadius: '6px',
@@ -451,57 +543,140 @@ export default function BulkImportPage() {
               <Heading level={2}>Preview Import</Heading>
               <Text>{parsedData.length} participants will be imported</Text>
 
-              <div style={{
-                maxHeight: '400px',
-                overflowY: 'auto',
-                border: '1px solid #e5e7eb',
-                borderRadius: '8px',
-              }}>
+              <div
+                style={{
+                  maxHeight: '400px',
+                  overflowY: 'auto',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '8px',
+                }}
+              >
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                  <thead style={{ backgroundColor: '#f9fafb', position: 'sticky', top: 0 }}>
+                  <thead
+                    style={{
+                      backgroundColor: '#f9fafb',
+                      position: 'sticky',
+                      top: 0,
+                    }}
+                  >
                     <tr>
-                      <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid #e5e7eb' }}>
-                        <Text variant="sm" weight="600">#</Text>
+                      <th
+                        style={{
+                          padding: '12px',
+                          textAlign: 'left',
+                          borderBottom: '1px solid #e5e7eb',
+                        }}
+                      >
+                        <Text variant="sm" weight="600">
+                          #
+                        </Text>
                       </th>
-                      <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid #e5e7eb' }}>
-                        <Text variant="sm" weight="600">First Name</Text>
+                      <th
+                        style={{
+                          padding: '12px',
+                          textAlign: 'left',
+                          borderBottom: '1px solid #e5e7eb',
+                        }}
+                      >
+                        <Text variant="sm" weight="600">
+                          First Name
+                        </Text>
                       </th>
-                      <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid #e5e7eb' }}>
-                        <Text variant="sm" weight="600">Last Name</Text>
+                      <th
+                        style={{
+                          padding: '12px',
+                          textAlign: 'left',
+                          borderBottom: '1px solid #e5e7eb',
+                        }}
+                      >
+                        <Text variant="sm" weight="600">
+                          Last Name
+                        </Text>
                       </th>
-                      <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid #e5e7eb' }}>
-                        <Text variant="sm" weight="600">Date of Birth</Text>
+                      <th
+                        style={{
+                          padding: '12px',
+                          textAlign: 'left',
+                          borderBottom: '1px solid #e5e7eb',
+                        }}
+                      >
+                        <Text variant="sm" weight="600">
+                          Date of Birth
+                        </Text>
                       </th>
-                      <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid #e5e7eb' }}>
-                        <Text variant="sm" weight="600">Email</Text>
+                      <th
+                        style={{
+                          padding: '12px',
+                          textAlign: 'left',
+                          borderBottom: '1px solid #e5e7eb',
+                        }}
+                      >
+                        <Text variant="sm" weight="600">
+                          Email
+                        </Text>
                       </th>
                     </tr>
                   </thead>
                   <tbody>
                     {parsedData.map((row, idx) => {
                       const mappedData: any = {};
-                      Object.entries(columnMapping).forEach(([sourceCol, targetField]) => {
-                        if (row[sourceCol]) {
-                          mappedData[targetField] = row[sourceCol];
-                        }
-                      });
+                      Object.entries(columnMapping).forEach(
+                        ([sourceCol, targetField]) => {
+                          if (row[sourceCol]) {
+                            mappedData[targetField] = row[sourceCol];
+                          }
+                        },
+                      );
 
                       return (
                         <tr key={idx}>
-                          <td style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>
+                          <td
+                            style={{
+                              padding: '12px',
+                              borderBottom: '1px solid #e5e7eb',
+                            }}
+                          >
                             <Text variant="sm">{idx + 1}</Text>
                           </td>
-                          <td style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>
-                            <Text variant="sm">{mappedData.firstName || <em>-</em>}</Text>
+                          <td
+                            style={{
+                              padding: '12px',
+                              borderBottom: '1px solid #e5e7eb',
+                            }}
+                          >
+                            <Text variant="sm">
+                              {mappedData.firstName || <em>-</em>}
+                            </Text>
                           </td>
-                          <td style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>
-                            <Text variant="sm">{mappedData.lastName || <em>-</em>}</Text>
+                          <td
+                            style={{
+                              padding: '12px',
+                              borderBottom: '1px solid #e5e7eb',
+                            }}
+                          >
+                            <Text variant="sm">
+                              {mappedData.lastName || <em>-</em>}
+                            </Text>
                           </td>
-                          <td style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>
-                            <Text variant="sm">{mappedData.dateOfBirth || <em>-</em>}</Text>
+                          <td
+                            style={{
+                              padding: '12px',
+                              borderBottom: '1px solid #e5e7eb',
+                            }}
+                          >
+                            <Text variant="sm">
+                              {mappedData.dateOfBirth || <em>-</em>}
+                            </Text>
                           </td>
-                          <td style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>
-                            <Text variant="sm">{mappedData.email || <em>-</em>}</Text>
+                          <td
+                            style={{
+                              padding: '12px',
+                              borderBottom: '1px solid #e5e7eb',
+                            }}
+                          >
+                            <Text variant="sm">
+                              {mappedData.email || <em>-</em>}
+                            </Text>
                           </td>
                         </tr>
                       );
@@ -510,14 +685,21 @@ export default function BulkImportPage() {
                 </table>
               </div>
 
-              <div style={{
-                padding: '16px',
-                backgroundColor: '#fef3c7',
-                borderRadius: '8px',
-                border: '1px solid #fbbf24',
-              }}>
+              <div
+                style={{
+                  padding: '16px',
+                  backgroundColor: '#fef3c7',
+                  borderRadius: '8px',
+                  border: '1px solid #fbbf24',
+                }}
+              >
                 <Text variant="sm">
-                  ⚠️ All participants will be enrolled in the currently selected program: <strong>{programs.find(p => p.id === currentProgramId)?.name || 'None'}</strong>
+                  ⚠️ All participants will be enrolled in the currently selected
+                  program:{' '}
+                  <strong>
+                    {programs.find((p) => p.id === currentProgramId)?.name ||
+                      'None'}
+                  </strong>
                 </Text>
               </div>
 
@@ -531,7 +713,9 @@ export default function BulkImportPage() {
                   isDisabled={isProcessing || !currentProgramId}
                   style={{ backgroundColor: '#10b981' }}
                 >
-                  {isProcessing ? 'Importing...' : `Import ${parsedData.length} Participants`}
+                  {isProcessing
+                    ? 'Importing...'
+                    : `Import ${parsedData.length} Participants`}
                 </Button>
               </InlineStack>
             </Stack>
@@ -546,14 +730,18 @@ export default function BulkImportPage() {
               <Heading level={2}>Import Complete!</Heading>
               <Text>
                 Successfully imported {importResults.success} participant(s)
-                {importResults.failed > 0 && ` • ${importResults.failed} failed`}
+                {importResults.failed > 0 &&
+                  ` • ${importResults.failed} failed`}
               </Text>
 
               <InlineStack gap="300">
                 <Button variant="secondary" onPress={() => router.push('/')}>
                   Go to Home
                 </Button>
-                <Button variant="primary" onPress={() => router.push('/individuals')}>
+                <Button
+                  variant="primary"
+                  onPress={() => router.push('/individuals')}
+                >
                   View Participants
                 </Button>
               </InlineStack>

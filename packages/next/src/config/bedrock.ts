@@ -8,7 +8,8 @@
  * This is the same model used in Claude Code conversations
  */
 export const BEDROCK_MODEL_ID =
-  process.env.BEDROCK_MODEL_ID || 'us.anthropic.claude-sonnet-4-5-20250929-v1:0';
+  process.env.BEDROCK_MODEL_ID ||
+  'us.anthropic.claude-sonnet-4-5-20250929-v1:0';
 
 /**
  * AWS Region for Bedrock API calls

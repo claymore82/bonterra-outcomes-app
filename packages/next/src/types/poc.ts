@@ -83,7 +83,12 @@ export interface ConversationState {
   extractedData: ExtractedData;
   requiredFields: string[];
   completedFields: string[];
-  currentStep: 'greeting' | 'collecting' | 'duplicateCheck' | 'review' | 'complete';
+  currentStep:
+    | 'greeting'
+    | 'collecting'
+    | 'duplicateCheck'
+    | 'review'
+    | 'complete';
   duplicateMatches?: DuplicateMatch[];
   isAgentTyping: boolean;
 }
@@ -95,7 +100,7 @@ export const HMIS_GENDER_CODES = {
   3: 'Transgender',
   4: 'Non-Binary',
   5: 'Questioning',
-  99: 'Data not collected'
+  99: 'Data not collected',
 } as const;
 
 export const HMIS_DOB_DATA_QUALITY = {
@@ -103,7 +108,7 @@ export const HMIS_DOB_DATA_QUALITY = {
   2: 'Approximate or partial DOB reported',
   8: "Client doesn't know",
   9: 'Client prefers not to answer',
-  99: 'Data not collected'
+  99: 'Data not collected',
 } as const;
 
 // Entity Types (Institutions that can be enrolled)
@@ -139,7 +144,11 @@ export interface Entity {
 }
 
 // Enrollment Types
-export type EnrollmentStatus = 'active' | 'completed' | 'dismissed' | 'transferred';
+export type EnrollmentStatus =
+  | 'active'
+  | 'completed'
+  | 'dismissed'
+  | 'transferred';
 
 // What can be enrolled in a program
 export type EnrolleeType = 'participant' | 'family' | 'entity';
@@ -378,7 +387,11 @@ export interface Program {
 }
 
 // User Management & Authentication
-export type UserRole = 'case_worker' | 'program_manager' | 'staff' | 'super_admin';
+export type UserRole =
+  | 'case_worker'
+  | 'program_manager'
+  | 'staff'
+  | 'super_admin';
 
 export const USER_ROLE_LABELS: Record<UserRole, string> = {
   case_worker: 'Case Worker',

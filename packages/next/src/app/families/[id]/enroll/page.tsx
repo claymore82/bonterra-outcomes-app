@@ -23,14 +23,19 @@ import { useCaseWorkerStore } from '@/lib/stores/caseWorkerStore';
 import { RELATIONSHIP_LABELS, RelationshipType } from '@/types/household';
 import PageLayout from '../../../components/PageLayout';
 
-export default function EnrollFamilyPage({ params }: { params: Promise<{ id: string }> }) {
+export default function EnrollFamilyPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = use(params);
   const router = useRouter();
   const { getHouseholdById } = useHouseholdStore();
   const { programs } = useProgramStore();
   const { sites } = useSiteStore();
   const { createEnrollment } = useEnrollmentStore();
-  const { caseWorkers, getCaseWorker, incrementCaseload } = useCaseWorkerStore();
+  const { caseWorkers, getCaseWorker, incrementCaseload } =
+    useCaseWorkerStore();
 
   const household = getHouseholdById(id);
 
@@ -59,24 +64,35 @@ export default function EnrollFamilyPage({ params }: { params: Promise<{ id: str
   }
 
   const headOfHousehold = household.members.find(
-    (m) => m.id === household.headOfHouseholdId || m.relationshipToHoH === 'self'
+    (m) =>
+      m.id === household.headOfHouseholdId || m.relationshipToHoH === 'self',
   );
 
   const handleEnroll = () => {
-    if (!selectedProgramId || !selectedCaseWorkerId || selectedMembers.length === 0) {
-      alert('Please select a program, case worker, and at least one family member');
+    if (
+      !selectedProgramId ||
+      !selectedCaseWorkerId ||
+      selectedMembers.length === 0
+    ) {
+      alert(
+        'Please select a program, case worker, and at least one family member',
+      );
       return;
     }
 
     // Validate case worker exists and is active
     const caseWorker = getCaseWorker(selectedCaseWorkerId);
     if (!caseWorker) {
-      alert('Selected case worker not found. Please select a valid case worker.');
+      alert(
+        'Selected case worker not found. Please select a valid case worker.',
+      );
       return;
     }
 
     if (caseWorker.status !== 'active') {
-      alert(`Case worker ${caseWorker.firstName} ${caseWorker.lastName} is not currently active. Please select an active case worker.`);
+      alert(
+        `Case worker ${caseWorker.firstName} ${caseWorker.lastName} is not currently active. Please select an active case worker.`,
+      );
       return;
     }
 
@@ -107,7 +123,9 @@ export default function EnrollFamilyPage({ params }: { params: Promise<{ id: str
   };
 
   const selectedProgram = programs.find((p) => p.id === selectedProgramId);
-  const selectedCaseWorker = selectedCaseWorkerId ? getCaseWorker(selectedCaseWorkerId) : null;
+  const selectedCaseWorker = selectedCaseWorkerId
+    ? getCaseWorker(selectedCaseWorkerId)
+    : null;
 
   return (
     <PageLayout pageTitle="Enroll Family">
@@ -136,7 +154,9 @@ export default function EnrollFamilyPage({ params }: { params: Promise<{ id: str
                     if (isSelected) {
                       setSelectedMembers([...selectedMembers, member.id]);
                     } else {
-                      setSelectedMembers(selectedMembers.filter((id) => id !== member.id));
+                      setSelectedMembers(
+                        selectedMembers.filter((id) => id !== member.id),
+                      );
                     }
                   }}
                 >
@@ -146,12 +166,18 @@ export default function EnrollFamilyPage({ params }: { params: Promise<{ id: str
                         {member.firstName} {member.lastName}
                       </Text>
                       <Text variant="sm" color="subdued">
-                        {RELATIONSHIP_LABELS[member.relationshipToHoH as RelationshipType]}
+                        {
+                          RELATIONSHIP_LABELS[
+                            member.relationshipToHoH as RelationshipType
+                          ]
+                        }
                       </Text>
                     </InlineStack>
                     {member.dateOfBirth && (
                       <Text variant="sm" color="subdued">
-                        {new Date().getFullYear() - member.dateOfBirth.getFullYear()} years old
+                        {new Date().getFullYear() -
+                          member.dateOfBirth.getFullYear()}{' '}
+                        years old
                       </Text>
                     )}
                   </Stack>
@@ -162,7 +188,9 @@ export default function EnrollFamilyPage({ params }: { params: Promise<{ id: str
               <Button
                 variant="secondary"
                 size="small"
-                onPress={() => setSelectedMembers(household.members.map((m) => m.id))}
+                onPress={() =>
+                  setSelectedMembers(household.members.map((m) => m.id))
+                }
               >
                 Select All
               </Button>
@@ -219,13 +247,16 @@ export default function EnrollFamilyPage({ params }: { params: Promise<{ id: str
                 label="Case Worker *"
                 placeholder="Select a case worker..."
                 selectedKey={selectedCaseWorkerId}
-                onSelectionChange={(key) => setSelectedCaseWorkerId(key as string)}
+                onSelectionChange={(key) =>
+                  setSelectedCaseWorkerId(key as string)
+                }
               >
                 {caseWorkers
-                  .filter(cw => cw.status === 'active')
+                  .filter((cw) => cw.status === 'active')
                   .map((cw) => (
                     <SelectItem key={cw.id} id={cw.id}>
-                      {cw.firstName} {cw.lastName} - {cw.role} ({cw.currentCaseload}/{cw.maxCaseload})
+                      {cw.firstName} {cw.lastName} - {cw.role} (
+                      {cw.currentCaseload}/{cw.maxCaseload})
                     </SelectItem>
                   ))}
               </Select>
@@ -250,27 +281,45 @@ export default function EnrollFamilyPage({ params }: { params: Promise<{ id: str
         </Card>
 
         {/* Summary */}
-        <Card style={{ backgroundColor: '#f0f9ff', border: '1px solid #bae6fd' }}>
+        <Card
+          style={{ backgroundColor: '#f0f9ff', border: '1px solid #bae6fd' }}
+        >
           <Stack space="400">
             <Heading level={3}>Enrollment Summary</Heading>
             <Stack space="200">
               <InlineStack gap="400">
-                <Text variant="sm" color="subdued">Family Members:</Text>
-                <Text variant="sm" weight="600">{selectedMembers.length} selected</Text>
-              </InlineStack>
-              <InlineStack gap="400">
-                <Text variant="sm" color="subdued">Program:</Text>
-                <Text variant="sm" weight="600">{selectedProgram?.name || 'Not selected'}</Text>
-              </InlineStack>
-              <InlineStack gap="400">
-                <Text variant="sm" color="subdued">Case Worker:</Text>
+                <Text variant="sm" color="subdued">
+                  Family Members:
+                </Text>
                 <Text variant="sm" weight="600">
-                  {selectedCaseWorker ? `${selectedCaseWorker.firstName} ${selectedCaseWorker.lastName}` : 'Not selected'}
+                  {selectedMembers.length} selected
                 </Text>
               </InlineStack>
               <InlineStack gap="400">
-                <Text variant="sm" color="subdued">Enrollment Date:</Text>
-                <Text variant="sm" weight="600">{new Date().toLocaleDateString()}</Text>
+                <Text variant="sm" color="subdued">
+                  Program:
+                </Text>
+                <Text variant="sm" weight="600">
+                  {selectedProgram?.name || 'Not selected'}
+                </Text>
+              </InlineStack>
+              <InlineStack gap="400">
+                <Text variant="sm" color="subdued">
+                  Case Worker:
+                </Text>
+                <Text variant="sm" weight="600">
+                  {selectedCaseWorker
+                    ? `${selectedCaseWorker.firstName} ${selectedCaseWorker.lastName}`
+                    : 'Not selected'}
+                </Text>
+              </InlineStack>
+              <InlineStack gap="400">
+                <Text variant="sm" color="subdued">
+                  Enrollment Date:
+                </Text>
+                <Text variant="sm" weight="600">
+                  {new Date().toLocaleDateString()}
+                </Text>
               </InlineStack>
             </Stack>
           </Stack>
@@ -278,16 +327,17 @@ export default function EnrollFamilyPage({ params }: { params: Promise<{ id: str
 
         {/* Actions */}
         <InlineStack gap="400">
-          <Button
-            variant="secondary"
-            onPress={() => router.push('/families')}
-          >
+          <Button variant="secondary" onPress={() => router.push('/families')}>
             Cancel
           </Button>
           <Button
             variant="primary"
             onPress={handleEnroll}
-            isDisabled={!selectedProgramId || !selectedCaseWorkerId || selectedMembers.length === 0}
+            isDisabled={
+              !selectedProgramId ||
+              !selectedCaseWorkerId ||
+              selectedMembers.length === 0
+            }
           >
             Enroll Family ({selectedMembers.length} members)
           </Button>

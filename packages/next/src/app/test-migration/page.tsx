@@ -24,7 +24,8 @@ export default function TestMigrationPage() {
         <Stack space="400">
           <Heading level={1}>Migration Test Page</Heading>
           <Text>
-            Testing ported POC data with Stitch components. All data below is from your ported Zustand stores.
+            Testing ported POC data with Stitch components. All data below is
+            from your ported Zustand stores.
           </Text>
         </Stack>
 
@@ -32,17 +33,21 @@ export default function TestMigrationPage() {
         <InlineStack gap="400">
           <Card>
             <Stack space="200">
-              <Text variant="sm" color="subdued">Programs</Text>
+              <Text variant="sm" color="subdued">
+                Programs
+              </Text>
               <Heading level={2}>{programs.length}</Heading>
               <Text variant="sm">
-                {programs.filter(p => p.active).length} active
+                {programs.filter((p) => p.active).length} active
               </Text>
             </Stack>
           </Card>
 
           <Card>
             <Stack space="200">
-              <Text variant="sm" color="subdued">Participants</Text>
+              <Text variant="sm" color="subdued">
+                Participants
+              </Text>
               <Heading level={2}>{participants.length}</Heading>
               <Text variant="sm">Total participants</Text>
             </Stack>
@@ -50,10 +55,12 @@ export default function TestMigrationPage() {
 
           <Card>
             <Stack space="200">
-              <Text variant="sm" color="subdued">Enrollments</Text>
+              <Text variant="sm" color="subdued">
+                Enrollments
+              </Text>
               <Heading level={2}>{enrollments.length}</Heading>
               <Text variant="sm">
-                {enrollments.filter(e => e.status === 'active').length} active
+                {enrollments.filter((e) => e.status === 'active').length} active
               </Text>
             </Stack>
           </Card>
@@ -69,7 +76,9 @@ export default function TestMigrationPage() {
                   <Stack space="200">
                     <InlineStack gap="200">
                       <Text weight="600">{program.name}</Text>
-                      <Text variant="sm" color="subdued">• {program.type}</Text>
+                      <Text variant="sm" color="subdued">
+                        • {program.type}
+                      </Text>
                     </InlineStack>
                     <Text variant="sm">
                       {program.active ? '✅ Active' : '⏸️ Inactive'}
@@ -79,7 +88,9 @@ export default function TestMigrationPage() {
               ))}
             </Stack>
             {programs.length > 5 && (
-              <Text variant="sm" color="subdued">Showing 5 of {programs.length} programs</Text>
+              <Text variant="sm" color="subdued">
+                Showing 5 of {programs.length} programs
+              </Text>
             )}
           </Stack>
         </Card>
@@ -99,14 +110,18 @@ export default function TestMigrationPage() {
                       <Text variant="sm">{participant.email}</Text>
                     )}
                     {participant.phone && (
-                      <Text variant="sm" color="subdued">{participant.phone}</Text>
+                      <Text variant="sm" color="subdued">
+                        {participant.phone}
+                      </Text>
                     )}
                   </Stack>
                 </Card>
               ))}
             </Stack>
             {participants.length > 5 && (
-              <Text variant="sm" color="subdued">Showing 5 of {participants.length} participants</Text>
+              <Text variant="sm" color="subdued">
+                Showing 5 of {participants.length} participants
+              </Text>
             )}
           </Stack>
         </Card>
@@ -118,13 +133,22 @@ export default function TestMigrationPage() {
             <Stack space="300">
               <InlineStack gap="400">
                 <Text>
-                  ✅ Active: <strong>{enrollments.filter(e => e.status === 'active').length}</strong>
+                  ✅ Active:{' '}
+                  <strong>
+                    {enrollments.filter((e) => e.status === 'active').length}
+                  </strong>
                 </Text>
                 <Text>
-                  ✔️ Completed: <strong>{enrollments.filter(e => e.status === 'completed').length}</strong>
+                  ✔️ Completed:{' '}
+                  <strong>
+                    {enrollments.filter((e) => e.status === 'completed').length}
+                  </strong>
                 </Text>
                 <Text>
-                  ⏳ Pending: <strong>{enrollments.filter(e => e.status === 'pending').length}</strong>
+                  ⏳ Pending:{' '}
+                  <strong>
+                    {enrollments.filter((e) => e.status === 'pending').length}
+                  </strong>
                 </Text>
               </InlineStack>
             </Stack>
@@ -136,8 +160,9 @@ export default function TestMigrationPage() {
           <Stack space="300">
             <Text weight="600">✅ Phase 2 Complete!</Text>
             <Text>
-              All types, stores, and mock data have been successfully ported from POC to Bonstart.
-              Stitch components are rendering correctly with your data.
+              All types, stores, and mock data have been successfully ported
+              from POC to Bonstart. Stitch components are rendering correctly
+              with your data.
             </Text>
             <Text variant="sm" color="subdued">
               Next: Phase 3 will recreate all POC pages using Stitch components

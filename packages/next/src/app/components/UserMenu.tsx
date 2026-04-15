@@ -18,7 +18,10 @@ export default function UserMenu() {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -37,7 +40,15 @@ export default function UserMenu() {
   };
 
   return (
-    <div style={{ position: 'relative', height: '100%', display: 'flex', alignItems: 'center' }} ref={dropdownRef}>
+    <div
+      style={{
+        position: 'relative',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+      }}
+      ref={dropdownRef}
+    >
       <button
         onClick={() => setIsOpen(!isOpen)}
         style={{
@@ -52,7 +63,9 @@ export default function UserMenu() {
           transition: 'background-color 0.2s',
           height: 'fit-content',
         }}
-        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f9fafb')}
+        onMouseEnter={(e) =>
+          (e.currentTarget.style.backgroundColor = '#f9fafb')
+        }
         onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'white')}
       >
         <div
@@ -68,7 +81,8 @@ export default function UserMenu() {
           }}
         >
           <Text style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>
-            {currentUser.firstName[0]}{currentUser.lastName[0]}
+            {currentUser.firstName[0]}
+            {currentUser.lastName[0]}
           </Text>
         </div>
         <div style={{ textAlign: 'left', lineHeight: '1.2' }}>
@@ -95,7 +109,8 @@ export default function UserMenu() {
             width: '256px',
             backgroundColor: 'white',
             borderRadius: '8px',
-            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+            boxShadow:
+              '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
             border: '1px solid #e5e7eb',
             padding: '8px 0',
             zIndex: 9999,
@@ -103,7 +118,16 @@ export default function UserMenu() {
         >
           {/* Personal Section */}
           <div style={{ padding: '8px 12px' }}>
-            <Text variant="sm" color="subdued" weight="600" style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            <Text
+              variant="sm"
+              color="subdued"
+              weight="600"
+              style={{
+                fontSize: '11px',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+              }}
+            >
               Personal
             </Text>
           </div>
@@ -118,8 +142,12 @@ export default function UserMenu() {
               color: '#374151',
               fontSize: '14px',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f9fafb')}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = '#f9fafb')
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor = 'transparent')
+            }
             onClick={() => setIsOpen(false)}
           >
             <Icon name="user" size="small" />
@@ -136,8 +164,12 @@ export default function UserMenu() {
               color: '#374151',
               fontSize: '14px',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f9fafb')}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = '#f9fafb')
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor = 'transparent')
+            }
             onClick={() => setIsOpen(false)}
           >
             <Icon name="cog" size="small" />
@@ -145,13 +177,23 @@ export default function UserMenu() {
           </Link>
 
           {/* Admin Section - Only for program managers and admins */}
-          {(currentUser.role === 'program_manager' || currentUser.role === 'super_admin') && (
+          {(currentUser.role === 'program_manager' ||
+            currentUser.role === 'super_admin') && (
             <>
               <div style={{ margin: '8px 0' }}>
                 <Divider />
               </div>
               <div style={{ padding: '8px 12px' }}>
-                <Text variant="sm" color="subdued" weight="600" style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                <Text
+                  variant="sm"
+                  color="subdued"
+                  weight="600"
+                  style={{
+                    fontSize: '11px',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                  }}
+                >
                   Administration
                 </Text>
               </div>
@@ -166,8 +208,12 @@ export default function UserMenu() {
                   color: '#374151',
                   fontSize: '14px',
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f9fafb')}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor = '#f9fafb')
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = 'transparent')
+                }
                 onClick={() => setIsOpen(false)}
               >
                 <Icon name="sliders-h" size="small" />
@@ -184,8 +230,12 @@ export default function UserMenu() {
                   color: '#374151',
                   fontSize: '14px',
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f9fafb')}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor = '#f9fafb')
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = 'transparent')
+                }
                 onClick={() => setIsOpen(false)}
               >
                 <Icon name="briefcase" size="small" />
@@ -202,8 +252,12 @@ export default function UserMenu() {
                   color: '#374151',
                   fontSize: '14px',
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f9fafb')}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor = '#f9fafb')
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = 'transparent')
+                }
                 onClick={() => setIsOpen(false)}
               >
                 <Icon name="user-tie" size="small" />
@@ -229,8 +283,12 @@ export default function UserMenu() {
               fontSize: '14px',
               textAlign: 'left',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#fef2f2')}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = '#fef2f2')
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor = 'transparent')
+            }
             onClick={() => {
               // TODO: Implement logout
               alert('Logout functionality coming soon');
@@ -238,7 +296,9 @@ export default function UserMenu() {
             }}
           >
             <Icon name="sign-out-alt" size="small" />
-            <Text variant="sm" style={{ color: '#dc2626' }}>Sign Out</Text>
+            <Text variant="sm" style={{ color: '#dc2626' }}>
+              Sign Out
+            </Text>
           </button>
         </div>
       )}

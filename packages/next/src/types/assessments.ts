@@ -1,4 +1,9 @@
-export type AssessmentType = 'intake' | 'progress' | 'exit' | 'crisis' | 'custom';
+export type AssessmentType =
+  | 'intake'
+  | 'progress'
+  | 'exit'
+  | 'crisis'
+  | 'custom';
 
 export interface AssessmentResponse {
   questionId: string;
@@ -26,7 +31,14 @@ export interface Assessment {
 export interface AssessmentQuestion {
   id: string;
   question: string;
-  type: 'text' | 'number' | 'scale' | 'yes-no' | 'multiple-choice' | 'checkbox' | 'textarea';
+  type:
+    | 'text'
+    | 'number'
+    | 'scale'
+    | 'yes-no'
+    | 'multiple-choice'
+    | 'checkbox'
+    | 'textarea';
   options?: string[];
   required: boolean;
   scoringKey?: string; // for calculated scores
@@ -66,7 +78,13 @@ export interface ScoreRange {
 }
 
 // Goal tracking types (enhanced from poc.ts)
-export type GoalStatus = 'not-started' | 'in-progress' | 'achieved' | 'partially-achieved' | 'not-achieved' | 'abandoned';
+export type GoalStatus =
+  | 'not-started'
+  | 'in-progress'
+  | 'achieved'
+  | 'partially-achieved'
+  | 'not-achieved'
+  | 'abandoned';
 
 export interface GoalMilestone {
   id: string;
@@ -83,7 +101,13 @@ export interface Goal {
   participantId: string;
   goal: string;
   description?: string;
-  category: 'housing' | 'employment' | 'health' | 'education' | 'financial' | 'other';
+  category:
+    | 'housing'
+    | 'employment'
+    | 'health'
+    | 'education'
+    | 'financial'
+    | 'other';
   status: GoalStatus;
   targetDate?: Date;
   completedDate?: Date;

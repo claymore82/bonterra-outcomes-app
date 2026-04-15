@@ -20,25 +20,28 @@ import { Program, ProgramType } from '@/types/poc';
 import PageLayout from '../../components/PageLayout';
 
 export default function ProgramsPage() {
-  const { programs, addProgram, updateProgram, deleteProgram } = useProgramStore();
+  const { programs, addProgram, updateProgram, deleteProgram } =
+    useProgramStore();
   const { sites } = useSiteStore();
   const { serviceTypes } = useServiceStore();
 
   const [showModal, setShowModal] = useState(false);
   const [editingProgram, setEditingProgram] = useState<Program | null>(null);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(
+    null,
+  );
 
-  const activePrograms = programs.filter(p => p.active);
+  const activePrograms = programs.filter((p) => p.active);
 
   const getSiteNames = (siteIds: string[]) => {
     if (siteIds.length === 0) return 'All sites';
     return siteIds
-      .map(id => sites.find(s => s.id === id)?.name || id)
+      .map((id) => sites.find((s) => s.id === id)?.name || id)
       .join(', ');
   };
 
   const getProgramServices = (programId: string) => {
-    return serviceTypes.filter(s => s.programs.includes(programId));
+    return serviceTypes.filter((s) => s.programs.includes(programId));
   };
 
   const handleEdit = (program: Program) => {
@@ -80,14 +83,18 @@ export default function ProgramsPage() {
         <InlineStack gap="400">
           <Card>
             <Stack space="200">
-              <Text variant="sm" color="subdued">Total Programs</Text>
+              <Text variant="sm" color="subdued">
+                Total Programs
+              </Text>
               <Heading level={2}>{programs.length}</Heading>
             </Stack>
           </Card>
 
           <Card>
             <Stack space="200">
-              <Text variant="sm" color="subdued">Active</Text>
+              <Text variant="sm" color="subdued">
+                Active
+              </Text>
               <Heading level={2}>{activePrograms.length}</Heading>
             </Stack>
           </Card>
@@ -99,7 +106,9 @@ export default function ProgramsPage() {
             <Heading level={2}>All Programs</Heading>
 
             {programs.length === 0 ? (
-              <Text>No programs yet. Click "Create Program" to get started.</Text>
+              <Text>
+                No programs yet. Click "Create Program" to get started.
+              </Text>
             ) : (
               <Stack space="300">
                 {programs.map((program) => (
@@ -107,98 +116,157 @@ export default function ProgramsPage() {
                     <Stack space="300">
                       <div>
                         <InlineStack gap="300" verticalAlign="center">
-                          <Text weight="600" style={{ fontSize: '16px' }}>{program.name}</Text>
-                          <div style={{
-                            padding: '2px 8px',
-                            borderRadius: '4px',
-                            backgroundColor: program.status === 'active' ? '#d1fae5' : '#f3f4f6',
-                            color: program.status === 'active' ? '#065f46' : '#6b7280',
-                            fontSize: '11px',
-                            fontWeight: 600,
-                            textTransform: 'uppercase',
-                          }}>
+                          <Text weight="600" style={{ fontSize: '16px' }}>
+                            {program.name}
+                          </Text>
+                          <div
+                            style={{
+                              padding: '2px 8px',
+                              borderRadius: '4px',
+                              backgroundColor:
+                                program.status === 'active'
+                                  ? '#d1fae5'
+                                  : '#f3f4f6',
+                              color:
+                                program.status === 'active'
+                                  ? '#065f46'
+                                  : '#6b7280',
+                              fontSize: '11px',
+                              fontWeight: 600,
+                              textTransform: 'uppercase',
+                            }}
+                          >
                             {program.status}
                           </div>
                         </InlineStack>
                         {program.description && (
-                          <Text variant="sm" style={{ marginTop: '4px' }}>{program.description}</Text>
+                          <Text variant="sm" style={{ marginTop: '4px' }}>
+                            {program.description}
+                          </Text>
                         )}
                       </div>
 
                       <InlineStack gap="400">
                         {program.programType && (
                           <div>
-                            <Text variant="xs" color="subdued">Type</Text>
-                            <Text variant="sm" weight="500" style={{ textTransform: 'capitalize' }}>
+                            <Text variant="xs" color="subdued">
+                              Type
+                            </Text>
+                            <Text
+                              variant="sm"
+                              weight="500"
+                              style={{ textTransform: 'capitalize' }}
+                            >
                               {program.programType.replace('_', ' ')}
                             </Text>
                           </div>
                         )}
                         {program.capacity && (
                           <div>
-                            <Text variant="xs" color="subdued">Capacity</Text>
+                            <Text variant="xs" color="subdued">
+                              Capacity
+                            </Text>
                             <Text variant="sm" weight="500">
-                              {program.currentEnrollment || 0} / {program.capacity}
+                              {program.currentEnrollment || 0} /{' '}
+                              {program.capacity}
                             </Text>
                           </div>
                         )}
                       </InlineStack>
 
-                      {program.outcomeGoals && program.outcomeGoals.length > 0 && (
-                        <div style={{
-                          padding: '12px',
-                          backgroundColor: '#fef3c7',
-                          borderRadius: '6px',
-                          border: '1px solid #fbbf24',
-                        }}>
-                          <Text variant="sm" weight="500" style={{ marginBottom: '6px', color: '#78350f' }}>
-                            🎯 Outcome Goals:
-                          </Text>
-                          <Stack space="100">
-                            {program.outcomeGoals.map((goal, idx) => (
-                              <Text key={idx} variant="sm" style={{ color: '#92400e' }}>
-                                • {goal}
-                              </Text>
-                            ))}
-                          </Stack>
-                        </div>
-                      )}
+                      {program.outcomeGoals &&
+                        program.outcomeGoals.length > 0 && (
+                          <div
+                            style={{
+                              padding: '12px',
+                              backgroundColor: '#fef3c7',
+                              borderRadius: '6px',
+                              border: '1px solid #fbbf24',
+                            }}
+                          >
+                            <Text
+                              variant="sm"
+                              weight="500"
+                              style={{ marginBottom: '6px', color: '#78350f' }}
+                            >
+                              🎯 Outcome Goals:
+                            </Text>
+                            <Stack space="100">
+                              {program.outcomeGoals.map((goal, idx) => (
+                                <Text
+                                  key={idx}
+                                  variant="sm"
+                                  style={{ color: '#92400e' }}
+                                >
+                                  • {goal}
+                                </Text>
+                              ))}
+                            </Stack>
+                          </div>
+                        )}
 
                       {(() => {
                         const programServices = getProgramServices(program.id);
-                        return programServices.length > 0 && (
-                          <div style={{
-                            padding: '12px',
-                            backgroundColor: '#dbeafe',
-                            borderRadius: '6px',
-                            border: '1px solid #3b82f6',
-                          }}>
-                            <Text variant="sm" weight="500" style={{ marginBottom: '6px', color: '#1e40af' }}>
-                              📋 Services ({programServices.length}):
-                            </Text>
-                            <Stack space="100">
-                              {programServices.slice(0, 3).map(service => (
-                                <Text key={service.id} variant="sm" style={{ color: '#1e3a8a' }}>
-                                  • {service.name}
-                                </Text>
-                              ))}
-                              {programServices.length > 3 && (
-                                <Text variant="xs" style={{ color: '#1e40af', fontStyle: 'italic' }}>
-                                  +{programServices.length - 3} more services
-                                </Text>
-                              )}
-                            </Stack>
-                          </div>
+                        return (
+                          programServices.length > 0 && (
+                            <div
+                              style={{
+                                padding: '12px',
+                                backgroundColor: '#dbeafe',
+                                borderRadius: '6px',
+                                border: '1px solid #3b82f6',
+                              }}
+                            >
+                              <Text
+                                variant="sm"
+                                weight="500"
+                                style={{
+                                  marginBottom: '6px',
+                                  color: '#1e40af',
+                                }}
+                              >
+                                📋 Services ({programServices.length}):
+                              </Text>
+                              <Stack space="100">
+                                {programServices.slice(0, 3).map((service) => (
+                                  <Text
+                                    key={service.id}
+                                    variant="sm"
+                                    style={{ color: '#1e3a8a' }}
+                                  >
+                                    • {service.name}
+                                  </Text>
+                                ))}
+                                {programServices.length > 3 && (
+                                  <Text
+                                    variant="xs"
+                                    style={{
+                                      color: '#1e40af',
+                                      fontStyle: 'italic',
+                                    }}
+                                  >
+                                    +{programServices.length - 3} more services
+                                  </Text>
+                                )}
+                              </Stack>
+                            </div>
+                          )
                         );
                       })()}
 
-                      <div style={{
-                        padding: '12px',
-                        backgroundColor: '#f9fafb',
-                        borderRadius: '6px',
-                        border: '1px solid #e5e7eb',
-                      }}>
-                        <Text variant="sm" weight="500" style={{ marginBottom: '4px' }}>
+                      <div
+                        style={{
+                          padding: '12px',
+                          backgroundColor: '#f9fafb',
+                          borderRadius: '6px',
+                          border: '1px solid #e5e7eb',
+                        }}
+                      >
+                        <Text
+                          variant="sm"
+                          weight="500"
+                          style={{ marginBottom: '4px' }}
+                        >
                           Sites:
                         </Text>
                         <Text variant="sm" color="subdued">
@@ -253,20 +321,23 @@ export default function ProgramsPage() {
 
       {/* Delete Confirmation */}
       {showDeleteConfirm && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          backgroundColor: 'rgba(0,0,0,0.5)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 9999,
-        }}>
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999,
+          }}
+        >
           <Card>
             <Stack space="400">
               <Heading level={3}>Confirm Delete</Heading>
               <Text>
-                Are you sure you want to delete this program? This action cannot be undone.
+                Are you sure you want to delete this program? This action cannot
+                be undone.
               </Text>
               <InlineStack gap="300">
                 <Button
@@ -301,15 +372,23 @@ function ProgramModal({ program, onClose, onSave }: ProgramModalProps) {
   const { serviceTypes } = useServiceStore();
   const [name, setName] = useState(program?.name || '');
   const [description, setDescription] = useState(program?.description || '');
-  const [programType, setProgramType] = useState<string>(program?.programType || 'emergency_shelter');
-  const [targetPopulation, setTargetPopulation] = useState(program?.eligibilityCriteria || '');
+  const [programType, setProgramType] = useState<string>(
+    program?.programType || 'emergency_shelter',
+  );
+  const [targetPopulation, setTargetPopulation] = useState(
+    program?.eligibilityCriteria || '',
+  );
   const [capacity, setCapacity] = useState(program?.capacity?.toString() || '');
   const [budget, setBudget] = useState(program?.budget?.toString() || '');
-  const [status, setStatus] = useState<'active' | 'inactive'>(program?.status || 'active');
-  const [selectedSites, setSelectedSites] = useState<Set<string>>(
-    new Set(program?.siteIds || [])
+  const [status, setStatus] = useState<'active' | 'inactive'>(
+    program?.status || 'active',
   );
-  const [outcomeGoals, setOutcomeGoals] = useState<string[]>(program?.outcomeGoals || []);
+  const [selectedSites, setSelectedSites] = useState<Set<string>>(
+    new Set(program?.siteIds || []),
+  );
+  const [outcomeGoals, setOutcomeGoals] = useState<string[]>(
+    program?.outcomeGoals || [],
+  );
   const [newGoalInput, setNewGoalInput] = useState('');
 
   const handleSubmit = () => {
@@ -361,27 +440,33 @@ function ProgramModal({ program, onClose, onSave }: ProgramModalProps) {
     setOutcomeGoals(outcomeGoals.filter((_, i) => i !== index));
   };
 
-  const programServices = program ? serviceTypes.filter(s => s.programs.includes(program.id)) : [];
+  const programServices = program
+    ? serviceTypes.filter((s) => s.programs.includes(program.id))
+    : [];
 
   return (
-    <div style={{
-      position: 'fixed',
-      inset: 0,
-      backgroundColor: 'rgba(0,0,0,0.5)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 9999,
-      padding: '16px',
-    }}>
-      <div style={{
-        backgroundColor: 'white',
-        borderRadius: '12px',
-        maxWidth: '600px',
-        width: '100%',
-        maxHeight: '90vh',
-        overflow: 'auto',
-      }}>
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 9999,
+        padding: '16px',
+      }}
+    >
+      <div
+        style={{
+          backgroundColor: 'white',
+          borderRadius: '12px',
+          maxWidth: '600px',
+          width: '100%',
+          maxHeight: '90vh',
+          overflow: 'auto',
+        }}
+      >
         <Card>
           <Stack space="500">
             <Heading level={2}>
@@ -412,14 +497,26 @@ function ProgramModal({ program, onClose, onSave }: ProgramModalProps) {
                   selectedKey={programType}
                   onSelectionChange={(key) => setProgramType(key as string)}
                 >
-                  <SelectItem id="emergency_shelter">Emergency Shelter</SelectItem>
+                  <SelectItem id="emergency_shelter">
+                    Emergency Shelter
+                  </SelectItem>
                   <SelectItem id="rapid_rehousing">Rapid Rehousing</SelectItem>
-                  <SelectItem id="permanent_supportive_housing">Permanent Supportive Housing</SelectItem>
-                  <SelectItem id="transitional_housing">Transitional Housing</SelectItem>
+                  <SelectItem id="permanent_supportive_housing">
+                    Permanent Supportive Housing
+                  </SelectItem>
+                  <SelectItem id="transitional_housing">
+                    Transitional Housing
+                  </SelectItem>
                   <SelectItem id="job_training">Job Training</SelectItem>
-                  <SelectItem id="educational_support">Educational Support</SelectItem>
-                  <SelectItem id="mental_health_services">Mental Health Services</SelectItem>
-                  <SelectItem id="substance_abuse_treatment">Substance Abuse Treatment</SelectItem>
+                  <SelectItem id="educational_support">
+                    Educational Support
+                  </SelectItem>
+                  <SelectItem id="mental_health_services">
+                    Mental Health Services
+                  </SelectItem>
+                  <SelectItem id="substance_abuse_treatment">
+                    Substance Abuse Treatment
+                  </SelectItem>
                   <SelectItem id="case_management">Case Management</SelectItem>
                   <SelectItem id="other">Other</SelectItem>
                 </Select>
@@ -427,7 +524,9 @@ function ProgramModal({ program, onClose, onSave }: ProgramModalProps) {
                 <Select
                   label="Status *"
                   selectedKey={status}
-                  onSelectionChange={(key) => setStatus(key as 'active' | 'inactive')}
+                  onSelectionChange={(key) =>
+                    setStatus(key as 'active' | 'inactive')
+                  }
                 >
                   <SelectItem id="active">Active</SelectItem>
                   <SelectItem id="inactive">Inactive</SelectItem>
@@ -465,12 +564,18 @@ function ProgramModal({ program, onClose, onSave }: ProgramModalProps) {
 
               {/* Outcome Goals */}
               <div>
-                <div style={{
-                  fontSize: '14px',
-                  fontWeight: 500,
-                  marginBottom: '8px',
-                }}>
-                  Outcome Goals * <span style={{ color: '#ef4444' }}>({outcomeGoals.length} goal{outcomeGoals.length !== 1 ? 's' : ''})</span>
+                <div
+                  style={{
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    marginBottom: '8px',
+                  }}
+                >
+                  Outcome Goals *{' '}
+                  <span style={{ color: '#ef4444' }}>
+                    ({outcomeGoals.length} goal
+                    {outcomeGoals.length !== 1 ? 's' : ''})
+                  </span>
                 </div>
 
                 {/* Add new goal input */}
@@ -502,12 +607,14 @@ function ProgramModal({ program, onClose, onSave }: ProgramModalProps) {
 
                 {/* List of added goals */}
                 {outcomeGoals.length > 0 && (
-                  <div style={{
-                    border: '1px solid #fbbf24',
-                    borderRadius: '8px',
-                    padding: '12px',
-                    backgroundColor: '#fef3c7',
-                  }}>
+                  <div
+                    style={{
+                      border: '1px solid #fbbf24',
+                      borderRadius: '8px',
+                      padding: '12px',
+                      backgroundColor: '#fef3c7',
+                    }}
+                  >
                     <Stack space="200">
                       {outcomeGoals.map((goal, index) => (
                         <div
@@ -522,7 +629,11 @@ function ProgramModal({ program, onClose, onSave }: ProgramModalProps) {
                             border: '1px solid #fbbf24',
                           }}
                         >
-                          <Text variant="sm" weight="500" style={{ color: '#78350f' }}>
+                          <Text
+                            variant="sm"
+                            weight="500"
+                            style={{ color: '#78350f' }}
+                          >
                             🎯 {goal}
                           </Text>
                           <button
@@ -550,50 +661,82 @@ function ProgramModal({ program, onClose, onSave }: ProgramModalProps) {
 
               {/* Show linked services */}
               {program && programServices.length > 0 && (
-                <div style={{
-                  padding: '12px',
-                  backgroundColor: '#dbeafe',
-                  borderRadius: '8px',
-                  border: '1px solid #3b82f6',
-                }}>
-                  <Text variant="sm" weight="500" style={{ marginBottom: '8px', color: '#1e40af' }}>
-                    📋 Services Linked to This Program ({programServices.length}):
+                <div
+                  style={{
+                    padding: '12px',
+                    backgroundColor: '#dbeafe',
+                    borderRadius: '8px',
+                    border: '1px solid #3b82f6',
+                  }}
+                >
+                  <Text
+                    variant="sm"
+                    weight="500"
+                    style={{ marginBottom: '8px', color: '#1e40af' }}
+                  >
+                    📋 Services Linked to This Program ({programServices.length}
+                    ):
                   </Text>
                   <Stack space="100">
-                    {programServices.map(service => (
-                      <Text key={service.id} variant="sm" style={{ color: '#1e3a8a' }}>
+                    {programServices.map((service) => (
+                      <Text
+                        key={service.id}
+                        variant="sm"
+                        style={{ color: '#1e3a8a' }}
+                      >
                         • {service.name}
                       </Text>
                     ))}
                   </Stack>
-                  <Text variant="xs" style={{ marginTop: '8px', color: '#1e40af', fontStyle: 'italic' }}>
-                    Services help achieve outcome goals. Manage services in the Services admin page.
+                  <Text
+                    variant="xs"
+                    style={{
+                      marginTop: '8px',
+                      color: '#1e40af',
+                      fontStyle: 'italic',
+                    }}
+                  >
+                    Services help achieve outcome goals. Manage services in the
+                    Services admin page.
                   </Text>
                 </div>
               )}
 
               {/* Site Selection */}
               <div>
-                <div style={{
-                  fontSize: '14px',
-                  fontWeight: 500,
-                  marginBottom: '8px',
-                }}>
-                  Sites <span style={{ color: '#6b7280' }}>({selectedSites.size === 0 ? 'All sites' : `${selectedSites.size} selected`})</span>
+                <div
+                  style={{
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    marginBottom: '8px',
+                  }}
+                >
+                  Sites{' '}
+                  <span style={{ color: '#6b7280' }}>
+                    (
+                    {selectedSites.size === 0
+                      ? 'All sites'
+                      : `${selectedSites.size} selected`}
+                    )
+                  </span>
                 </div>
-                <div style={{
-                  border: '1px solid #d1d5db',
-                  borderRadius: '8px',
-                  padding: '12px',
-                  maxHeight: '200px',
-                  overflowY: 'auto',
-                  backgroundColor: '#f9fafb',
-                }}>
+                <div
+                  style={{
+                    border: '1px solid #d1d5db',
+                    borderRadius: '8px',
+                    padding: '12px',
+                    maxHeight: '200px',
+                    overflowY: 'auto',
+                    backgroundColor: '#f9fafb',
+                  }}
+                >
                   {sites.length === 0 ? (
-                    <Text variant="sm" color="subdued">No sites available</Text>
+                    <Text variant="sm" color="subdued">
+                      No sites available
+                    </Text>
                   ) : (
                     <Stack space="200">
-                      {sites.map(site => (
+                      {sites.map((site) => (
                         <label
                           key={site.id}
                           style={{
@@ -602,8 +745,12 @@ function ProgramModal({ program, onClose, onSave }: ProgramModalProps) {
                             padding: '8px',
                             borderRadius: '6px',
                             cursor: 'pointer',
-                            backgroundColor: selectedSites.has(site.id) ? 'white' : 'transparent',
-                            border: selectedSites.has(site.id) ? '1px solid #7c3aed' : '1px solid transparent',
+                            backgroundColor: selectedSites.has(site.id)
+                              ? 'white'
+                              : 'transparent',
+                            border: selectedSites.has(site.id)
+                              ? '1px solid #7c3aed'
+                              : '1px solid transparent',
                           }}
                         >
                           <input
@@ -613,9 +760,15 @@ function ProgramModal({ program, onClose, onSave }: ProgramModalProps) {
                             style={{ marginRight: '10px', marginTop: '2px' }}
                           />
                           <div style={{ flex: 1 }}>
-                            <Text variant="sm" weight="500">{site.name}</Text>
+                            <Text variant="sm" weight="500">
+                              {site.name}
+                            </Text>
                             {site.address && (
-                              <Text variant="xs" color="subdued" style={{ marginTop: '2px' }}>
+                              <Text
+                                variant="xs"
+                                color="subdued"
+                                style={{ marginTop: '2px' }}
+                              >
                                 {site.address}
                               </Text>
                             )}

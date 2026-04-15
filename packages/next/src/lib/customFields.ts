@@ -55,7 +55,7 @@ export const CUSTOM_FIELD_TEMPLATES: CustomFieldTemplate[] = [
     options: [
       'Yes',
       'No',
-      'Client doesn\'t know',
+      "Client doesn't know",
       'Client prefers not to answer',
       'Data not collected',
     ],
@@ -298,7 +298,8 @@ export const CUSTOM_FIELD_TEMPLATES: CustomFieldTemplate[] = [
     name: 'times_homeless_past_3_years',
     label: 'Times Homeless in Past 3 Years',
     fieldType: 'number',
-    description: 'Number of times experiencing homelessness in past 3 years (HMIS)',
+    description:
+      'Number of times experiencing homelessness in past 3 years (HMIS)',
     required: false,
     hmisCompliant: true,
     category: 'housing',
@@ -372,7 +373,7 @@ export const CUSTOM_FIELD_TEMPLATES: CustomFieldTemplate[] = [
       'Yes (currently fleeing)',
       'Yes (not currently fleeing)',
       'No',
-      'Client doesn\'t know',
+      "Client doesn't know",
       'Client prefers not to answer',
       'Data not collected',
     ],
@@ -398,9 +399,9 @@ export const CUSTOM_FIELD_TEMPLATES: CustomFieldTemplate[] = [
   },
   {
     name: 'drivers_license',
-    label: 'Driver\'s License Number',
+    label: "Driver's License Number",
     fieldType: 'text',
-    description: 'State-issued driver\'s license number',
+    description: "State-issued driver's license number",
     required: false,
     hmisCompliant: false,
     category: 'demographics',
@@ -456,7 +457,7 @@ export const CUSTOM_FIELD_TEMPLATES: CustomFieldTemplate[] = [
       'High school diploma/GED',
       'Some college',
       'Associate degree',
-      'Bachelor\'s degree',
+      "Bachelor's degree",
       'Graduate degree',
       'Prefer not to answer',
     ],
@@ -504,6 +505,8 @@ export function getHMISTemplates(): CustomFieldTemplate[] {
   return CUSTOM_FIELD_TEMPLATES.filter((t) => t.hmisCompliant);
 }
 
-export function getTemplateByName(name: string): CustomFieldTemplate | undefined {
+export function getTemplateByName(
+  name: string,
+): CustomFieldTemplate | undefined {
   return CUSTOM_FIELD_TEMPLATES.find((t) => t.name === name);
 }

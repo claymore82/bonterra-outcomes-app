@@ -20,7 +20,7 @@ function levenshteinDistance(str1: string, str2: string): number {
         dp[i][j] = Math.min(
           dp[i - 1][j] + 1,
           dp[i][j - 1] + 1,
-          dp[i - 1][j - 1] + 1
+          dp[i - 1][j - 1] + 1,
         );
       }
     }
@@ -32,10 +32,7 @@ function levenshteinDistance(str1: string, str2: string): number {
 function fuzzyMatch(str1?: string, str2?: string): number {
   if (!str1 || !str2) return 0;
 
-  const distance = levenshteinDistance(
-    str1.toLowerCase(),
-    str2.toLowerCase()
-  );
+  const distance = levenshteinDistance(str1.toLowerCase(), str2.toLowerCase());
   const maxLength = Math.max(str1.length, str2.length);
 
   return 1 - distance / maxLength;
@@ -59,7 +56,8 @@ function isSameDay(date1?: Date | string, date2?: Date | string): boolean {
 }
 
 function calculateAge(dateOfBirth: Date | string): number {
-  const dob = typeof dateOfBirth === 'string' ? new Date(dateOfBirth) : dateOfBirth;
+  const dob =
+    typeof dateOfBirth === 'string' ? new Date(dateOfBirth) : dateOfBirth;
 
   // Check if date is valid
   if (isNaN(dob.getTime())) return 0;
@@ -75,11 +73,12 @@ function calculateAge(dateOfBirth: Date | string): number {
 
 function checkMatch(
   extracted: ExtractedData,
-  participant: Participant
+  participant: Participant,
 ): DuplicateMatch | null {
   // Rule 1: Exact name + DOB match
   if (
-    extracted.firstName?.toLowerCase() === participant.firstName.toLowerCase() &&
+    extracted.firstName?.toLowerCase() ===
+      participant.firstName.toLowerCase() &&
     extracted.lastName?.toLowerCase() === participant.lastName.toLowerCase() &&
     extracted.dateOfBirth &&
     isSameDay(extracted.dateOfBirth, participant.dateOfBirth)
@@ -107,10 +106,13 @@ function checkMatch(
 
   // Rule 3: Exact name + approximate age match
   if (
-    extracted.firstName?.toLowerCase() === participant.firstName.toLowerCase() &&
+    extracted.firstName?.toLowerCase() ===
+      participant.firstName.toLowerCase() &&
     extracted.lastName?.toLowerCase() === participant.lastName.toLowerCase() &&
     extracted.approximateAge &&
-    Math.abs(extracted.approximateAge - calculateAge(participant.dateOfBirth)) <= 1
+    Math.abs(
+      extracted.approximateAge - calculateAge(participant.dateOfBirth),
+    ) <= 1
   ) {
     return {
       participant,
@@ -124,7 +126,7 @@ function checkMatch(
 
 export function findDuplicates(
   extractedData: ExtractedData,
-  existingParticipants: Participant[]
+  existingParticipants: Participant[],
 ): DuplicateMatch[] {
   const matches: DuplicateMatch[] = [];
 

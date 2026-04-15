@@ -35,7 +35,7 @@ export default function UpcomingCheckIns() {
 
     // Filter enrollments assigned to the current user with upcoming check-ins
     const checkIns = enrollments
-      .filter(enrollment => {
+      .filter((enrollment) => {
         if (enrollment.status !== 'active') return false;
         if (!enrollment.nextCheckIn) return false;
         if (enrollment.caseWorkerId !== currentUser.id) return false;
@@ -43,15 +43,19 @@ export default function UpcomingCheckIns() {
         const checkInDate = new Date(enrollment.nextCheckIn);
         return checkInDate <= sevenDaysFromNow; // Show check-ins within the next 7 days
       })
-      .map(enrollment => {
-        const participant = participants.find(p => p.id === enrollment.participantId);
-        const program = programs.find(p => p.id === enrollment.programId);
+      .map((enrollment) => {
+        const participant = participants.find(
+          (p) => p.id === enrollment.participantId,
+        );
+        const program = programs.find((p) => p.id === enrollment.programId);
         const checkInDate = new Date(enrollment.nextCheckIn!);
         const isPast = checkInDate < now;
         const isToday = checkInDate.toDateString() === now.toDateString();
 
         // Calculate hours until check-in
-        const hoursUntil = Math.floor((checkInDate.getTime() - now.getTime()) / (1000 * 60 * 60));
+        const hoursUntil = Math.floor(
+          (checkInDate.getTime() - now.getTime()) / (1000 * 60 * 60),
+        );
 
         return {
           enrollment,
@@ -71,17 +75,24 @@ export default function UpcomingCheckIns() {
   if (!currentUser) return null;
 
   // Limit display to first 5 check-ins unless "showAll" is clicked
-  const displayedCheckIns = showAll ? upcomingCheckIns : upcomingCheckIns.slice(0, 5);
+  const displayedCheckIns = showAll
+    ? upcomingCheckIns
+    : upcomingCheckIns.slice(0, 5);
   const hasMore = upcomingCheckIns.length > 5;
 
   return (
     <Card>
       <Stack space="400">
-        <InlineStack gap="400" verticalAlign="center" distribute="space-between">
+        <InlineStack
+          gap="400"
+          verticalAlign="center"
+          distribute="space-between"
+        >
           <InlineStack gap="200" verticalAlign="center">
             <Icon name="calendar" size="medium" style={{ color: '#7C3AED' }} />
             <Heading level={3}>
-              Upcoming Check-Ins {upcomingCheckIns.length > 0 && `(${upcomingCheckIns.length})`}
+              Upcoming Check-Ins{' '}
+              {upcomingCheckIns.length > 0 && `(${upcomingCheckIns.length})`}
             </Heading>
           </InlineStack>
           {upcomingCheckIns.length > 0 && (
@@ -106,128 +117,167 @@ export default function UpcomingCheckIns() {
               </div>
             ) : (
               <Stack space="300">
-                {displayedCheckIns.map(({ enrollment, participant, program, checkInDate, isPast, isToday, hoursUntil }) => {
-                  if (!participant) return null;
+                {displayedCheckIns.map(
+                  ({
+                    enrollment,
+                    participant,
+                    program,
+                    checkInDate,
+                    isPast,
+                    isToday,
+                    hoursUntil,
+                  }) => {
+                    if (!participant) return null;
 
-                  const urgencyColor = isPast
-                    ? '#ef4444'
-                    : isToday
-                    ? '#f59e0b'
-                    : hoursUntil < 24
-                    ? '#f59e0b'
-                    : '#7C3AED';
+                    const urgencyColor = isPast
+                      ? '#ef4444'
+                      : isToday
+                        ? '#f59e0b'
+                        : hoursUntil < 24
+                          ? '#f59e0b'
+                          : '#7C3AED';
 
-                  return (
-                    <Card
-                      key={enrollment.id}
-                      style={{
-                        backgroundColor: isPast ? '#fef2f2' : isToday ? '#fffbeb' : 'white',
-                        border: `1px solid ${urgencyColor}20`,
-                      }}
-                    >
-                      <InlineStack gap="300" verticalAlign="center" distribute="space-between">
-                        <Stack space="100">
-                          <InlineStack gap="200" verticalAlign="center">
-                            <Text weight="600">
-                              {participant.firstName} {participant.lastName}
-                            </Text>
-                            {isPast && (
-                              <span
-                                style={{
-                                  padding: '2px 8px',
-                                  backgroundColor: '#ef4444',
-                                  color: 'white',
-                                  borderRadius: '4px',
-                                  fontSize: '10px',
-                                  fontWeight: 600,
-                                  textTransform: 'uppercase',
-                                }}
-                              >
-                                Overdue
-                              </span>
-                            )}
-                            {isToday && (
-                              <span
-                                style={{
-                                  padding: '2px 8px',
-                                  backgroundColor: '#f59e0b',
-                                  color: 'white',
-                                  borderRadius: '4px',
-                                  fontSize: '10px',
-                                  fontWeight: 600,
-                                  textTransform: 'uppercase',
-                                }}
-                              >
-                                Today
-                              </span>
-                            )}
-                          </InlineStack>
-
-                          <Text variant="sm" color="subdued">
-                            {program?.name || 'Unknown Program'}
-                          </Text>
-
-                          <InlineStack gap="200" verticalAlign="center">
-                            <Icon
-                              name="clock"
-                              size="small"
-                              style={{ color: urgencyColor }}
-                            />
-                            <Text variant="sm" style={{ color: urgencyColor }}>
-                              {checkInDate.toLocaleDateString('en-US', {
-                                month: 'short',
-                                day: 'numeric',
-                                year: 'numeric',
-                              })}
-                              {' at '}
-                              {checkInDate.toLocaleTimeString('en-US', {
-                                hour: 'numeric',
-                                minute: '2-digit',
-                              })}
-                            </Text>
-                            {!isPast && hoursUntil < 48 && (
-                              <Text variant="xs" color="subdued">
-                                ({hoursUntil < 1 ? 'Less than 1 hour' : `${hoursUntil} hours`})
-                              </Text>
-                            )}
-                          </InlineStack>
-
-                          {enrollment.nextCheckInZoomLink && (
+                    return (
+                      <Card
+                        key={enrollment.id}
+                        style={{
+                          backgroundColor: isPast
+                            ? '#fef2f2'
+                            : isToday
+                              ? '#fffbeb'
+                              : 'white',
+                          border: `1px solid ${urgencyColor}20`,
+                        }}
+                      >
+                        <InlineStack
+                          gap="300"
+                          verticalAlign="center"
+                          distribute="space-between"
+                        >
+                          <Stack space="100">
                             <InlineStack gap="200" verticalAlign="center">
-                              <Icon name="video" size="small" style={{ color: '#2563eb' }} />
-                              <a
-                                href={enrollment.nextCheckInZoomLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={{ color: '#2563eb', textDecoration: 'none', fontSize: '13px' }}
-                              >
-                                Join Zoom Meeting
-                              </a>
+                              <Text weight="600">
+                                {participant.firstName} {participant.lastName}
+                              </Text>
+                              {isPast && (
+                                <span
+                                  style={{
+                                    padding: '2px 8px',
+                                    backgroundColor: '#ef4444',
+                                    color: 'white',
+                                    borderRadius: '4px',
+                                    fontSize: '10px',
+                                    fontWeight: 600,
+                                    textTransform: 'uppercase',
+                                  }}
+                                >
+                                  Overdue
+                                </span>
+                              )}
+                              {isToday && (
+                                <span
+                                  style={{
+                                    padding: '2px 8px',
+                                    backgroundColor: '#f59e0b',
+                                    color: 'white',
+                                    borderRadius: '4px',
+                                    fontSize: '10px',
+                                    fontWeight: 600,
+                                    textTransform: 'uppercase',
+                                  }}
+                                >
+                                  Today
+                                </span>
+                              )}
                             </InlineStack>
-                          )}
-                        </Stack>
 
-                        <InlineStack gap="200">
-                          <Button
-                            variant="tertiary"
-                            size="small"
-                            onPress={() => router.push(`/participants/${participant.id}`)}
-                          >
-                            View Profile
-                          </Button>
-                          <Button
-                            variant="primary"
-                            size="small"
-                            onPress={() => router.push(`/participants/${participant.id}/add-case-note`)}
-                          >
-                            <Icon name="plus" />
-                            Add Note
-                          </Button>
+                            <Text variant="sm" color="subdued">
+                              {program?.name || 'Unknown Program'}
+                            </Text>
+
+                            <InlineStack gap="200" verticalAlign="center">
+                              <Icon
+                                name="clock"
+                                size="small"
+                                style={{ color: urgencyColor }}
+                              />
+                              <Text
+                                variant="sm"
+                                style={{ color: urgencyColor }}
+                              >
+                                {checkInDate.toLocaleDateString('en-US', {
+                                  month: 'short',
+                                  day: 'numeric',
+                                  year: 'numeric',
+                                })}
+                                {' at '}
+                                {checkInDate.toLocaleTimeString('en-US', {
+                                  hour: 'numeric',
+                                  minute: '2-digit',
+                                })}
+                              </Text>
+                              {!isPast && hoursUntil < 48 && (
+                                <Text variant="xs" color="subdued">
+                                  (
+                                  {hoursUntil < 1
+                                    ? 'Less than 1 hour'
+                                    : `${hoursUntil} hours`}
+                                  )
+                                </Text>
+                              )}
+                            </InlineStack>
+
+                            {enrollment.nextCheckInZoomLink && (
+                              <InlineStack gap="200" verticalAlign="center">
+                                <Icon
+                                  name="video"
+                                  size="small"
+                                  style={{ color: '#2563eb' }}
+                                />
+                                <a
+                                  href={enrollment.nextCheckInZoomLink}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  style={{
+                                    color: '#2563eb',
+                                    textDecoration: 'none',
+                                    fontSize: '13px',
+                                  }}
+                                >
+                                  Join Zoom Meeting
+                                </a>
+                              </InlineStack>
+                            )}
+                          </Stack>
+
+                          <InlineStack gap="200">
+                            <Button
+                              variant="tertiary"
+                              size="small"
+                              onPress={() =>
+                                router.push(`/participants/${participant.id}`)
+                              }
+                            >
+                              View Profile
+                            </Button>
+                            <Button
+                              variant="primary"
+                              size="small"
+                              onPress={() =>
+                                router.push(
+                                  `/participants/${participant.id}/add-case-note`,
+                                )
+                              }
+                            >
+                              <Icon name="plus" />
+                              Add Note
+                            </Button>
+                          </InlineStack>
                         </InlineStack>
-                      </InlineStack>
-                    </Card>
-                  );
-                })}
+                      </Card>
+                    );
+                  },
+                )}
 
                 {hasMore && !showAll && (
                   <Button

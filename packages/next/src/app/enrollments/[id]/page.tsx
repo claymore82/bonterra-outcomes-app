@@ -17,7 +17,10 @@ import { useAssessmentStore } from '@/lib/stores/assessmentStore';
 import { useProgramStore } from '@/lib/stores/programStore';
 import { useParticipantStore } from '@/lib/stores/participantStore';
 import { useCaseWorkerStore } from '@/lib/stores/caseWorkerStore';
-import { calculateEnrollmentMetrics, getSuccessIndicators } from '@/lib/outcomeMetrics';
+import {
+  calculateEnrollmentMetrics,
+  getSuccessIndicators,
+} from '@/lib/outcomeMetrics';
 import { HMIS_GENDER_CODES } from '@/types/poc';
 import { TimelineEvent, TimelineEventType } from '@/types/assessments';
 import PageLayout from '../../components/PageLayout';
@@ -27,11 +30,15 @@ interface EnrollmentDetailPageProps {
   params: Promise<{ id: string }>;
 }
 
-export default function EnrollmentDetailPage({ params }: EnrollmentDetailPageProps) {
+export default function EnrollmentDetailPage({
+  params,
+}: EnrollmentDetailPageProps) {
   const resolvedParams = use(params);
   const enrollmentId = resolvedParams.id;
 
-  const [activeTab, setActiveTab] = useState<'timeline' | 'services' | 'goals' | 'assessments'>('timeline');
+  const [activeTab, setActiveTab] = useState<
+    'timeline' | 'services' | 'goals' | 'assessments'
+  >('timeline');
   const [showCompleteModal, setShowCompleteModal] = useState(false);
 
   const { getEnrollmentById, getEnrollmentDuration } = useEnrollmentStore();
@@ -62,9 +69,13 @@ export default function EnrollmentDetailPage({ params }: EnrollmentDetailPagePro
     );
   }
 
-  const participant = participants.find(p => p.id === enrollment.participantId);
+  const participant = participants.find(
+    (p) => p.id === enrollment.participantId,
+  );
   const program = getProgram(enrollment.programId);
-  const caseWorker = caseWorkers.find(cw => cw.id === enrollment.caseWorkerId);
+  const caseWorker = caseWorkers.find(
+    (cw) => cw.id === enrollment.caseWorkerId,
+  );
   const daysEnrolled = getEnrollmentDuration(enrollmentId) || 0;
 
   const metrics = calculateEnrollmentMetrics(enrollment, goals, assessments);
@@ -87,7 +98,7 @@ export default function EnrollmentDetailPage({ params }: EnrollmentDetailPagePro
   });
 
   // Assessments
-  assessments.forEach(assessment => {
+  assessments.forEach((assessment) => {
     timelineEvents.push({
       id: `event-assessment-${assessment.id}`,
       enrollmentId: enrollment.id,
@@ -103,27 +114,29 @@ export default function EnrollmentDetailPage({ params }: EnrollmentDetailPagePro
   });
 
   // Goals and milestones
-  goals.forEach(goal => {
-    goal.milestones.filter(m => m.status === 'completed').forEach(milestone => {
-      if (milestone.completedDate) {
-        timelineEvents.push({
-          id: `event-milestone-${milestone.id}`,
-          enrollmentId: enrollment.id,
-          participantId: enrollment.participantId,
-          eventType: 'goal-milestone',
-          eventDate: milestone.completedDate,
-          title: `Milestone Achieved: ${milestone.description}`,
-          description: `Goal: ${goal.goal}`,
-          metadata: { goal, milestone },
-          icon: 'check',
-          color: 'green',
-        });
-      }
-    });
+  goals.forEach((goal) => {
+    goal.milestones
+      .filter((m) => m.status === 'completed')
+      .forEach((milestone) => {
+        if (milestone.completedDate) {
+          timelineEvents.push({
+            id: `event-milestone-${milestone.id}`,
+            enrollmentId: enrollment.id,
+            participantId: enrollment.participantId,
+            eventType: 'goal-milestone',
+            eventDate: milestone.completedDate,
+            title: `Milestone Achieved: ${milestone.description}`,
+            description: `Goal: ${goal.goal}`,
+            metadata: { goal, milestone },
+            icon: 'check',
+            color: 'green',
+          });
+        }
+      });
   });
 
   // Services
-  enrollment.servicesReceived.forEach(service => {
+  enrollment.servicesReceived.forEach((service) => {
     timelineEvents.push({
       id: `event-service-${service.id}`,
       enrollmentId: enrollment.id,
@@ -147,7 +160,8 @@ export default function EnrollmentDetailPage({ params }: EnrollmentDetailPagePro
       eventType: 'enrollment-end',
       eventDate: enrollment.endDate,
       title: `Enrollment ${enrollment.status === 'completed' ? 'Completed' : 'Ended'}`,
-      description: enrollment.dismissalReason || 'Program completed successfully',
+      description:
+        enrollment.dismissalReason || 'Program completed successfully',
       icon: 'flag',
       color: enrollment.status === 'completed' ? 'green' : 'gray',
     });
@@ -164,19 +178,27 @@ export default function EnrollmentDetailPage({ params }: EnrollmentDetailPagePro
   };
 
   return (
-    <PageLayout pageTitle={`${participant?.firstName} ${participant?.lastName} - Enrollment`}>
+    <PageLayout
+      pageTitle={`${participant?.firstName} ${participant?.lastName} - Enrollment`}
+    >
       <Stack space="600">
         {/* Back Link */}
         {participant && (
           <Link href={`/participants/${participant.id}`}>
-            <Text color="link">← Back to {participant.firstName} {participant.lastName}</Text>
+            <Text color="link">
+              ← Back to {participant.firstName} {participant.lastName}
+            </Text>
           </Link>
         )}
 
         {/* Header */}
         <Card>
           <Stack space="400">
-            <InlineStack gap="400" verticalAlign="center" distribute="space-between">
+            <InlineStack
+              gap="400"
+              verticalAlign="center"
+              distribute="space-between"
+            >
               <Stack space="200">
                 <Heading level={1}>
                   {participant?.firstName} {participant?.lastName}
@@ -186,7 +208,10 @@ export default function EnrollmentDetailPage({ params }: EnrollmentDetailPagePro
                     DOB: {participant?.dateOfBirth.toLocaleDateString()}
                   </Text>
                   <Text variant="sm" color="subdued">
-                    Gender: {participant ? HMIS_GENDER_CODES[participant.gender] : 'Unknown'}
+                    Gender:{' '}
+                    {participant
+                      ? HMIS_GENDER_CODES[participant.gender]
+                      : 'Unknown'}
                   </Text>
                   <Text variant="sm" color="subdued">
                     Case Worker: {caseWorker?.firstName} {caseWorker?.lastName}
@@ -224,46 +249,70 @@ export default function EnrollmentDetailPage({ params }: EnrollmentDetailPagePro
             <Card>
               <InlineStack gap="600">
                 <Stack space="100">
-                  <Text variant="sm" color="subdued">Program</Text>
+                  <Text variant="sm" color="subdued">
+                    Program
+                  </Text>
                   <Text weight="600">{program?.name}</Text>
                 </Stack>
                 <Stack space="100">
-                  <Text variant="sm" color="subdued">Enrollment Date</Text>
-                  <Text weight="600">{enrollment.startDate.toLocaleDateString()}</Text>
+                  <Text variant="sm" color="subdued">
+                    Enrollment Date
+                  </Text>
+                  <Text weight="600">
+                    {enrollment.startDate.toLocaleDateString()}
+                  </Text>
                 </Stack>
                 <Stack space="100">
-                  <Text variant="sm" color="subdued">End Date</Text>
+                  <Text variant="sm" color="subdued">
+                    End Date
+                  </Text>
                   <Text weight="600">
-                    {enrollment.endDate ? enrollment.endDate.toLocaleDateString() : 'Ongoing'}
+                    {enrollment.endDate
+                      ? enrollment.endDate.toLocaleDateString()
+                      : 'Ongoing'}
                   </Text>
                 </Stack>
                 {enrollment.nextCheckIn && enrollment.status === 'active' && (
                   <Stack space="100">
-                    <Text variant="sm" color="subdued">Next Check-In</Text>
+                    <Text variant="sm" color="subdued">
+                      Next Check-In
+                    </Text>
                     <InlineStack gap="200" verticalAlign="center">
                       <Icon
                         name="calendar"
                         size="small"
                         style={{
-                          color: new Date(enrollment.nextCheckIn) < new Date() ? '#ef4444' : '#7C3AED',
+                          color:
+                            new Date(enrollment.nextCheckIn) < new Date()
+                              ? '#ef4444'
+                              : '#7C3AED',
                         }}
                       />
                       <Text
                         weight="600"
                         style={{
-                          color: new Date(enrollment.nextCheckIn) < new Date() ? '#ef4444' : '#7C3AED',
+                          color:
+                            new Date(enrollment.nextCheckIn) < new Date()
+                              ? '#ef4444'
+                              : '#7C3AED',
                         }}
                       >
-                        {new Date(enrollment.nextCheckIn).toLocaleDateString('en-US', {
-                          month: 'short',
-                          day: 'numeric',
-                          year: 'numeric',
-                        })}
+                        {new Date(enrollment.nextCheckIn).toLocaleDateString(
+                          'en-US',
+                          {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric',
+                          },
+                        )}
                         {' at '}
-                        {new Date(enrollment.nextCheckIn).toLocaleTimeString('en-US', {
-                          hour: 'numeric',
-                          minute: '2-digit',
-                        })}
+                        {new Date(enrollment.nextCheckIn).toLocaleTimeString(
+                          'en-US',
+                          {
+                            hour: 'numeric',
+                            minute: '2-digit',
+                          },
+                        )}
                       </Text>
                     </InlineStack>
                   </Stack>
@@ -272,42 +321,67 @@ export default function EnrollmentDetailPage({ params }: EnrollmentDetailPagePro
             </Card>
 
             {/* Outcomes Achieved */}
-            {enrollment.status === 'completed' && enrollment.outcomes.length > 0 && (
-              <Card style={{ backgroundColor: '#f0fdf4', border: '1px solid #86efac' }}>
-                <Stack space="200">
-                  <InlineStack gap="200" verticalAlign="center">
-                    <Icon name="check-circle" size="small" style={{ color: '#22c55e' }} />
-                    <Text weight="600">Outcomes Achieved</Text>
-                  </InlineStack>
-                  <Stack space="100">
-                    {enrollment.outcomes.map((outcome, idx) => (
-                      <InlineStack key={idx} gap="200" verticalAlign="center">
-                        <Text variant="sm" style={{ color: '#22c55e' }}>✓</Text>
-                        <Text variant="sm">{outcome}</Text>
-                      </InlineStack>
-                    ))}
+            {enrollment.status === 'completed' &&
+              enrollment.outcomes.length > 0 && (
+                <Card
+                  style={{
+                    backgroundColor: '#f0fdf4',
+                    border: '1px solid #86efac',
+                  }}
+                >
+                  <Stack space="200">
+                    <InlineStack gap="200" verticalAlign="center">
+                      <Icon
+                        name="check-circle"
+                        size="small"
+                        style={{ color: '#22c55e' }}
+                      />
+                      <Text weight="600">Outcomes Achieved</Text>
+                    </InlineStack>
+                    <Stack space="100">
+                      {enrollment.outcomes.map((outcome, idx) => (
+                        <InlineStack key={idx} gap="200" verticalAlign="center">
+                          <Text variant="sm" style={{ color: '#22c55e' }}>
+                            ✓
+                          </Text>
+                          <Text variant="sm">{outcome}</Text>
+                        </InlineStack>
+                      ))}
+                    </Stack>
                   </Stack>
-                </Stack>
-              </Card>
-            )}
+                </Card>
+              )}
 
             {/* Dismissal/Transfer Info */}
             {enrollment.status !== 'active' && enrollment.dismissalReason && (
-              <Card style={{
-                backgroundColor: enrollment.status === 'completed' ? '#eff6ff' : '#fef3c7',
-                border: enrollment.status === 'completed' ? '1px solid #93c5fd' : '1px solid #fcd34d'
-              }}>
+              <Card
+                style={{
+                  backgroundColor:
+                    enrollment.status === 'completed' ? '#eff6ff' : '#fef3c7',
+                  border:
+                    enrollment.status === 'completed'
+                      ? '1px solid #93c5fd'
+                      : '1px solid #fcd34d',
+                }}
+              >
                 <Stack space="200">
                   <InlineStack gap="200" verticalAlign="center">
                     <Icon
                       name="info-circle"
                       size="small"
-                      style={{ color: enrollment.status === 'completed' ? '#3b82f6' : '#f59e0b' }}
+                      style={{
+                        color:
+                          enrollment.status === 'completed'
+                            ? '#3b82f6'
+                            : '#f59e0b',
+                      }}
                     />
                     <Text weight="600">
-                      {enrollment.status === 'completed' ? 'Completion Notes' :
-                       enrollment.status === 'transferred' ? 'Transfer Notes' :
-                       'Dismissal Reason'}
+                      {enrollment.status === 'completed'
+                        ? 'Completion Notes'
+                        : enrollment.status === 'transferred'
+                          ? 'Transfer Notes'
+                          : 'Dismissal Reason'}
                     </Text>
                   </InlineStack>
                   <Text variant="sm">{enrollment.dismissalReason}</Text>
@@ -321,7 +395,9 @@ export default function EnrollmentDetailPage({ params }: EnrollmentDetailPagePro
                 {successIndicators.map((indicator, idx) => (
                   <Card key={idx}>
                     <Stack space="100">
-                      <Text variant="sm" color="subdued">{indicator.indicator}</Text>
+                      <Text variant="sm" color="subdued">
+                        {indicator.indicator}
+                      </Text>
                       <Heading level={3}>{indicator.value}</Heading>
                     </Stack>
                   </Card>
@@ -339,7 +415,7 @@ export default function EnrollmentDetailPage({ params }: EnrollmentDetailPagePro
               { id: 'services', label: 'Services' },
               { id: 'goals', label: 'Goals' },
               { id: 'assessments', label: 'Assessments' },
-            ].map(tab => (
+            ].map((tab) => (
               <Button
                 key={tab.id}
                 variant={activeTab === tab.id ? 'primary' : 'secondary'}
@@ -398,7 +474,9 @@ export default function EnrollmentDetailPage({ params }: EnrollmentDetailPagePro
                             </Text>
                           </InlineStack>
                           {event.description && (
-                            <Text variant="sm" color="subdued">{event.description}</Text>
+                            <Text variant="sm" color="subdued">
+                              {event.description}
+                            </Text>
                           )}
                         </Stack>
                       </Card>
@@ -421,7 +499,7 @@ export default function EnrollmentDetailPage({ params }: EnrollmentDetailPagePro
               </InlineStack>
 
               <Stack space="400">
-                {goals.map(goal => (
+                {goals.map((goal) => (
                   <Card key={goal.id}>
                     <Stack space="300">
                       <InlineStack gap="400" verticalAlign="center">
@@ -430,7 +508,12 @@ export default function EnrollmentDetailPage({ params }: EnrollmentDetailPagePro
                           variant="sm"
                           weight="600"
                           style={{
-                            color: goal.status === 'achieved' ? '#10b981' : goal.status === 'in-progress' ? '#3b82f6' : '#6b7280',
+                            color:
+                              goal.status === 'achieved'
+                                ? '#10b981'
+                                : goal.status === 'in-progress'
+                                  ? '#3b82f6'
+                                  : '#6b7280',
                             textTransform: 'capitalize',
                           }}
                         >
@@ -438,28 +521,44 @@ export default function EnrollmentDetailPage({ params }: EnrollmentDetailPagePro
                         </Text>
                       </InlineStack>
                       {goal.description && (
-                        <Text variant="sm" color="subdued">{goal.description}</Text>
+                        <Text variant="sm" color="subdued">
+                          {goal.description}
+                        </Text>
                       )}
 
                       {/* Milestones */}
                       {goal.milestones.length > 0 && (
                         <Stack space="200">
-                          <Text variant="sm" weight="600">Milestones</Text>
-                          {goal.milestones.map(milestone => (
-                            <InlineStack key={milestone.id} gap="300" verticalAlign="center">
+                          <Text variant="sm" weight="600">
+                            Milestones
+                          </Text>
+                          {goal.milestones.map((milestone) => (
+                            <InlineStack
+                              key={milestone.id}
+                              gap="300"
+                              verticalAlign="center"
+                            >
                               <Icon
-                                name={milestone.status === 'completed' ? 'check-circle' : 'circle'}
+                                name={
+                                  milestone.status === 'completed'
+                                    ? 'check-circle'
+                                    : 'circle'
+                                }
                                 size="small"
                                 style={{
-                                  color: milestone.status === 'completed' ? '#10b981' : milestone.status === 'missed' ? '#ef4444' : '#6b7280',
+                                  color:
+                                    milestone.status === 'completed'
+                                      ? '#10b981'
+                                      : milestone.status === 'missed'
+                                        ? '#ef4444'
+                                        : '#6b7280',
                                 }}
                               />
                               <Text variant="sm">{milestone.description}</Text>
                               <Text variant="sm" color="subdued">
                                 {milestone.completedDate
                                   ? `Completed ${milestone.completedDate.toLocaleDateString()}`
-                                  : `Due ${milestone.targetDate.toLocaleDateString()}`
-                                }
+                                  : `Due ${milestone.targetDate.toLocaleDateString()}`}
                               </Text>
                             </InlineStack>
                           ))}
@@ -469,9 +568,13 @@ export default function EnrollmentDetailPage({ params }: EnrollmentDetailPagePro
                       {/* Progress notes */}
                       {goal.progressNotes.length > 0 && (
                         <Stack space="200">
-                          <Text variant="sm" weight="600">Progress Notes</Text>
+                          <Text variant="sm" weight="600">
+                            Progress Notes
+                          </Text>
                           {goal.progressNotes.map((note, idx) => (
-                            <Text key={idx} variant="sm" color="subdued">• {note}</Text>
+                            <Text key={idx} variant="sm" color="subdued">
+                              • {note}
+                            </Text>
                           ))}
                         </Stack>
                       )}
@@ -494,37 +597,49 @@ export default function EnrollmentDetailPage({ params }: EnrollmentDetailPagePro
               </InlineStack>
 
               <Stack space="400">
-                {assessments.map(assessment => (
+                {assessments.map((assessment) => (
                   <Card key={assessment.id}>
                     <Stack space="300">
                       <Heading level={3}>{assessment.templateName}</Heading>
                       <Text variant="sm" color="subdued">
-                        {assessment.assessmentType} • Completed {assessment.assessmentDate.toLocaleDateString()}
+                        {assessment.assessmentType} • Completed{' '}
+                        {assessment.assessmentDate.toLocaleDateString()}
                       </Text>
 
                       {/* Scores */}
-                      {assessment.scores && Object.keys(assessment.scores).length > 0 && (
-                        <Stack space="200">
-                          <Text variant="sm" weight="600">Scores</Text>
-                          <InlineStack gap="400">
-                            {Object.entries(assessment.scores).map(([key, value]) => (
-                              <Card key={key}>
-                                <Stack space="100">
-                                  <Text variant="sm" color="subdued">{key}</Text>
-                                  <Heading level={3}>{value}</Heading>
-                                </Stack>
-                              </Card>
-                            ))}
-                          </InlineStack>
-                        </Stack>
-                      )}
+                      {assessment.scores &&
+                        Object.keys(assessment.scores).length > 0 && (
+                          <Stack space="200">
+                            <Text variant="sm" weight="600">
+                              Scores
+                            </Text>
+                            <InlineStack gap="400">
+                              {Object.entries(assessment.scores).map(
+                                ([key, value]) => (
+                                  <Card key={key}>
+                                    <Stack space="100">
+                                      <Text variant="sm" color="subdued">
+                                        {key}
+                                      </Text>
+                                      <Heading level={3}>{value}</Heading>
+                                    </Stack>
+                                  </Card>
+                                ),
+                              )}
+                            </InlineStack>
+                          </Stack>
+                        )}
 
                       {/* Recommendations */}
                       {assessment.recommendations.length > 0 && (
                         <Stack space="200">
-                          <Text variant="sm" weight="600">Recommendations</Text>
+                          <Text variant="sm" weight="600">
+                            Recommendations
+                          </Text>
                           {assessment.recommendations.map((rec, idx) => (
-                            <Text key={idx} variant="sm" color="subdued">• {rec}</Text>
+                            <Text key={idx} variant="sm" color="subdued">
+                              • {rec}
+                            </Text>
                           ))}
                         </Stack>
                       )}
@@ -543,24 +658,33 @@ export default function EnrollmentDetailPage({ params }: EnrollmentDetailPagePro
                 <Heading level={2}>Services Received</Heading>
                 <Text variant="sm" color="subdued">
                   Total: {metrics.totalServices} services
-                  {metrics.totalServiceCost > 0 && ` • $${metrics.totalServiceCost.toLocaleString()}`}
+                  {metrics.totalServiceCost > 0 &&
+                    ` • $${metrics.totalServiceCost.toLocaleString()}`}
                 </Text>
               </InlineStack>
 
               <Stack space="300">
-                {enrollment.servicesReceived.map(service => (
+                {enrollment.servicesReceived.map((service) => (
                   <Card key={service.id}>
                     <InlineStack gap="600">
                       <Stack space="100">
                         <Text weight="600">{service.serviceType}</Text>
-                        <Text variant="sm" color="subdued">{service.date.toLocaleDateString()}</Text>
+                        <Text variant="sm" color="subdued">
+                          {service.date.toLocaleDateString()}
+                        </Text>
                       </Stack>
                       <Stack space="100">
-                        <Text variant="sm" color="subdued">Amount</Text>
-                        <Text weight="600">{service.amount} {service.unit}</Text>
+                        <Text variant="sm" color="subdued">
+                          Amount
+                        </Text>
+                        <Text weight="600">
+                          {service.amount} {service.unit}
+                        </Text>
                       </Stack>
                       <Stack space="100">
-                        <Text variant="sm" color="subdued">Provider</Text>
+                        <Text variant="sm" color="subdued">
+                          Provider
+                        </Text>
                         <Text weight="600">{service.providedBy}</Text>
                       </Stack>
                     </InlineStack>

@@ -11,10 +11,12 @@ export const HMIS_2024: DemographicsStandard = {
   version: '2024',
   status: 'active',
   agency: 'HUD',
-  description: 'Current HMIS data standards for homeless services programs (based on pre-2024 OMB standards)',
+  description:
+    'Current HMIS data standards for homeless services programs (based on pre-2024 OMB standards)',
   effectiveDate: new Date('2023-10-01'),
   retirementDate: new Date('2025-09-30'), // Anticipated when HMIS adopts OMB 2024
-  documentationUrl: 'https://hudexchange.info/programs/hmis/hmis-data-standards/',
+  documentationUrl:
+    'https://hudexchange.info/programs/hmis/hmis-data-standards/',
   fields: [
     {
       fieldKey: 'race',
@@ -23,12 +25,16 @@ export const HMIS_2024: DemographicsStandard = {
       required: true,
       helpText: 'Select all that apply',
       options: [
-        { value: '1', label: 'American Indian, Alaska Native, or Indigenous', code: '1' },
+        {
+          value: '1',
+          label: 'American Indian, Alaska Native, or Indigenous',
+          code: '1',
+        },
         { value: '2', label: 'Asian or Asian American', code: '2' },
         { value: '3', label: 'Black, African American, or African', code: '3' },
         { value: '4', label: 'Native Hawaiian or Pacific Islander', code: '4' },
         { value: '5', label: 'White', code: '5' },
-        { value: '8', label: 'Client doesn\'t know', code: '8' },
+        { value: '8', label: "Client doesn't know", code: '8' },
         { value: '9', label: 'Client prefers not to answer', code: '9' },
         { value: '99', label: 'Data not collected', code: '99' },
       ],
@@ -41,7 +47,7 @@ export const HMIS_2024: DemographicsStandard = {
       options: [
         { value: '0', label: 'Non-Hispanic/Non-Latin(a)(o)(x)', code: '0' },
         { value: '1', label: 'Hispanic/Latin(a)(o)(x)', code: '1' },
-        { value: '8', label: 'Client doesn\'t know', code: '8' },
+        { value: '8', label: "Client doesn't know", code: '8' },
         { value: '9', label: 'Client prefers not to answer', code: '9' },
         { value: '99', label: 'Data not collected', code: '99' },
       ],
@@ -60,7 +66,7 @@ export const HMIS_2024: DemographicsStandard = {
         { value: '4', label: 'Transgender', code: '4' },
         { value: '5', label: 'Questioning', code: '5' },
         { value: '6', label: 'Different Identity', code: '6' },
-        { value: '8', label: 'Client doesn\'t know', code: '8' },
+        { value: '8', label: "Client doesn't know", code: '8' },
         { value: '9', label: 'Client prefers not to answer', code: '9' },
         { value: '99', label: 'Data not collected', code: '99' },
       ],
@@ -73,7 +79,7 @@ export const HMIS_2024: DemographicsStandard = {
       options: [
         { value: '0', label: 'No', code: '0' },
         { value: '1', label: 'Yes', code: '1' },
-        { value: '8', label: 'Client doesn\'t know', code: '8' },
+        { value: '8', label: "Client doesn't know", code: '8' },
         { value: '9', label: 'Client prefers not to answer', code: '9' },
         { value: '99', label: 'Data not collected', code: '99' },
       ],
@@ -89,58 +95,68 @@ export const OMB_2024: DemographicsStandard = {
   version: '2024',
   status: 'active',
   agency: 'OMB',
-  description: 'Updated federal race and ethnicity standards released March 28, 2024. Includes Middle Eastern/North African category and combined race/ethnicity question.',
+  description:
+    'Updated federal race and ethnicity standards released March 28, 2024. Includes Middle Eastern/North African category and combined race/ethnicity question.',
   effectiveDate: new Date('2024-03-28'),
-  documentationUrl: 'https://www.federalregister.gov/documents/2024/03/29/2024-06469/revisions-to-ombs-statistical-policy-directive-no-15-standards-for-maintaining-collecting-and',
+  documentationUrl:
+    'https://www.federalregister.gov/documents/2024/03/29/2024-06469/revisions-to-ombs-statistical-policy-directive-no-15-standards-for-maintaining-collecting-and',
   fields: [
     {
       fieldKey: 'raceEthnicity',
       label: 'Race and Ethnicity',
       fieldType: 'multi-select',
       required: true,
-      helpText: 'Select all categories that apply to you (OMB 2024 combined question)',
+      helpText:
+        'Select all categories that apply to you (OMB 2024 combined question)',
       options: [
         {
           value: 'HISPANIC_LATINO',
           label: 'Hispanic or Latino',
           code: 'HL',
-          description: 'Includes persons of Cuban, Mexican, Puerto Rican, South or Central American, or other Spanish culture or origin',
+          description:
+            'Includes persons of Cuban, Mexican, Puerto Rican, South or Central American, or other Spanish culture or origin',
         },
         {
           value: 'AMERICAN_INDIAN_ALASKA_NATIVE',
           label: 'American Indian or Alaska Native',
           code: 'AIAN',
-          description: 'A person having origins in any of the original peoples of North and South America (including Central America) and who maintains tribal affiliation or community attachment',
+          description:
+            'A person having origins in any of the original peoples of North and South America (including Central America) and who maintains tribal affiliation or community attachment',
         },
         {
           value: 'ASIAN',
           label: 'Asian',
           code: 'A',
-          description: 'A person having origins in any of the original peoples of the Far East, Southeast Asia, or the Indian subcontinent',
+          description:
+            'A person having origins in any of the original peoples of the Far East, Southeast Asia, or the Indian subcontinent',
         },
         {
           value: 'BLACK_AFRICAN_AMERICAN',
           label: 'Black or African American',
           code: 'B',
-          description: 'A person having origins in any of the Black racial groups of Africa',
+          description:
+            'A person having origins in any of the Black racial groups of Africa',
         },
         {
           value: 'MIDDLE_EASTERN_NORTH_AFRICAN',
           label: 'Middle Eastern or North African',
           code: 'MENA',
-          description: 'A person having origins in any of the original peoples of the Middle East or North Africa (NEW in 2024)',
+          description:
+            'A person having origins in any of the original peoples of the Middle East or North Africa (NEW in 2024)',
         },
         {
           value: 'NATIVE_HAWAIIAN_PACIFIC_ISLANDER',
           label: 'Native Hawaiian or Pacific Islander',
           code: 'NHPI',
-          description: 'A person having origins in any of the original peoples of Hawaii, Guam, Samoa, or other Pacific Islands',
+          description:
+            'A person having origins in any of the original peoples of Hawaii, Guam, Samoa, or other Pacific Islands',
         },
         {
           value: 'WHITE',
           label: 'White',
           code: 'W',
-          description: 'A person having origins in any of the original peoples of Europe',
+          description:
+            'A person having origins in any of the original peoples of Europe',
         },
       ],
     },
@@ -154,7 +170,8 @@ export const HHS_MEDICAID: DemographicsStandard = {
   version: '2024',
   status: 'active',
   agency: 'HHS',
-  description: 'Health and Human Services demographics for Medicaid and CHIP enrollment',
+  description:
+    'Health and Human Services demographics for Medicaid and CHIP enrollment',
   effectiveDate: new Date('2024-01-01'),
   documentationUrl: 'https://www.medicaid.gov/',
   fields: [
@@ -164,10 +181,18 @@ export const HHS_MEDICAID: DemographicsStandard = {
       fieldType: 'multi-select',
       required: true,
       options: [
-        { value: 'AIAN', label: 'American Indian or Alaska Native', code: 'AIAN' },
+        {
+          value: 'AIAN',
+          label: 'American Indian or Alaska Native',
+          code: 'AIAN',
+        },
         { value: 'A', label: 'Asian', code: 'A' },
         { value: 'B', label: 'Black or African American', code: 'B' },
-        { value: 'NHPI', label: 'Native Hawaiian or Other Pacific Islander', code: 'NHPI' },
+        {
+          value: 'NHPI',
+          label: 'Native Hawaiian or Other Pacific Islander',
+          code: 'NHPI',
+        },
         { value: 'W', label: 'White', code: 'W' },
         { value: 'O', label: 'Other', code: 'O' },
         { value: 'U', label: 'Unknown', code: 'U' },
@@ -228,14 +253,19 @@ export const DOE_IPEDS: DemographicsStandard = {
       label: 'Race/Ethnicity',
       fieldType: 'single-select',
       required: true,
-      helpText: 'Students may report multiple races, but only one category is recorded',
+      helpText:
+        'Students may report multiple races, but only one category is recorded',
       options: [
         { value: '1', label: 'Nonresident alien', code: '1' },
         { value: '2', label: 'Hispanic/Latino', code: '2' },
         { value: '3', label: 'American Indian or Alaska Native', code: '3' },
         { value: '4', label: 'Asian', code: '4' },
         { value: '5', label: 'Black or African American', code: '5' },
-        { value: '6', label: 'Native Hawaiian or Other Pacific Islander', code: '6' },
+        {
+          value: '6',
+          label: 'Native Hawaiian or Other Pacific Islander',
+          code: '6',
+        },
         { value: '7', label: 'White', code: '7' },
         { value: '8', label: 'Two or more races', code: '8' },
         { value: '9', label: 'Race and ethnicity unknown', code: '9' },
@@ -265,7 +295,8 @@ export const FAIR_HOUSING: DemographicsStandard = {
   agency: 'HUD',
   description: 'Demographics for fair housing and mortgage lending monitoring',
   effectiveDate: new Date('2024-01-01'),
-  documentationUrl: 'https://www.hud.gov/program_offices/fair_housing_equal_opp',
+  documentationUrl:
+    'https://www.hud.gov/program_offices/fair_housing_equal_opp',
   fields: [
     {
       fieldKey: 'race',
@@ -274,12 +305,24 @@ export const FAIR_HOUSING: DemographicsStandard = {
       required: false,
       helpText: 'Applicant may select one or more (voluntary)',
       options: [
-        { value: 'AIAN', label: 'American Indian or Alaska Native', code: 'AIAN' },
+        {
+          value: 'AIAN',
+          label: 'American Indian or Alaska Native',
+          code: 'AIAN',
+        },
         { value: 'A', label: 'Asian', code: 'A' },
         { value: 'B', label: 'Black or African American', code: 'B' },
-        { value: 'NHPI', label: 'Native Hawaiian or Other Pacific Islander', code: 'NHPI' },
+        {
+          value: 'NHPI',
+          label: 'Native Hawaiian or Other Pacific Islander',
+          code: 'NHPI',
+        },
         { value: 'W', label: 'White', code: 'W' },
-        { value: 'DNA', label: 'I do not wish to provide this information', code: 'DNA' },
+        {
+          value: 'DNA',
+          label: 'I do not wish to provide this information',
+          code: 'DNA',
+        },
       ],
     },
     {
@@ -290,7 +333,11 @@ export const FAIR_HOUSING: DemographicsStandard = {
       options: [
         { value: 'H', label: 'Hispanic or Latino', code: 'H' },
         { value: 'NH', label: 'Not Hispanic or Latino', code: 'NH' },
-        { value: 'DNA', label: 'I do not wish to provide this information', code: 'DNA' },
+        {
+          value: 'DNA',
+          label: 'I do not wish to provide this information',
+          code: 'DNA',
+        },
       ],
     },
     {
@@ -301,7 +348,11 @@ export const FAIR_HOUSING: DemographicsStandard = {
       options: [
         { value: 'M', label: 'Male', code: 'M' },
         { value: 'F', label: 'Female', code: 'F' },
-        { value: 'DNA', label: 'I do not wish to provide this information', code: 'DNA' },
+        {
+          value: 'DNA',
+          label: 'I do not wish to provide this information',
+          code: 'DNA',
+        },
       ],
     },
   ],
@@ -326,11 +377,28 @@ export const EEO_REPORTING: DemographicsStandard = {
       options: [
         { value: 'HL', label: 'Hispanic or Latino', code: 'HL' },
         { value: 'WNH', label: 'White (Not Hispanic or Latino)', code: 'WNH' },
-        { value: 'BNH', label: 'Black or African American (Not Hispanic or Latino)', code: 'BNH' },
-        { value: 'NHPI', label: 'Native Hawaiian or Other Pacific Islander (Not Hispanic or Latino)', code: 'NHPI' },
+        {
+          value: 'BNH',
+          label: 'Black or African American (Not Hispanic or Latino)',
+          code: 'BNH',
+        },
+        {
+          value: 'NHPI',
+          label:
+            'Native Hawaiian or Other Pacific Islander (Not Hispanic or Latino)',
+          code: 'NHPI',
+        },
         { value: 'ANH', label: 'Asian (Not Hispanic or Latino)', code: 'ANH' },
-        { value: 'AIAN', label: 'American Indian or Alaska Native (Not Hispanic or Latino)', code: 'AIAN' },
-        { value: 'TMR', label: 'Two or More Races (Not Hispanic or Latino)', code: 'TMR' },
+        {
+          value: 'AIAN',
+          label: 'American Indian or Alaska Native (Not Hispanic or Latino)',
+          code: 'AIAN',
+        },
+        {
+          value: 'TMR',
+          label: 'Two or More Races (Not Hispanic or Latino)',
+          code: 'TMR',
+        },
       ],
     },
     {
@@ -357,7 +425,9 @@ export const DEMOGRAPHICS_STANDARDS_LIBRARY: DemographicsStandard[] = [
 ];
 
 // Helper to get standard by ID
-export function getStandardById(standardId: string): DemographicsStandard | undefined {
+export function getStandardById(
+  standardId: string,
+): DemographicsStandard | undefined {
   return DEMOGRAPHICS_STANDARDS_LIBRARY.find((s) => s.id === standardId);
 }
 

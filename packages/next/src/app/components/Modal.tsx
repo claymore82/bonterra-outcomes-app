@@ -10,7 +10,13 @@ interface ModalProps {
   size?: 'small' | 'medium' | 'large';
 }
 
-export default function Modal({ isOpen, onClose, title, children, size = 'medium' }: ModalProps) {
+export default function Modal({
+  isOpen,
+  onClose,
+  title,
+  children,
+  size = 'medium',
+}: ModalProps) {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -56,7 +62,8 @@ export default function Modal({ isOpen, onClose, title, children, size = 'medium
           maxWidth: widthMap[size],
           maxHeight: '90vh',
           overflow: 'auto',
-          boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+          boxShadow:
+            '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -69,7 +76,9 @@ export default function Modal({ isOpen, onClose, title, children, size = 'medium
             alignItems: 'center',
           }}
         >
-          <h2 style={{ fontSize: '18px', fontWeight: 600, margin: 0 }}>{title}</h2>
+          <h2 style={{ fontSize: '18px', fontWeight: 600, margin: 0 }}>
+            {title}
+          </h2>
           <button
             onClick={onClose}
             style={{

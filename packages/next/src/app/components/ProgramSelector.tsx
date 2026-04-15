@@ -1,11 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import {
-  Text,
-  InlineStack,
-  Icon,
-} from '@bonterratech/stitch-extension';
+import { Text, InlineStack, Icon } from '@bonterratech/stitch-extension';
 import { useUserStore } from '@/lib/stores/userStore';
 import { useProgramStore } from '@/lib/stores/programStore';
 import { useEnrollmentStore } from '@/lib/stores/enrollmentStore';
@@ -21,7 +17,10 @@ export default function ProgramSelector() {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -32,21 +31,32 @@ export default function ProgramSelector() {
 
   // Filter programs based on user's access
   const availablePrograms = currentUser.caseWorkerProfile?.programIds.length
-    ? programs.filter(p => currentUser.caseWorkerProfile!.programIds.includes(p.id))
+    ? programs.filter((p) =>
+        currentUser.caseWorkerProfile!.programIds.includes(p.id),
+      )
     : programs;
 
   const currentProgram = currentProgramId
-    ? programs.find(p => p.id === currentProgramId)
+    ? programs.find((p) => p.id === currentProgramId)
     : null;
 
   const activeEnrollmentCount = currentProgram
-    ? getActiveEnrollments().filter(e => e.programId === currentProgram.id).length
+    ? getActiveEnrollments().filter((e) => e.programId === currentProgram.id)
+        .length
     : getActiveEnrollments().length;
 
   const displayText = currentProgram ? currentProgram.name : 'All Programs';
 
   return (
-    <div style={{ position: 'relative', height: '100%', display: 'flex', alignItems: 'center' }} ref={dropdownRef}>
+    <div
+      style={{
+        position: 'relative',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+      }}
+      ref={dropdownRef}
+    >
       <button
         onClick={() => setIsOpen(!isOpen)}
         style={{
@@ -61,8 +71,12 @@ export default function ProgramSelector() {
           transition: 'background-color 0.2s',
           height: 'fit-content',
         }}
-        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f3f4f6')}
-        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+        onMouseEnter={(e) =>
+          (e.currentTarget.style.backgroundColor = '#f3f4f6')
+        }
+        onMouseLeave={(e) =>
+          (e.currentTarget.style.backgroundColor = 'transparent')
+        }
       >
         <Text variant="sm" weight="500" style={{ fontSize: '15px' }}>
           {displayText}
@@ -84,7 +98,8 @@ export default function ProgramSelector() {
             width: '280px',
             backgroundColor: 'white',
             borderRadius: '8px',
-            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+            boxShadow:
+              '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
             border: '1px solid #e5e7eb',
             maxHeight: '400px',
             overflowY: 'auto',
@@ -105,11 +120,19 @@ export default function ProgramSelector() {
               cursor: 'pointer',
               transition: 'background-color 0.2s',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f9fafb')}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = currentProgramId === null ? '#f3f4f6' : 'white')}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = '#f9fafb')
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor =
+                currentProgramId === null ? '#f3f4f6' : 'white')
+            }
           >
             <InlineStack gap="300" verticalAlign="center">
-              <Text variant="sm" weight={currentProgramId === null ? '600' : '400'}>
+              <Text
+                variant="sm"
+                weight={currentProgramId === null ? '600' : '400'}
+              >
                 All Programs
               </Text>
               {currentProgramId === null && (
@@ -121,7 +144,9 @@ export default function ProgramSelector() {
           </button>
           {availablePrograms.map((program) => {
             const isSelected = currentProgramId === program.id;
-            const programActiveCount = getActiveEnrollments().filter(e => e.programId === program.id).length;
+            const programActiveCount = getActiveEnrollments().filter(
+              (e) => e.programId === program.id,
+            ).length;
 
             return (
               <button
@@ -139,8 +164,14 @@ export default function ProgramSelector() {
                   cursor: 'pointer',
                   transition: 'background-color 0.2s',
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f9fafb')}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = isSelected ? '#f3f4f6' : 'white')}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor = '#f9fafb')
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = isSelected
+                    ? '#f3f4f6'
+                    : 'white')
+                }
               >
                 <InlineStack gap="300" verticalAlign="center">
                   <Text variant="sm" weight={isSelected ? '600' : '400'}>

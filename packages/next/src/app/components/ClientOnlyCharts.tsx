@@ -45,7 +45,9 @@ const CustomTooltip = ({ active, payload, label }: any) => {
           boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
         }}
       >
-        <p style={{ margin: '0 0 4px 0', fontWeight: '600', color: '#1a1a1a' }}>{label}</p>
+        <p style={{ margin: '0 0 4px 0', fontWeight: '600', color: '#1a1a1a' }}>
+          {label}
+        </p>
         <p style={{ margin: 0, color: '#7C3AED', fontWeight: '500' }}>
           {payload[0].name}: {payload[0].value}
         </p>
@@ -55,7 +57,12 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-export function ClientLineChart({ categories, data, title, seriesName }: LineChartData) {
+export function ClientLineChart({
+  categories,
+  data,
+  title,
+  seriesName,
+}: LineChartData) {
   const chartData = categories.map((category, index) => ({
     name: category,
     [seriesName]: data[index],
@@ -65,7 +72,10 @@ export function ClientLineChart({ categories, data, title, seriesName }: LineCha
     <Stack space="300">
       <Heading level={3}>{title}</Heading>
       <ResponsiveContainer width="100%" height={320}>
-        <LineChart data={chartData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+        <LineChart
+          data={chartData}
+          margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
+        >
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
           <XAxis
             dataKey="name"
@@ -97,7 +107,12 @@ export function ClientLineChart({ categories, data, title, seriesName }: LineCha
   );
 }
 
-export function ClientBarChart({ categories, data, title, seriesName }: BarChartData) {
+export function ClientBarChart({
+  categories,
+  data,
+  title,
+  seriesName,
+}: BarChartData) {
   const chartData = categories.map((category, index) => ({
     name: category,
     [seriesName]: data[index],
@@ -107,7 +122,10 @@ export function ClientBarChart({ categories, data, title, seriesName }: BarChart
     <Stack space="300">
       <Heading level={3}>{title}</Heading>
       <ResponsiveContainer width="100%" height={320}>
-        <BarChart data={chartData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+        <BarChart
+          data={chartData}
+          margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
+        >
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
           <XAxis
             dataKey="name"
@@ -157,9 +175,14 @@ const StackedTooltip = ({ active, payload, label }: any) => {
           boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
         }}
       >
-        <p style={{ margin: '0 0 8px 0', fontWeight: '600', color: '#1a1a1a' }}>{label}</p>
+        <p style={{ margin: '0 0 8px 0', fontWeight: '600', color: '#1a1a1a' }}>
+          {label}
+        </p>
         {payload.map((entry: any, index: number) => (
-          <p key={index} style={{ margin: '4px 0', color: entry.color, fontWeight: '500' }}>
+          <p
+            key={index}
+            style={{ margin: '4px 0', color: entry.color, fontWeight: '500' }}
+          >
             {entry.name}: ${(entry.value / 1000).toFixed(1)}k
           </p>
         ))}
@@ -169,10 +192,16 @@ const StackedTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-export function ClientStackedBarChart({ categories, series, title, yAxisLabel, onBarClick }: StackedBarChartData) {
+export function ClientStackedBarChart({
+  categories,
+  series,
+  title,
+  yAxisLabel,
+  onBarClick,
+}: StackedBarChartData) {
   const chartData = categories.map((category, index) => {
     const dataPoint: any = { name: category, index };
-    series.forEach(s => {
+    series.forEach((s) => {
       dataPoint[s.name] = s.data[index];
     });
     return dataPoint;
@@ -189,13 +218,23 @@ export function ClientStackedBarChart({ categories, series, title, yAxisLabel, o
       <Heading level={3}>
         {title}
         {onBarClick && (
-          <span style={{ fontSize: '14px', fontWeight: 'normal', color: '#6b7280', marginLeft: '8px' }}>
+          <span
+            style={{
+              fontSize: '14px',
+              fontWeight: 'normal',
+              color: '#6b7280',
+              marginLeft: '8px',
+            }}
+          >
             (Click bar to drill down)
           </span>
         )}
       </Heading>
       <ResponsiveContainer width="100%" height={320}>
-        <BarChart data={chartData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+        <BarChart
+          data={chartData}
+          margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
+        >
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
           <XAxis
             dataKey="name"
@@ -207,7 +246,16 @@ export function ClientStackedBarChart({ categories, series, title, yAxisLabel, o
             tick={{ fill: '#666', fontSize: 12 }}
             axisLine={{ stroke: '#e5e5e5' }}
             tickLine={{ stroke: '#e5e5e5' }}
-            label={yAxisLabel ? { value: yAxisLabel, angle: -90, position: 'insideLeft', style: { fill: '#666', fontSize: 12 } } : undefined}
+            label={
+              yAxisLabel
+                ? {
+                    value: yAxisLabel,
+                    angle: -90,
+                    position: 'insideLeft',
+                    style: { fill: '#666', fontSize: 12 },
+                  }
+                : undefined
+            }
           />
           <Tooltip content={<StackedTooltip />} />
           <Legend

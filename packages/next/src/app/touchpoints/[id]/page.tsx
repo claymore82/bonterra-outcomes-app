@@ -20,13 +20,13 @@ import SimpleBadge from '../../components/SimpleBadge';
 
 const TOUCHPOINT_TYPE_LABELS = {
   'in-person': 'In-Person Meeting',
-  'phone': 'Phone Call',
+  phone: 'Phone Call',
   'home-visit': 'Home Visit',
-  'video': 'Video Call',
-  'email': 'Email',
-  'text': 'Text Message',
+  video: 'Video Call',
+  email: 'Email',
+  text: 'Text Message',
   'group-session': 'Group Session',
-  'other': 'Other',
+  other: 'Other',
 };
 
 export default function TouchpointDetailPage() {
@@ -37,7 +37,7 @@ export default function TouchpointDetailPage() {
   const { getProgram } = useProgramStore();
   const { getCaseWorker } = useCaseWorkerStore();
 
-  const touchpoint = mockTouchpoints.find(t => t.id === touchpointId);
+  const touchpoint = mockTouchpoints.find((t) => t.id === touchpointId);
 
   if (!touchpoint) {
     return (
@@ -56,10 +56,16 @@ export default function TouchpointDetailPage() {
     );
   }
 
-  const enrollment = mockEnrollments.find(e => e.id === touchpoint.enrollmentId);
-  const participant = participants.find(p => p.id === touchpoint.participantId);
+  const enrollment = mockEnrollments.find(
+    (e) => e.id === touchpoint.enrollmentId,
+  );
+  const participant = participants.find(
+    (p) => p.id === touchpoint.participantId,
+  );
   const program = enrollment ? getProgram(enrollment.programId) : null;
-  const caseWorker = touchpoint.caseWorkerId ? getCaseWorker(touchpoint.caseWorkerId) : null;
+  const caseWorker = touchpoint.caseWorkerId
+    ? getCaseWorker(touchpoint.caseWorkerId)
+    : null;
 
   const formatDate = (date: Date) => {
     return new Date(date).toLocaleDateString('en-US', {
@@ -87,11 +93,18 @@ export default function TouchpointDetailPage() {
           <Link href="/case-notes">
             <Text color="link">← Back to Case Notes</Text>
           </Link>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+            }}
+          >
             <div>
               <Heading level={1}>Touchpoint Details</Heading>
               <Text color="subdued">
-                {formatDate(touchpoint.createdAt)} at {formatTime(touchpoint.createdAt)}
+                {formatDate(touchpoint.createdAt)} at{' '}
+                {formatTime(touchpoint.createdAt)}
               </Text>
             </div>
             <InlineStack gap="200">
@@ -108,13 +121,24 @@ export default function TouchpointDetailPage() {
         </Stack>
 
         {/* Main Content Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '2fr 1fr',
+            gap: '24px',
+          }}
+        >
           {/* Main Content */}
           <Stack space="400">
             {/* Original Notes */}
             <Card>
               <Stack space="400">
-                <div style={{ padding: '16px 0', borderBottom: '1px solid #e5e7eb' }}>
+                <div
+                  style={{
+                    padding: '16px 0',
+                    borderBottom: '1px solid #e5e7eb',
+                  }}
+                >
                   <Heading level={2}>Original Case Notes</Heading>
                 </div>
                 <div>
@@ -136,122 +160,153 @@ export default function TouchpointDetailPage() {
             {/* AI Extracted Data */}
             <Card>
               <Stack space="400">
-                <div style={{ padding: '16px 0', borderBottom: '1px solid #e5e7eb', backgroundColor: '#f5f3ff' }}>
+                <div
+                  style={{
+                    padding: '16px 0',
+                    borderBottom: '1px solid #e5e7eb',
+                    backgroundColor: '#f5f3ff',
+                  }}
+                >
                   <Heading level={2}>AI-Extracted Insights</Heading>
                 </div>
 
                 {/* Services Provided */}
-                {extractedData.servicesProvided && extractedData.servicesProvided.length > 0 && (
-                  <Stack space="300">
-                    <Heading level={3}>Services Provided</Heading>
-                    <Stack space="200">
-                      {extractedData.servicesProvided.map((service, idx) => (
-                        <div
-                          key={idx}
-                          style={{
-                            padding: '12px',
-                            backgroundColor: '#eff6ff',
-                            border: '1px solid #bfdbfe',
-                            borderRadius: '6px',
-                          }}
-                        >
-                          <Text weight="500">{service.serviceType}</Text>
-                          <Text variant="sm" color="subdued">
-                            {service.quantity} {service.unit}
-                            {service.amount && ` - $${service.amount.toFixed(2)}`}
-                            {' '}(confidence: {Math.round(service.confidence * 100)}%)
-                          </Text>
-                        </div>
-                      ))}
+                {extractedData.servicesProvided &&
+                  extractedData.servicesProvided.length > 0 && (
+                    <Stack space="300">
+                      <Heading level={3}>Services Provided</Heading>
+                      <Stack space="200">
+                        {extractedData.servicesProvided.map((service, idx) => (
+                          <div
+                            key={idx}
+                            style={{
+                              padding: '12px',
+                              backgroundColor: '#eff6ff',
+                              border: '1px solid #bfdbfe',
+                              borderRadius: '6px',
+                            }}
+                          >
+                            <Text weight="500">{service.serviceType}</Text>
+                            <Text variant="sm" color="subdued">
+                              {service.quantity} {service.unit}
+                              {service.amount &&
+                                ` - $${service.amount.toFixed(2)}`}{' '}
+                              (confidence:{' '}
+                              {Math.round(service.confidence * 100)}%)
+                            </Text>
+                          </div>
+                        ))}
+                      </Stack>
+                      {touchpoint.servicesRecorded.length > 0 && (
+                        <Text variant="sm" style={{ color: '#16a34a' }}>
+                          ✓ {touchpoint.servicesRecorded.length} service
+                          transaction(s) recorded
+                        </Text>
+                      )}
                     </Stack>
-                    {touchpoint.servicesRecorded.length > 0 && (
-                      <Text variant="sm" style={{ color: '#16a34a' }}>
-                        ✓ {touchpoint.servicesRecorded.length} service transaction(s) recorded
-                      </Text>
-                    )}
-                  </Stack>
-                )}
+                  )}
 
                 {/* Goal Progress */}
-                {extractedData.progressOnGoals && extractedData.progressOnGoals.length > 0 && (
-                  <Stack space="300">
-                    <Heading level={3}>Goal Progress</Heading>
-                    <Stack space="200">
-                      {extractedData.progressOnGoals.map((progress, idx) => (
-                        <div
-                          key={idx}
-                          style={{
-                            padding: '12px',
-                            backgroundColor: progress.status === 'positive'
-                              ? '#f0fdf4'
-                              : progress.status === 'negative'
-                              ? '#fef2f2'
-                              : '#f9fafb',
-                            border: `1px solid ${
-                              progress.status === 'positive'
-                                ? '#bbf7d0'
-                                : progress.status === 'negative'
-                                ? '#fecaca'
-                                : '#e5e7eb'
-                            }`,
-                            borderRadius: '6px',
-                          }}
-                        >
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                            <SimpleBadge
-                              variant={
+                {extractedData.progressOnGoals &&
+                  extractedData.progressOnGoals.length > 0 && (
+                    <Stack space="300">
+                      <Heading level={3}>Goal Progress</Heading>
+                      <Stack space="200">
+                        {extractedData.progressOnGoals.map((progress, idx) => (
+                          <div
+                            key={idx}
+                            style={{
+                              padding: '12px',
+                              backgroundColor:
                                 progress.status === 'positive'
-                                  ? 'success'
+                                  ? '#f0fdf4'
                                   : progress.status === 'negative'
-                                  ? 'danger'
-                                  : 'neutral'
-                              }
+                                    ? '#fef2f2'
+                                    : '#f9fafb',
+                              border: `1px solid ${
+                                progress.status === 'positive'
+                                  ? '#bbf7d0'
+                                  : progress.status === 'negative'
+                                    ? '#fecaca'
+                                    : '#e5e7eb'
+                              }`,
+                              borderRadius: '6px',
+                            }}
+                          >
+                            <div
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                marginBottom: '4px',
+                              }}
                             >
-                              {progress.status}
-                            </SimpleBadge>
-                            <Text variant="sm" weight="500">{progress.goal}</Text>
-                            {progress.percentComplete && (
-                              <Text variant="sm" color="subdued" style={{ marginLeft: 'auto' }}>
-                                {progress.percentComplete}% complete
+                              <SimpleBadge
+                                variant={
+                                  progress.status === 'positive'
+                                    ? 'success'
+                                    : progress.status === 'negative'
+                                      ? 'danger'
+                                      : 'neutral'
+                                }
+                              >
+                                {progress.status}
+                              </SimpleBadge>
+                              <Text variant="sm" weight="500">
+                                {progress.goal}
                               </Text>
-                            )}
+                              {progress.percentComplete && (
+                                <Text
+                                  variant="sm"
+                                  color="subdued"
+                                  style={{ marginLeft: 'auto' }}
+                                >
+                                  {progress.percentComplete}% complete
+                                </Text>
+                              )}
+                            </div>
+                            <Text variant="sm">{progress.notes}</Text>
                           </div>
-                          <Text variant="sm">{progress.notes}</Text>
-                        </div>
-                      ))}
+                        ))}
+                      </Stack>
                     </Stack>
-                  </Stack>
-                )}
+                  )}
 
                 {/* Outcome Achievements */}
-                {extractedData.outcomeAchievements && extractedData.outcomeAchievements.length > 0 && (
-                  <Stack space="300">
-                    <Heading level={3}>Outcome Achievements</Heading>
-                    <Stack space="200">
-                      {extractedData.outcomeAchievements.map((outcome, idx) => (
-                        <div
-                          key={idx}
-                          style={{
-                            padding: '12px',
-                            backgroundColor: '#f0fdf4',
-                            border: '1px solid #bbf7d0',
-                            borderRadius: '6px',
-                          }}
-                        >
-                          <Text weight="500">{outcome.goal}</Text>
-                          <Text variant="sm">{outcome.evidence}</Text>
-                          <Text variant="sm" color="subdued">
-                            {formatDate(outcome.date)} (confidence: {Math.round(outcome.confidence * 100)}%)
-                          </Text>
-                        </div>
-                      ))}
+                {extractedData.outcomeAchievements &&
+                  extractedData.outcomeAchievements.length > 0 && (
+                    <Stack space="300">
+                      <Heading level={3}>Outcome Achievements</Heading>
+                      <Stack space="200">
+                        {extractedData.outcomeAchievements.map(
+                          (outcome, idx) => (
+                            <div
+                              key={idx}
+                              style={{
+                                padding: '12px',
+                                backgroundColor: '#f0fdf4',
+                                border: '1px solid #bbf7d0',
+                                borderRadius: '6px',
+                              }}
+                            >
+                              <Text weight="500">{outcome.goal}</Text>
+                              <Text variant="sm">{outcome.evidence}</Text>
+                              <Text variant="sm" color="subdued">
+                                {formatDate(outcome.date)} (confidence:{' '}
+                                {Math.round(outcome.confidence * 100)}%)
+                              </Text>
+                            </div>
+                          ),
+                        )}
+                      </Stack>
                     </Stack>
-                  </Stack>
-                )}
+                  )}
 
                 {/* Status Changes */}
-                {(extractedData.employmentChange || extractedData.housingChange ||
-                  extractedData.incomeChange || extractedData.healthChange) && (
+                {(extractedData.employmentChange ||
+                  extractedData.housingChange ||
+                  extractedData.incomeChange ||
+                  extractedData.healthChange) && (
                   <Stack space="300">
                     <Heading level={3}>Status Changes</Heading>
                     <Stack space="200">
@@ -264,9 +319,12 @@ export default function TouchpointDetailPage() {
                             borderRadius: '6px',
                           }}
                         >
-                          <Text variant="sm" weight="500">Employment Change</Text>
+                          <Text variant="sm" weight="500">
+                            Employment Change
+                          </Text>
                           <Text variant="sm">
-                            {extractedData.employmentChange.from} → {extractedData.employmentChange.to}
+                            {extractedData.employmentChange.from} →{' '}
+                            {extractedData.employmentChange.to}
                           </Text>
                           <Text variant="sm" color="subdued">
                             {extractedData.employmentChange.description}
@@ -282,9 +340,12 @@ export default function TouchpointDetailPage() {
                             borderRadius: '6px',
                           }}
                         >
-                          <Text variant="sm" weight="500">Housing Change</Text>
+                          <Text variant="sm" weight="500">
+                            Housing Change
+                          </Text>
                           <Text variant="sm">
-                            {extractedData.housingChange.from} → {extractedData.housingChange.to}
+                            {extractedData.housingChange.from} →{' '}
+                            {extractedData.housingChange.to}
                           </Text>
                           <Text variant="sm" color="subdued">
                             {extractedData.housingChange.description}
@@ -300,9 +361,12 @@ export default function TouchpointDetailPage() {
                             borderRadius: '6px',
                           }}
                         >
-                          <Text variant="sm" weight="500">Income Change</Text>
+                          <Text variant="sm" weight="500">
+                            Income Change
+                          </Text>
                           <Text variant="sm">
-                            {extractedData.incomeChange.from} → {extractedData.incomeChange.to}
+                            {extractedData.incomeChange.from} →{' '}
+                            {extractedData.incomeChange.to}
                           </Text>
                           <Text variant="sm" color="subdued">
                             {extractedData.incomeChange.description}
@@ -318,9 +382,12 @@ export default function TouchpointDetailPage() {
                             borderRadius: '6px',
                           }}
                         >
-                          <Text variant="sm" weight="500">Health Change</Text>
+                          <Text variant="sm" weight="500">
+                            Health Change
+                          </Text>
                           <Text variant="sm">
-                            {extractedData.healthChange.from} → {extractedData.healthChange.to}
+                            {extractedData.healthChange.from} →{' '}
+                            {extractedData.healthChange.to}
                           </Text>
                           <Text variant="sm" color="subdued">
                             {extractedData.healthChange.description}
@@ -332,74 +399,99 @@ export default function TouchpointDetailPage() {
                 )}
 
                 {/* Risk Flags */}
-                {extractedData.riskFlags && extractedData.riskFlags.length > 0 && (
-                  <Stack space="300">
-                    <Heading level={3}>Risk Flags</Heading>
-                    <Stack space="200">
-                      {extractedData.riskFlags.map((risk, idx) => (
-                        <div
-                          key={idx}
-                          style={{
-                            padding: '12px',
-                            backgroundColor: risk.severity === 'high'
-                              ? '#fef2f2'
-                              : risk.severity === 'medium'
-                              ? '#fefce8'
-                              : '#eff6ff',
-                            border: `1px solid ${
-                              risk.severity === 'high'
-                                ? '#fca5a5'
-                                : risk.severity === 'medium'
-                                ? '#fde047'
-                                : '#93c5fd'
-                            }`,
-                            borderRadius: '6px',
-                          }}
-                        >
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <SimpleBadge
-                              variant={
+                {extractedData.riskFlags &&
+                  extractedData.riskFlags.length > 0 && (
+                    <Stack space="300">
+                      <Heading level={3}>Risk Flags</Heading>
+                      <Stack space="200">
+                        {extractedData.riskFlags.map((risk, idx) => (
+                          <div
+                            key={idx}
+                            style={{
+                              padding: '12px',
+                              backgroundColor:
                                 risk.severity === 'high'
-                                  ? 'danger'
+                                  ? '#fef2f2'
                                   : risk.severity === 'medium'
-                                  ? 'warning'
-                                  : 'info'
-                              }
+                                    ? '#fefce8'
+                                    : '#eff6ff',
+                              border: `1px solid ${
+                                risk.severity === 'high'
+                                  ? '#fca5a5'
+                                  : risk.severity === 'medium'
+                                    ? '#fde047'
+                                    : '#93c5fd'
+                              }`,
+                              borderRadius: '6px',
+                            }}
+                          >
+                            <div
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                              }}
                             >
-                              {risk.severity}
-                            </SimpleBadge>
-                            <Text variant="sm" weight="500" style={{ textTransform: 'capitalize' }}>
-                              {risk.type}
-                            </Text>
+                              <SimpleBadge
+                                variant={
+                                  risk.severity === 'high'
+                                    ? 'danger'
+                                    : risk.severity === 'medium'
+                                      ? 'warning'
+                                      : 'info'
+                                }
+                              >
+                                {risk.severity}
+                              </SimpleBadge>
+                              <Text
+                                variant="sm"
+                                weight="500"
+                                style={{ textTransform: 'capitalize' }}
+                              >
+                                {risk.type}
+                              </Text>
+                            </div>
+                            <Text variant="sm">{risk.description}</Text>
                           </div>
-                          <Text variant="sm">{risk.description}</Text>
-                        </div>
-                      ))}
+                        ))}
+                      </Stack>
                     </Stack>
-                  </Stack>
-                )}
+                  )}
 
                 {/* Action Items */}
-                {extractedData.actionItems && extractedData.actionItems.length > 0 && (
-                  <Stack space="300">
-                    <Heading level={3}>Action Items</Heading>
-                    <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                      {extractedData.actionItems.map((item, idx) => (
-                        <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '8px' }}>
-                          <span style={{ color: '#7c3aed', marginRight: '8px' }}>•</span>
-                          <div>
-                            <Text variant="sm">{item.description}</Text>
-                            {item.dueDate && (
-                              <Text variant="sm" color="subdued">
-                                {' '}Due: {formatDate(item.dueDate)}
-                              </Text>
-                            )}
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </Stack>
-                )}
+                {extractedData.actionItems &&
+                  extractedData.actionItems.length > 0 && (
+                    <Stack space="300">
+                      <Heading level={3}>Action Items</Heading>
+                      <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                        {extractedData.actionItems.map((item, idx) => (
+                          <li
+                            key={idx}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'flex-start',
+                              marginBottom: '8px',
+                            }}
+                          >
+                            <span
+                              style={{ color: '#7c3aed', marginRight: '8px' }}
+                            >
+                              •
+                            </span>
+                            <div>
+                              <Text variant="sm">{item.description}</Text>
+                              {item.dueDate && (
+                                <Text variant="sm" color="subdued">
+                                  {' '}
+                                  Due: {formatDate(item.dueDate)}
+                                </Text>
+                              )}
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    </Stack>
+                  )}
 
                 {/* Emotional State */}
                 {extractedData.emotionalState && (
@@ -413,28 +505,49 @@ export default function TouchpointDetailPage() {
                         borderRadius: '6px',
                       }}
                     >
-                      <Text variant="sm" weight="500" style={{ color: '#7c3aed', textTransform: 'capitalize' }}>
+                      <Text
+                        variant="sm"
+                        weight="500"
+                        style={{
+                          color: '#7c3aed',
+                          textTransform: 'capitalize',
+                        }}
+                      >
                         {extractedData.emotionalState.primary}
                       </Text>
-                      <Text variant="sm">{extractedData.emotionalState.description}</Text>
+                      <Text variant="sm">
+                        {extractedData.emotionalState.description}
+                      </Text>
                     </div>
                   </Stack>
                 )}
 
                 {/* New Needs */}
-                {extractedData.newNeeds && extractedData.newNeeds.length > 0 && (
-                  <Stack space="200">
-                    <Heading level={3}>New Needs Identified</Heading>
-                    <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                      {extractedData.newNeeds.map((need, idx) => (
-                        <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '4px' }}>
-                          <span style={{ color: '#7c3aed', marginRight: '8px' }}>•</span>
-                          <Text variant="sm">{need}</Text>
-                        </li>
-                      ))}
-                    </ul>
-                  </Stack>
-                )}
+                {extractedData.newNeeds &&
+                  extractedData.newNeeds.length > 0 && (
+                    <Stack space="200">
+                      <Heading level={3}>New Needs Identified</Heading>
+                      <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                        {extractedData.newNeeds.map((need, idx) => (
+                          <li
+                            key={idx}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'flex-start',
+                              marginBottom: '4px',
+                            }}
+                          >
+                            <span
+                              style={{ color: '#7c3aed', marginRight: '8px' }}
+                            >
+                              •
+                            </span>
+                            <Text variant="sm">{need}</Text>
+                          </li>
+                        ))}
+                      </ul>
+                    </Stack>
+                  )}
               </Stack>
             </Card>
           </Stack>
@@ -448,24 +561,34 @@ export default function TouchpointDetailPage() {
                   <Heading level={3}>Participant</Heading>
                   <Stack space="200">
                     <div>
-                      <Text variant="sm" color="subdued">Name</Text>
+                      <Text variant="sm" color="subdued">
+                        Name
+                      </Text>
                       <Text weight="500">
                         {participant.firstName} {participant.lastName}
                       </Text>
                     </div>
                     <div>
-                      <Text variant="sm" color="subdued">Gender</Text>
-                      <Text variant="sm">{HMIS_GENDER_CODES[participant.gender]}</Text>
+                      <Text variant="sm" color="subdued">
+                        Gender
+                      </Text>
+                      <Text variant="sm">
+                        {HMIS_GENDER_CODES[participant.gender]}
+                      </Text>
                     </div>
                     {participant.phoneNumber && (
                       <div>
-                        <Text variant="sm" color="subdued">Phone</Text>
+                        <Text variant="sm" color="subdued">
+                          Phone
+                        </Text>
                         <Text variant="sm">{participant.phoneNumber}</Text>
                       </div>
                     )}
                     {participant.email && (
                       <div>
-                        <Text variant="sm" color="subdued">Email</Text>
+                        <Text variant="sm" color="subdued">
+                          Email
+                        </Text>
                         <Text variant="sm">{participant.email}</Text>
                       </div>
                     )}
@@ -481,16 +604,27 @@ export default function TouchpointDetailPage() {
                   <Heading level={3}>Enrollment</Heading>
                   <Stack space="200">
                     <div>
-                      <Text variant="sm" color="subdued">Program</Text>
+                      <Text variant="sm" color="subdued">
+                        Program
+                      </Text>
                       <Text weight="500">{program.name}</Text>
                     </div>
                     <div>
-                      <Text variant="sm" color="subdued">Enrollment Date</Text>
-                      <Text variant="sm">{formatDate(enrollment.startDate)}</Text>
+                      <Text variant="sm" color="subdued">
+                        Enrollment Date
+                      </Text>
+                      <Text variant="sm">
+                        {formatDate(enrollment.startDate)}
+                      </Text>
                     </div>
                     <div>
-                      <Text variant="sm" color="subdued">Status</Text>
-                      <SimpleBadge variant="success" style={{ textTransform: 'capitalize' }}>
+                      <Text variant="sm" color="subdued">
+                        Status
+                      </Text>
+                      <SimpleBadge
+                        variant="success"
+                        style={{ textTransform: 'capitalize' }}
+                      >
                         {enrollment.status}
                       </SimpleBadge>
                     </div>
@@ -506,18 +640,24 @@ export default function TouchpointDetailPage() {
                   <Heading level={3}>Case Worker</Heading>
                   <Stack space="200">
                     <div>
-                      <Text variant="sm" color="subdued">Name</Text>
+                      <Text variant="sm" color="subdued">
+                        Name
+                      </Text>
                       <Text weight="500">
                         {caseWorker.firstName} {caseWorker.lastName}
                       </Text>
                     </div>
                     <div>
-                      <Text variant="sm" color="subdued">Role</Text>
+                      <Text variant="sm" color="subdued">
+                        Role
+                      </Text>
                       <Text variant="sm">{caseWorker.role}</Text>
                     </div>
                     {caseWorker.email && (
                       <div>
-                        <Text variant="sm" color="subdued">Email</Text>
+                        <Text variant="sm" color="subdued">
+                          Email
+                        </Text>
                         <Text variant="sm">{caseWorker.email}</Text>
                       </div>
                     )}

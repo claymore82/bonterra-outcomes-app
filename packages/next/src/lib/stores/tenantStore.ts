@@ -62,7 +62,9 @@ interface TenantStore {
   getActiveTenants: () => Tenant[];
 
   // Write operations
-  createTenant: (tenant: Omit<Tenant, 'id' | 'createdAt' | 'updatedAt'>) => Tenant;
+  createTenant: (
+    tenant: Omit<Tenant, 'id' | 'createdAt' | 'updatedAt'>,
+  ) => Tenant;
   updateTenant: (id: string, updates: Partial<Tenant>) => void;
   deleteTenant: (id: string) => void;
 }
@@ -79,7 +81,9 @@ export const useTenantStore = create<TenantStore>((set, get) => ({
   },
 
   getActiveTenants: () => {
-    return get().tenants.filter((t) => t.status === 'active' || t.status === 'trial');
+    return get().tenants.filter(
+      (t) => t.status === 'active' || t.status === 'trial',
+    );
   },
 
   createTenant: (tenantData) => {
@@ -100,9 +104,7 @@ export const useTenantStore = create<TenantStore>((set, get) => ({
   updateTenant: (id, updates) => {
     set((state) => ({
       tenants: state.tenants.map((t) =>
-        t.id === id
-          ? { ...t, ...updates, updatedAt: new Date() }
-          : t
+        t.id === id ? { ...t, ...updates, updatedAt: new Date() } : t,
       ),
     }));
   },

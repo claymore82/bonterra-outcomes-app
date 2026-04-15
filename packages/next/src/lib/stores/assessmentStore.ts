@@ -1,6 +1,13 @@
 import { create } from 'zustand';
-import { Assessment, AssessmentTemplate, AssessmentType } from '@/types/assessments';
-import { mockAssessments, mockAssessmentTemplates } from '@/lib/mockAssessmentData';
+import {
+  Assessment,
+  AssessmentTemplate,
+  AssessmentType,
+} from '@/types/assessments';
+import {
+  mockAssessments,
+  mockAssessmentTemplates,
+} from '@/lib/mockAssessmentData';
 
 interface AssessmentStore {
   assessments: Assessment[];
@@ -10,8 +17,13 @@ interface AssessmentStore {
   getAssessmentById: (id: string) => Assessment | undefined;
   getAssessmentsByEnrollment: (enrollmentId: string) => Assessment[];
   getAssessmentsByParticipant: (participantId: string) => Assessment[];
-  getAssessmentsByType: (enrollmentId: string, type: AssessmentType) => Assessment[];
-  createAssessment: (assessment: Omit<Assessment, 'id' | 'createdAt' | 'updatedAt'>) => Assessment;
+  getAssessmentsByType: (
+    enrollmentId: string,
+    type: AssessmentType,
+  ) => Assessment[];
+  createAssessment: (
+    assessment: Omit<Assessment, 'id' | 'createdAt' | 'updatedAt'>,
+  ) => Assessment;
   updateAssessment: (id: string, updates: Partial<Assessment>) => void;
   deleteAssessment: (id: string) => void;
 
@@ -20,14 +32,19 @@ interface AssessmentStore {
   getTemplatesByProgram: (programId: string) => AssessmentTemplate[];
   getTemplatesByType: (type: AssessmentType) => AssessmentTemplate[];
   getAllTemplates: () => AssessmentTemplate[];
-  createTemplate: (template: Omit<AssessmentTemplate, 'id' | 'createdAt' | 'updatedAt'>) => AssessmentTemplate;
+  createTemplate: (
+    template: Omit<AssessmentTemplate, 'id' | 'createdAt' | 'updatedAt'>,
+  ) => AssessmentTemplate;
   updateTemplate: (id: string, updates: Partial<AssessmentTemplate>) => void;
   deleteTemplate: (id: string) => void;
 
   // Utility methods
   calculateScores: (assessment: Assessment) => Record<string, number>;
   getRecommendations: (assessment: Assessment) => string[];
-  getNextAssessmentDue: (enrollmentId: string, templateId: string) => Date | null;
+  getNextAssessmentDue: (
+    enrollmentId: string,
+    templateId: string,
+  ) => Date | null;
 }
 
 export const useAssessmentStore = create<AssessmentStore>((set, get) => ({
@@ -36,24 +53,26 @@ export const useAssessmentStore = create<AssessmentStore>((set, get) => ({
 
   // Assessment CRUD
   getAssessmentById: (id: string) => {
-    return get().assessments.find(a => a.id === id);
+    return get().assessments.find((a) => a.id === id);
   },
 
   getAssessmentsByEnrollment: (enrollmentId: string) => {
-    return get().assessments
-      .filter(a => a.enrollmentId === enrollmentId)
+    return get()
+      .assessments.filter((a) => a.enrollmentId === enrollmentId)
       .sort((a, b) => b.assessmentDate.getTime() - a.assessmentDate.getTime());
   },
 
   getAssessmentsByParticipant: (participantId: string) => {
-    return get().assessments
-      .filter(a => a.participantId === participantId)
+    return get()
+      .assessments.filter((a) => a.participantId === participantId)
       .sort((a, b) => b.assessmentDate.getTime() - a.assessmentDate.getTime());
   },
 
   getAssessmentsByType: (enrollmentId: string, type: AssessmentType) => {
-    return get().assessments
-      .filter(a => a.enrollmentId === enrollmentId && a.assessmentType === type)
+    return get()
+      .assessments.filter(
+        (a) => a.enrollmentId === enrollmentId && a.assessmentType === type,
+      )
       .sort((a, b) => b.assessmentDate.getTime() - a.assessmentDate.getTime());
   },
 
@@ -85,7 +104,7 @@ export const useAssessmentStore = create<AssessmentStore>((set, get) => ({
   updateAssessment: (id, updates) => {
     set((state) => ({
       assessments: state.assessments.map((a) =>
-        a.id === id ? { ...a, ...updates, updatedAt: new Date() } : a
+        a.id === id ? { ...a, ...updates, updatedAt: new Date() } : a,
       ),
     }));
   },
@@ -98,17 +117,17 @@ export const useAssessmentStore = create<AssessmentStore>((set, get) => ({
 
   // Template CRUD
   getTemplateById: (id: string) => {
-    return get().templates.find(t => t.id === id);
+    return get().templates.find((t) => t.id === id);
   },
 
   getTemplatesByProgram: (programId: string) => {
-    return get().templates.filter(t =>
-      t.programs.length === 0 || t.programs.includes(programId)
+    return get().templates.filter(
+      (t) => t.programs.length === 0 || t.programs.includes(programId),
     );
   },
 
   getTemplatesByType: (type: AssessmentType) => {
-    return get().templates.filter(t => t.assessmentType === type);
+    return get().templates.filter((t) => t.assessmentType === type);
   },
 
   getAllTemplates: () => {
@@ -133,7 +152,7 @@ export const useAssessmentStore = create<AssessmentStore>((set, get) => ({
   updateTemplate: (id, updates) => {
     set((state) => ({
       templates: state.templates.map((t) =>
-        t.id === id ? { ...t, ...updates, updatedAt: new Date() } : t
+        t.id === id ? { ...t, ...updates, updatedAt: new Date() } : t,
       ),
     }));
   },
@@ -157,7 +176,9 @@ export const useAssessmentStore = create<AssessmentStore>((set, get) => ({
       if (rule.calculation === 'sum') {
         for (const response of assessment.responses) {
           if (rule.questionIds.includes(response.questionId)) {
-            const question = template.questions.find(q => q.id === response.questionId);
+            const question = template.questions.find(
+              (q) => q.id === response.questionId,
+            );
             if (question?.scoringValue !== undefined) {
               score += question.scoringValue;
             } else if (typeof response.response === 'number') {
@@ -166,12 +187,14 @@ export const useAssessmentStore = create<AssessmentStore>((set, get) => ({
           }
         }
       } else if (rule.calculation === 'average') {
-        const relevantResponses = assessment.responses.filter(r =>
-          rule.questionIds.includes(r.questionId)
+        const relevantResponses = assessment.responses.filter((r) =>
+          rule.questionIds.includes(r.questionId),
         );
         if (relevantResponses.length > 0) {
           const sum = relevantResponses.reduce((acc, r) => {
-            const question = template.questions.find(q => q.id === r.questionId);
+            const question = template.questions.find(
+              (q) => q.id === r.questionId,
+            );
             if (question?.scoringValue !== undefined) {
               return acc + question.scoringValue;
             } else if (typeof r.response === 'number') {
@@ -199,7 +222,7 @@ export const useAssessmentStore = create<AssessmentStore>((set, get) => ({
     for (const rule of template.scoringRules) {
       const score = scores[rule.name];
       if (score !== undefined && rule.ranges) {
-        const range = rule.ranges.find(r => score >= r.min && score <= r.max);
+        const range = rule.ranges.find((r) => score >= r.min && score <= r.max);
         if (range?.recommendation) {
           recommendations.push(range.recommendation);
         }
@@ -213,8 +236,9 @@ export const useAssessmentStore = create<AssessmentStore>((set, get) => ({
     const template = get().getTemplateById(templateId);
     if (!template?.frequencyDays) return null;
 
-    const assessments = get().getAssessmentsByEnrollment(enrollmentId)
-      .filter(a => a.templateId === templateId);
+    const assessments = get()
+      .getAssessmentsByEnrollment(enrollmentId)
+      .filter((a) => a.templateId === templateId);
 
     if (assessments.length === 0) return new Date(); // Due now if never done
 

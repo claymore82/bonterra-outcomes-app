@@ -229,7 +229,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
   },
 
   getUsersByTenant: (tenantId: string) => {
-    return get().users.filter((u) => u.tenantId === tenantId && u.status === 'active');
+    return get().users.filter(
+      (u) => u.tenantId === tenantId && u.status === 'active',
+    );
   },
 
   getActiveUsers: () => {
@@ -237,7 +239,11 @@ export const useUserStore = create<UserStore>((set, get) => ({
     return get().users.filter((u) => {
       if (u.status !== 'active') return false;
       // Filter by current tenant (unless super_admin or no tenant selected)
-      if (currentTenantId && u.tenantId !== currentTenantId && u.tenantId !== 'SYSTEM') {
+      if (
+        currentTenantId &&
+        u.tenantId !== currentTenantId &&
+        u.tenantId !== 'SYSTEM'
+      ) {
         return false;
       }
       return true;
@@ -256,7 +262,11 @@ export const useUserStore = create<UserStore>((set, get) => ({
 
   getCaseWorkersByProgram: (programId: string) => {
     return get().users.filter((u) => {
-      if (u.role !== 'case_worker' || u.status !== 'active' || !u.caseWorkerProfile) {
+      if (
+        u.role !== 'case_worker' ||
+        u.status !== 'active' ||
+        !u.caseWorkerProfile
+      ) {
         return false;
       }
       // If programIds is empty, case worker works with all programs
@@ -284,9 +294,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
   updateUser: (id, updates) => {
     set((state) => ({
       users: state.users.map((u) =>
-        u.id === id
-          ? { ...u, ...updates, updatedAt: new Date() }
-          : u
+        u.id === id ? { ...u, ...updates, updatedAt: new Date() } : u,
       ),
     }));
   },
@@ -320,9 +328,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
   recordLogin: (id) => {
     set((state) => ({
       users: state.users.map((u) =>
-        u.id === id
-          ? { ...u, lastLoginAt: new Date() }
-          : u
+        u.id === id ? { ...u, lastLoginAt: new Date() } : u,
       ),
     }));
   },

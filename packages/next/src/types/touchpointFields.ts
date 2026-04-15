@@ -56,7 +56,10 @@ export interface TouchpointFieldSuggestion {
   extractedFrom: string; // The part of the note this was extracted from
 }
 
-export const TOUCHPOINT_FIELD_LIBRARY: Omit<TouchpointCustomField, 'id' | 'createdAt' | 'updatedAt'>[] = [
+export const TOUCHPOINT_FIELD_LIBRARY: Omit<
+  TouchpointCustomField,
+  'id' | 'createdAt' | 'updatedAt'
+>[] = [
   {
     name: 'Housing Status',
     fieldType: 'dropdown',
@@ -68,10 +71,20 @@ export const TOUCHPOINT_FIELD_LIBRARY: Omit<TouchpointCustomField, 'id' | 'creat
       'Transitional Housing',
       'Permanent Housing',
       'Staying with Friends/Family',
-      'Other'
+      'Other',
     ],
     trigger: {
-      keywords: ['housing', 'apartment', 'house', 'shelter', 'homeless', 'lease', 'rent', 'eviction', 'place to stay'],
+      keywords: [
+        'housing',
+        'apartment',
+        'house',
+        'shelter',
+        'homeless',
+        'lease',
+        'rent',
+        'eviction',
+        'place to stay',
+      ],
       required: true,
       autoPopulate: true,
     },
@@ -89,10 +102,21 @@ export const TOUCHPOINT_FIELD_LIBRARY: Omit<TouchpointCustomField, 'id' | 'creat
       'Unemployed - Not Looking',
       'Disabled',
       'Retired',
-      'Student'
+      'Student',
     ],
     trigger: {
-      keywords: ['job', 'work', 'employed', 'unemployed', 'hired', 'fired', 'quit', 'career', 'resume', 'interview'],
+      keywords: [
+        'job',
+        'work',
+        'employed',
+        'unemployed',
+        'hired',
+        'fired',
+        'quit',
+        'career',
+        'resume',
+        'interview',
+      ],
       required: true,
       autoPopulate: true,
     },
@@ -105,7 +129,16 @@ export const TOUCHPOINT_FIELD_LIBRARY: Omit<TouchpointCustomField, 'id' | 'creat
     description: 'Monthly income in dollars',
     min: 0,
     trigger: {
-      keywords: ['income', 'salary', 'wages', 'pay', 'earn', 'making', 'per hour', 'per month'],
+      keywords: [
+        'income',
+        'salary',
+        'wages',
+        'pay',
+        'earn',
+        'making',
+        'per hour',
+        'per month',
+      ],
       required: false,
       autoPopulate: true,
     },
@@ -124,10 +157,22 @@ export const TOUCHPOINT_FIELD_LIBRARY: Omit<TouchpointCustomField, 'id' | 'creat
       'Medication Needed',
       'Medical Appointment Needed',
       'Emergency Medical',
-      'None'
+      'None',
     ],
     trigger: {
-      keywords: ['health', 'doctor', 'medical', 'medication', 'sick', 'mental', 'depression', 'anxiety', 'substance', 'drugs', 'alcohol'],
+      keywords: [
+        'health',
+        'doctor',
+        'medical',
+        'medication',
+        'sick',
+        'mental',
+        'depression',
+        'anxiety',
+        'substance',
+        'drugs',
+        'alcohol',
+      ],
       required: false,
       autoPopulate: true,
     },
@@ -141,7 +186,17 @@ export const TOUCHPOINT_FIELD_LIBRARY: Omit<TouchpointCustomField, 'id' | 'creat
     min: 1,
     max: 5,
     trigger: {
-      keywords: ['risk', 'danger', 'unsafe', 'threat', 'violence', 'abuse', 'emergency', 'crisis', 'urgent'],
+      keywords: [
+        'risk',
+        'danger',
+        'unsafe',
+        'threat',
+        'violence',
+        'abuse',
+        'emergency',
+        'crisis',
+        'urgent',
+      ],
       required: true,
       autoPopulate: true,
     },
@@ -159,10 +214,18 @@ export const TOUCHPOINT_FIELD_LIBRARY: Omit<TouchpointCustomField, 'id' | 'creat
       'Self Harm Risk',
       'Unsafe Housing',
       'Neighborhood Violence',
-      'None'
+      'None',
     ],
     trigger: {
-      keywords: ['safety', 'violence', 'abuse', 'dangerous', 'afraid', 'hurt', 'threatened'],
+      keywords: [
+        'safety',
+        'violence',
+        'abuse',
+        'dangerous',
+        'afraid',
+        'hurt',
+        'threatened',
+      ],
       required: false,
       autoPopulate: true,
     },
@@ -174,7 +237,14 @@ export const TOUCHPOINT_FIELD_LIBRARY: Omit<TouchpointCustomField, 'id' | 'creat
     category: 'family',
     description: 'Does participant need child care support?',
     trigger: {
-      keywords: ['child care', 'daycare', 'babysitter', 'kids', 'children', 'school'],
+      keywords: [
+        'child care',
+        'daycare',
+        'babysitter',
+        'kids',
+        'children',
+        'school',
+      ],
       required: false,
       autoPopulate: true,
     },
@@ -186,7 +256,16 @@ export const TOUCHPOINT_FIELD_LIBRARY: Omit<TouchpointCustomField, 'id' | 'creat
     category: 'general',
     description: 'Does participant need transportation support?',
     trigger: {
-      keywords: ['transportation', 'bus', 'car', 'ride', 'gas', 'fare', 'transit', 'get around'],
+      keywords: [
+        'transportation',
+        'bus',
+        'car',
+        'ride',
+        'gas',
+        'fare',
+        'transit',
+        'get around',
+      ],
       required: false,
       autoPopulate: true,
     },
@@ -204,10 +283,20 @@ export const TOUCHPOINT_FIELD_LIBRARY: Omit<TouchpointCustomField, 'id' | 'creat
       'Bachelor Degree',
       'Graduate Degree',
       'ESL/English Classes',
-      'Not Pursuing Education'
+      'Not Pursuing Education',
     ],
     trigger: {
-      keywords: ['education', 'school', 'GED', 'college', 'degree', 'training', 'class', 'study', 'learn'],
+      keywords: [
+        'education',
+        'school',
+        'GED',
+        'college',
+        'degree',
+        'training',
+        'class',
+        'study',
+        'learn',
+      ],
       required: false,
       autoPopulate: true,
     },
@@ -226,10 +315,20 @@ export const TOUCHPOINT_FIELD_LIBRARY: Omit<TouchpointCustomField, 'id' | 'creat
       'Eviction',
       'Immigration',
       'Identity Documents',
-      'None'
+      'None',
     ],
     trigger: {
-      keywords: ['legal', 'court', 'lawyer', 'attorney', 'criminal', 'arrest', 'probation', 'custody', 'immigration'],
+      keywords: [
+        'legal',
+        'court',
+        'lawyer',
+        'attorney',
+        'criminal',
+        'arrest',
+        'probation',
+        'custody',
+        'immigration',
+      ],
       required: false,
       autoPopulate: true,
     },

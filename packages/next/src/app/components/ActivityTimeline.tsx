@@ -1,6 +1,12 @@
 'use client';
 
-import { Card, Stack, InlineStack, Text, Icon } from '@bonterratech/stitch-extension';
+import {
+  Card,
+  Stack,
+  InlineStack,
+  Text,
+  Icon,
+} from '@bonterratech/stitch-extension';
 import type { IconName } from '@bonterratech/stitch-extension';
 import SimpleBadge from './SimpleBadge';
 
@@ -24,8 +30,8 @@ interface ActivityTimelineProps {
 }
 
 export default function ActivityTimeline({ events }: ActivityTimelineProps) {
-  const sortedEvents = [...events].sort((a, b) =>
-    new Date(b.date).getTime() - new Date(a.date).getTime()
+  const sortedEvents = [...events].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   );
 
   const formatDate = (dateString: string) => {
@@ -97,7 +103,11 @@ export default function ActivityTimeline({ events }: ActivityTimelineProps) {
             <div style={{ marginLeft: '72px' }}>
               <Card>
                 <Stack space="200">
-                  <InlineStack gap="300" verticalAlign="center" distribute="space-between">
+                  <InlineStack
+                    gap="300"
+                    verticalAlign="center"
+                    distribute="space-between"
+                  >
                     <Stack space="100">
                       <Text weight="600">{event.title}</Text>
                       <Text variant="sm" color="subdued">
@@ -107,11 +117,12 @@ export default function ActivityTimeline({ events }: ActivityTimelineProps) {
                     {event.metadata?.status && (
                       <SimpleBadge
                         tone={
-                          event.metadata.status === 'active' || event.metadata.status === 'achieved'
+                          event.metadata.status === 'active' ||
+                          event.metadata.status === 'achieved'
                             ? 'positive'
                             : event.metadata.status === 'in-progress'
-                            ? 'caution'
-                            : 'neutral'
+                              ? 'caution'
+                              : 'neutral'
                         }
                       >
                         {event.metadata.status}

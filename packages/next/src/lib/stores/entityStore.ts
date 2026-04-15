@@ -8,7 +8,8 @@ const mockEntities: Entity[] = [
     tenantId: 'TENANT-001',
     name: 'Seattle Public Schools',
     entityType: 'school',
-    description: 'Partner school district providing educational support services',
+    description:
+      'Partner school district providing educational support services',
     address: '2445 3rd Avenue South',
     city: 'Seattle',
     state: 'WA',
@@ -28,7 +29,8 @@ const mockEntities: Entity[] = [
     tenantId: 'TENANT-001',
     name: 'Harborview Medical Center',
     entityType: 'healthcare_provider',
-    description: 'Healthcare partner providing medical and mental health services',
+    description:
+      'Healthcare partner providing medical and mental health services',
     address: '325 9th Avenue',
     city: 'Seattle',
     state: 'WA',
@@ -88,14 +90,15 @@ const mockEntities: Entity[] = [
     tenantId: 'TENANT-001',
     name: 'Sacred Heart Church',
     entityType: 'religious_organization',
-    description: 'Faith-based partner providing food bank and community support',
+    description:
+      'Faith-based partner providing food bank and community support',
     address: '550 19th Avenue East',
     city: 'Seattle',
     state: 'WA',
     zipCode: '98112',
     phone: '(206) 324-2573',
     email: 'outreach@sacredheart.org',
-    contactPerson: 'Father Michael O\'Brien',
+    contactPerson: "Father Michael O'Brien",
     contactTitle: 'Pastor',
     partnershipStatus: 'active',
     customData: {},
@@ -115,7 +118,9 @@ interface EntityStore {
   searchEntities: (query: string) => Entity[];
 
   // Write operations
-  createEntity: (entity: Omit<Entity, 'id' | 'createdAt' | 'updatedAt'>) => Entity;
+  createEntity: (
+    entity: Omit<Entity, 'id' | 'createdAt' | 'updatedAt'>,
+  ) => Entity;
   updateEntity: (id: string, updates: Partial<Entity>) => void;
   deleteEntity: (id: string) => void;
 }
@@ -141,10 +146,11 @@ export const useEntityStore = create<EntityStore>((set, get) => ({
 
   searchEntities: (query: string) => {
     const lowerQuery = query.toLowerCase();
-    return get().entities.filter((e) =>
-      e.name.toLowerCase().includes(lowerQuery) ||
-      e.entityType.toLowerCase().includes(lowerQuery) ||
-      e.description?.toLowerCase().includes(lowerQuery)
+    return get().entities.filter(
+      (e) =>
+        e.name.toLowerCase().includes(lowerQuery) ||
+        e.entityType.toLowerCase().includes(lowerQuery) ||
+        e.description?.toLowerCase().includes(lowerQuery),
     );
   },
 
@@ -166,9 +172,7 @@ export const useEntityStore = create<EntityStore>((set, get) => ({
   updateEntity: (id, updates) => {
     set((state) => ({
       entities: state.entities.map((e) =>
-        e.id === id
-          ? { ...e, ...updates, updatedAt: new Date() }
-          : e
+        e.id === id ? { ...e, ...updates, updatedAt: new Date() } : e,
       ),
     }));
   },

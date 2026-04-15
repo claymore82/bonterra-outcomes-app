@@ -7,7 +7,10 @@ interface BadgeProps {
   tone?: 'positive' | 'caution' | 'critical' | 'neutral' | 'info';
 }
 
-export default function SimpleBadge({ children, tone = 'neutral' }: BadgeProps) {
+export default function SimpleBadge({
+  children,
+  tone = 'neutral',
+}: BadgeProps) {
   const colors = {
     positive: { bg: '#DCFCE7', text: '#166534', border: '#BBF7D0' },
     caution: { bg: '#FEF3C7', text: '#92400E', border: '#FDE68A' },

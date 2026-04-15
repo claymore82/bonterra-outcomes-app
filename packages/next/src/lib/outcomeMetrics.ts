@@ -29,38 +29,46 @@ export interface OutcomeMetrics {
 export function calculateEnrollmentMetrics(
   enrollment: Enrollment,
   goals: Goal[],
-  assessments: Assessment[]
+  assessments: Assessment[],
 ): OutcomeMetrics {
   // Days enrolled
   const startDate = enrollment.startDate;
   const endDate = enrollment.endDate || new Date();
   const daysEnrolled = Math.ceil(
-    (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+    (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24),
   );
 
   // Goal metrics
-  const achievedGoals = goals.filter(g => g.status === 'achieved').length;
-  const partiallyAchievedGoals = goals.filter(g => g.status === 'partially-achieved').length;
-  const goalCompletionRate = goals.length > 0
-    ? ((achievedGoals + partiallyAchievedGoals) / goals.length) * 100
-    : 0;
+  const achievedGoals = goals.filter((g) => g.status === 'achieved').length;
+  const partiallyAchievedGoals = goals.filter(
+    (g) => g.status === 'partially-achieved',
+  ).length;
+  const goalCompletionRate =
+    goals.length > 0
+      ? ((achievedGoals + partiallyAchievedGoals) / goals.length) * 100
+      : 0;
 
   // Average days to goal completion
-  const completedGoals = goals.filter(g => g.status === 'achieved' && g.completedDate);
-  const averageDaysToGoalCompletion = completedGoals.length > 0
-    ? completedGoals.reduce((sum, goal) => {
-        const days = Math.ceil(
-          ((goal.completedDate!.getTime() - goal.createdAt.getTime()) / (1000 * 60 * 60 * 24))
-        );
-        return sum + days;
-      }, 0) / completedGoals.length
-    : null;
+  const completedGoals = goals.filter(
+    (g) => g.status === 'achieved' && g.completedDate,
+  );
+  const averageDaysToGoalCompletion =
+    completedGoals.length > 0
+      ? completedGoals.reduce((sum, goal) => {
+          const days = Math.ceil(
+            (goal.completedDate!.getTime() - goal.createdAt.getTime()) /
+              (1000 * 60 * 60 * 24),
+          );
+          return sum + days;
+        }, 0) / completedGoals.length
+      : null;
 
   // Service metrics
   const services = enrollment.servicesReceived || [];
   const totalServices = services.length;
 
-  const servicesByType: Record<string, { count: number; totalCost: number }> = {};
+  const servicesByType: Record<string, { count: number; totalCost: number }> =
+    {};
   let totalServiceCost = 0;
 
   for (const service of services) {
@@ -78,9 +86,10 @@ export function calculateEnrollmentMetrics(
 
   // Cost per successful outcome
   const successfulOutcomes = achievedGoals + partiallyAchievedGoals;
-  const costPerSuccessfulOutcome = successfulOutcomes > 0 && totalServiceCost > 0
-    ? totalServiceCost / successfulOutcomes
-    : null;
+  const costPerSuccessfulOutcome =
+    successfulOutcomes > 0 && totalServiceCost > 0
+      ? totalServiceCost / successfulOutcomes
+      : null;
 
   // Assessment metrics
   const assessmentsByType: Record<string, number> = {};
@@ -105,10 +114,10 @@ export function calculateEnrollmentMetrics(
       'completed-successfully': 0,
       'dismissed-violation': 0,
       'dismissed-inactive': 0,
-      'transferred': 0,
+      transferred: 0,
       'moved-away': 0,
-      'deceased': 0,
-      'other': 0,
+      deceased: 0,
+      other: 0,
     }, // Would need multiple enrollments to calculate
     assessmentsCompleted: assessments.length,
     assessmentsByType,
@@ -118,7 +127,7 @@ export function calculateEnrollmentMetrics(
 export function calculateProgramMetrics(
   enrollments: Enrollment[],
   allGoals: Goal[],
-  allAssessments: Assessment[]
+  allAssessments: Assessment[],
 ): OutcomeMetrics {
   let totalGoalCompletionRate = 0;
   let totalGoals = 0;
@@ -128,26 +137,35 @@ export function calculateProgramMetrics(
   let completedGoalsCount = 0;
   let totalServices = 0;
   let totalServiceCost = 0;
-  const servicesByType: Record<string, { count: number; totalCost: number }> = {};
+  const servicesByType: Record<string, { count: number; totalCost: number }> =
+    {};
   let totalDaysEnrolled = 0;
   let retainedEnrollments = 0;
   const exitReasons: Record<ExitReason, number> = {
     'completed-successfully': 0,
     'dismissed-violation': 0,
     'dismissed-inactive': 0,
-    'transferred': 0,
+    transferred: 0,
     'moved-away': 0,
-    'deceased': 0,
-    'other': 0,
+    deceased: 0,
+    other: 0,
   };
   let totalAssessments = 0;
   const assessmentsByType: Record<string, number> = {};
 
   for (const enrollment of enrollments) {
-    const enrollmentGoals = allGoals.filter(g => g.enrollmentId === enrollment.id);
-    const enrollmentAssessments = allAssessments.filter(a => a.enrollmentId === enrollment.id);
+    const enrollmentGoals = allGoals.filter(
+      (g) => g.enrollmentId === enrollment.id,
+    );
+    const enrollmentAssessments = allAssessments.filter(
+      (a) => a.enrollmentId === enrollment.id,
+    );
 
-    const metrics = calculateEnrollmentMetrics(enrollment, enrollmentGoals, enrollmentAssessments);
+    const metrics = calculateEnrollmentMetrics(
+      enrollment,
+      enrollmentGoals,
+      enrollmentAssessments,
+    );
 
     totalGoalCompletionRate += metrics.goalCompletionRate;
     totalGoals += metrics.totalGoals;
@@ -181,22 +199,24 @@ export function calculateProgramMetrics(
     }
   }
 
-  const averageGoalCompletionRate = enrollments.length > 0
-    ? totalGoalCompletionRate / enrollments.length
-    : 0;
+  const averageGoalCompletionRate =
+    enrollments.length > 0 ? totalGoalCompletionRate / enrollments.length : 0;
 
-  const averageDaysToGoalCompletion = completedGoalsCount > 0
-    ? totalDaysToCompletion / completedGoalsCount
-    : null;
+  const averageDaysToGoalCompletion =
+    completedGoalsCount > 0
+      ? totalDaysToCompletion / completedGoalsCount
+      : null;
 
-  const retentionRate = enrollments.length > 0
-    ? (retainedEnrollments / enrollments.length) * 100
-    : 0;
+  const retentionRate =
+    enrollments.length > 0
+      ? (retainedEnrollments / enrollments.length) * 100
+      : 0;
 
   const successfulOutcomes = achievedGoals + partiallyAchievedGoals;
-  const costPerSuccessfulOutcome = successfulOutcomes > 0 && totalServiceCost > 0
-    ? totalServiceCost / successfulOutcomes
-    : null;
+  const costPerSuccessfulOutcome =
+    successfulOutcomes > 0 && totalServiceCost > 0
+      ? totalServiceCost / successfulOutcomes
+      : null;
 
   return {
     goalCompletionRate: averageGoalCompletionRate,
@@ -249,7 +269,9 @@ export function getSuccessIndicators(metrics: OutcomeMetrics): {
     indicators.push({
       indicator: 'Avg. Days to Goal',
       value: `${Math.round(metrics.averageDaysToGoalCompletion)} days`,
-      trend: (metrics.averageDaysToGoalCompletion < 90 ? 'positive' : 'neutral') as 'positive' | 'neutral',
+      trend: (metrics.averageDaysToGoalCompletion < 90
+        ? 'positive'
+        : 'neutral') as 'positive' | 'neutral',
     });
   }
 

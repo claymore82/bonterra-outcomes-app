@@ -24,14 +24,20 @@ export const STANDARD_SOURCES: StandardSource[] = [
   {
     id: 'hmis',
     name: 'HMIS 2024 Data Standards',
-    description: 'HUD Homeless Management Information System standard fields for homeless services',
+    description:
+      'HUD Homeless Management Information System standard fields for homeless services',
     icon: '🏠',
     fields: [
       {
         name: 'name_data_quality',
         label: 'Name Data Quality',
         fieldType: 'dropdown',
-        options: ['Full name reported', 'Partial name reported', 'Client refused', 'Data not collected'],
+        options: [
+          'Full name reported',
+          'Partial name reported',
+          'Client refused',
+          'Data not collected',
+        ],
         helpText: 'HMIS 3.01 - Quality of name information',
         required: true,
         hmisCompliant: true,
@@ -42,7 +48,8 @@ export const STANDARD_SOURCES: StandardSource[] = [
         name: 'ssn',
         label: 'Social Security Number',
         fieldType: 'text',
-        helpText: 'HMIS 3.02 - Social Security Number (encrypted storage required)',
+        helpText:
+          'HMIS 3.02 - Social Security Number (encrypted storage required)',
         required: false,
         hmisCompliant: true,
         appliesTo: 'individual',
@@ -52,7 +59,12 @@ export const STANDARD_SOURCES: StandardSource[] = [
         name: 'ssn_data_quality',
         label: 'SSN Data Quality',
         fieldType: 'dropdown',
-        options: ['Full SSN reported', 'Approximate or partial SSN reported', 'Client refused', 'Data not collected'],
+        options: [
+          'Full SSN reported',
+          'Approximate or partial SSN reported',
+          'Client refused',
+          'Data not collected',
+        ],
         helpText: 'HMIS 3.02 - Quality of SSN information',
         required: true,
         hmisCompliant: true,
@@ -82,7 +94,12 @@ export const STANDARD_SOURCES: StandardSource[] = [
         name: 'ethnicity',
         label: 'Ethnicity',
         fieldType: 'dropdown',
-        options: ['Hispanic/Latina/e/o', 'Non-Hispanic/Non-Latina/e/o', 'Client prefers not to answer', 'Data not collected'],
+        options: [
+          'Hispanic/Latina/e/o',
+          'Non-Hispanic/Non-Latina/e/o',
+          'Client prefers not to answer',
+          'Data not collected',
+        ],
         helpText: 'HMIS 3.05 - Ethnicity',
         required: true,
         hmisCompliant: true,
@@ -93,7 +110,13 @@ export const STANDARD_SOURCES: StandardSource[] = [
         name: 'veteran_status',
         label: 'Veteran Status',
         fieldType: 'dropdown',
-        options: ['Yes', 'No', "Client doesn't know", 'Client prefers not to answer', 'Data not collected'],
+        options: [
+          'Yes',
+          'No',
+          "Client doesn't know",
+          'Client prefers not to answer',
+          'Data not collected',
+        ],
         helpText: 'HMIS 3.07 - U.S. military veteran status',
         required: true,
         hmisCompliant: true,
@@ -104,7 +127,12 @@ export const STANDARD_SOURCES: StandardSource[] = [
         name: 'disabling_condition',
         label: 'Disabling Condition',
         fieldType: 'dropdown',
-        options: ['Yes', 'No', 'Client prefers not to answer', 'Data not collected'],
+        options: [
+          'Yes',
+          'No',
+          'Client prefers not to answer',
+          'Data not collected',
+        ],
         helpText: 'HMIS 3.08 - Does the client have a disabling condition?',
         required: true,
         hmisCompliant: true,
@@ -115,7 +143,12 @@ export const STANDARD_SOURCES: StandardSource[] = [
         name: 'physical_disability',
         label: 'Physical Disability',
         fieldType: 'dropdown',
-        options: ['Yes', 'No', 'Client prefers not to answer', 'Data not collected'],
+        options: [
+          'Yes',
+          'No',
+          'Client prefers not to answer',
+          'Data not collected',
+        ],
         helpText: 'HMIS 4.05.1 - Physical disability',
         required: false,
         hmisCompliant: true,
@@ -126,7 +159,12 @@ export const STANDARD_SOURCES: StandardSource[] = [
         name: 'developmental_disability',
         label: 'Developmental Disability',
         fieldType: 'dropdown',
-        options: ['Yes', 'No', 'Client prefers not to answer', 'Data not collected'],
+        options: [
+          'Yes',
+          'No',
+          'Client prefers not to answer',
+          'Data not collected',
+        ],
         helpText: 'HMIS 4.05.2 - Developmental disability',
         required: false,
         hmisCompliant: true,
@@ -137,7 +175,12 @@ export const STANDARD_SOURCES: StandardSource[] = [
         name: 'chronic_health_condition',
         label: 'Chronic Health Condition',
         fieldType: 'dropdown',
-        options: ['Yes', 'No', 'Client prefers not to answer', 'Data not collected'],
+        options: [
+          'Yes',
+          'No',
+          'Client prefers not to answer',
+          'Data not collected',
+        ],
         helpText: 'HMIS 4.05.3 - Chronic health condition',
         required: false,
         hmisCompliant: true,
@@ -148,7 +191,12 @@ export const STANDARD_SOURCES: StandardSource[] = [
         name: 'hiv_aids',
         label: 'HIV/AIDS',
         fieldType: 'dropdown',
-        options: ['Yes', 'No', 'Client prefers not to answer', 'Data not collected'],
+        options: [
+          'Yes',
+          'No',
+          'Client prefers not to answer',
+          'Data not collected',
+        ],
         helpText: 'HMIS 4.05.4 - HIV/AIDS',
         required: false,
         hmisCompliant: true,
@@ -159,7 +207,12 @@ export const STANDARD_SOURCES: StandardSource[] = [
         name: 'mental_health_disorder',
         label: 'Mental Health Disorder',
         fieldType: 'dropdown',
-        options: ['Yes', 'No', 'Client prefers not to answer', 'Data not collected'],
+        options: [
+          'Yes',
+          'No',
+          'Client prefers not to answer',
+          'Data not collected',
+        ],
         helpText: 'HMIS 4.05.5 - Mental health disorder',
         required: false,
         hmisCompliant: true,
@@ -170,7 +223,12 @@ export const STANDARD_SOURCES: StandardSource[] = [
         name: 'substance_use_disorder',
         label: 'Substance Use Disorder',
         fieldType: 'dropdown',
-        options: ['Yes', 'No', 'Client prefers not to answer', 'Data not collected'],
+        options: [
+          'Yes',
+          'No',
+          'Client prefers not to answer',
+          'Data not collected',
+        ],
         helpText: 'HMIS 4.05.6 - Substance use disorder',
         required: false,
         hmisCompliant: true,
@@ -181,7 +239,12 @@ export const STANDARD_SOURCES: StandardSource[] = [
         name: 'domestic_violence_survivor',
         label: 'Domestic Violence Survivor',
         fieldType: 'dropdown',
-        options: ['Yes', 'No', 'Client prefers not to answer', 'Data not collected'],
+        options: [
+          'Yes',
+          'No',
+          'Client prefers not to answer',
+          'Data not collected',
+        ],
         helpText: 'HMIS 4.11 - Domestic violence history',
         required: false,
         hmisCompliant: true,
@@ -245,7 +308,8 @@ export const STANDARD_SOURCES: StandardSource[] = [
   {
     id: 'omb',
     name: 'OMB Race & Ethnicity Standards',
-    description: 'Office of Management and Budget Statistical Policy Directive 15',
+    description:
+      'Office of Management and Budget Statistical Policy Directive 15',
     icon: '🏛️',
     fields: [
       {
@@ -279,7 +343,8 @@ export const STANDARD_SOURCES: StandardSource[] = [
   {
     id: 'hhs',
     name: 'HHS Common Data Elements',
-    description: 'Health and Human Services standardized health and social service fields',
+    description:
+      'Health and Human Services standardized health and social service fields',
     icon: '🏥',
     fields: [
       {
@@ -380,7 +445,8 @@ export const STANDARD_SOURCES: StandardSource[] = [
   {
     id: 'wioa',
     name: 'WIOA Workforce Data',
-    description: 'Workforce Innovation and Opportunity Act common performance measures',
+    description:
+      'Workforce Innovation and Opportunity Act common performance measures',
     icon: '💼',
     fields: [
       {
@@ -396,7 +462,7 @@ export const STANDARD_SOURCES: StandardSource[] = [
           'Associate degree',
           "Bachelor's degree",
           'Post-baccalaureate certificate',
-          'Master\'s degree',
+          "Master's degree",
           'Doctoral degree',
           'Professional degree',
         ],

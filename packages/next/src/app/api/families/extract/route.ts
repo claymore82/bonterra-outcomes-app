@@ -92,7 +92,9 @@ export async function POST(req: NextRequest) {
                 fullText += text;
 
                 controller.enqueue(
-                  encoder.encode(`data: ${JSON.stringify({ type: 'token', content: text })}\n\n`)
+                  encoder.encode(
+                    `data: ${JSON.stringify({ type: 'token', content: text })}\n\n`,
+                  ),
                 );
               }
 
@@ -108,8 +110,9 @@ export async function POST(req: NextRequest) {
                       },
                       {
                         role: 'user',
-                        content: [{
-                          text: `Extract structured family data from the conversation. Return JSON:
+                        content: [
+                          {
+                            text: `Extract structured family data from the conversation. Return JSON:
 {
   "members": [
     {
@@ -142,23 +145,32 @@ IMPORTANT:
 - If field not mentioned, use null
 - Confidence is 0-1 (1 = very confident)
 
-Return ONLY valid JSON, no other text.`
-                        }],
+Return ONLY valid JSON, no other text.`,
+                          },
+                        ],
                       },
                     ],
-                    system: [{ text: 'You are a data extraction assistant. Return only valid JSON.' }],
+                    system: [
+                      {
+                        text: 'You are a data extraction assistant. Return only valid JSON.',
+                      },
+                    ],
                     inferenceConfig: {
                       maxTokens: 2048,
                       temperature: 0.3,
                     },
                   });
 
-                  const extractionResponse = await bedrockClient.send(extractionCommand);
+                  const extractionResponse =
+                    await bedrockClient.send(extractionCommand);
 
                   if (extractionResponse.output?.message?.content) {
-                    const extractedText = extractionResponse.output.message.content
-                      .map((block: ContentBlock) => ('text' in block ? block.text : ''))
-                      .join('');
+                    const extractedText =
+                      extractionResponse.output.message.content
+                        .map((block: ContentBlock) =>
+                          'text' in block ? block.text : '',
+                        )
+                        .join('');
 
                     const jsonMatch = extractedText.match(/\{[\s\S]*\}/);
                     if (jsonMatch) {
@@ -166,8 +178,8 @@ Return ONLY valid JSON, no other text.`
 
                       controller.enqueue(
                         encoder.encode(
-                          `data: ${JSON.stringify({ type: 'extraction', data: extractedData })}\n\n`
-                        )
+                          `data: ${JSON.stringify({ type: 'extraction', data: extractedData })}\n\n`,
+                        ),
                       );
                     }
                   }
@@ -175,13 +187,15 @@ Return ONLY valid JSON, no other text.`
                   console.error('Extraction error:', extractError);
                   controller.enqueue(
                     encoder.encode(
-                      `data: ${JSON.stringify({ type: 'error', error: 'Failed to extract data' })}\n\n`
-                    )
+                      `data: ${JSON.stringify({ type: 'error', error: 'Failed to extract data' })}\n\n`,
+                    ),
                   );
                 }
 
                 controller.enqueue(
-                  encoder.encode(`data: ${JSON.stringify({ type: 'done' })}\n\n`)
+                  encoder.encode(
+                    `data: ${JSON.stringify({ type: 'done' })}\n\n`,
+                  ),
                 );
               }
             }
@@ -192,8 +206,8 @@ Return ONLY valid JSON, no other text.`
           console.error('Stream error:', error);
           controller.enqueue(
             encoder.encode(
-              `data: ${JSON.stringify({ type: 'error', error: 'Stream failed' })}\n\n`
-            )
+              `data: ${JSON.stringify({ type: 'error', error: 'Stream failed' })}\n\n`,
+            ),
           );
           controller.close();
         }

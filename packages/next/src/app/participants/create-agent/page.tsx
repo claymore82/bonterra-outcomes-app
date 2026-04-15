@@ -55,7 +55,9 @@ export default function CreateParticipantAgentPage() {
   // AI Agent mode state
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
-  const [extractedData, setExtractedData] = useState<ExtractedParticipantData>({});
+  const [extractedData, setExtractedData] = useState<ExtractedParticipantData>(
+    {},
+  );
   const [isTyping, setIsTyping] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -92,7 +94,7 @@ export default function CreateParticipantAgentPage() {
           field.programSpecific &&
           field.programIds?.includes(selectedProgramId) &&
           (field.appliesTo === 'individual' || field.appliesTo === 'all') &&
-          field.visibleInIntake
+          field.visibleInIntake,
       )
     : [];
 
@@ -183,8 +185,13 @@ export default function CreateParticipantAgentPage() {
                     setMessages((prev) => {
                       const newMessages = [...prev];
                       const lastMessage = newMessages[newMessages.length - 1];
-                      if (lastMessage?.role === 'assistant' && lastMessage.id === assistantMessage.id) {
-                        newMessages[newMessages.length - 1] = { ...assistantMessage };
+                      if (
+                        lastMessage?.role === 'assistant' &&
+                        lastMessage.id === assistantMessage.id
+                      ) {
+                        newMessages[newMessages.length - 1] = {
+                          ...assistantMessage,
+                        };
                       } else {
                         newMessages.push({ ...assistantMessage });
                       }
@@ -214,13 +221,14 @@ export default function CreateParticipantAgentPage() {
         const errorMessage: Message = {
           id: Date.now().toString(),
           role: 'system',
-          content: 'Sorry, there was an error communicating with the agent. Please try again.',
+          content:
+            'Sorry, there was an error communicating with the agent. Please try again.',
           timestamp: new Date(),
         };
         setMessages((prev) => [...prev, errorMessage]);
       }
     },
-    [messages, selectedProgramId, programCustomFields]
+    [messages, selectedProgramId, programCustomFields],
   );
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -279,7 +287,9 @@ export default function CreateParticipantAgentPage() {
         customData: extractedData.customFields || {},
       });
 
-      alert(`Successfully created participant ${participant.firstName} ${participant.lastName}`);
+      alert(
+        `Successfully created participant ${participant.firstName} ${participant.lastName}`,
+      );
       router.push(`/participants/${participant.id}`);
     } catch (error) {
       console.error('Error creating participant:', error);
@@ -304,22 +314,29 @@ export default function CreateParticipantAgentPage() {
   let completedRequired = 0;
   if (extractedData.firstName) completedRequired++;
   if (extractedData.lastName) completedRequired++;
-  if (extractedData.dateOfBirth || extractedData.approximateAge) completedRequired++;
+  if (extractedData.dateOfBirth || extractedData.approximateAge)
+    completedRequired++;
 
   // Count completed custom fields
   requiredCustomFields.forEach((field) => {
     if (extractedData.customFields?.[field.name]) completedRequired++;
   });
 
-  const canCreate = extractedData.firstName && extractedData.lastName &&
+  const canCreate =
+    extractedData.firstName &&
+    extractedData.lastName &&
     (extractedData.dateOfBirth || extractedData.approximateAge);
 
   // Helper function to get confidence badge
-  const getConfidenceBadge = (field: string, confidence?: Record<string, number>) => {
+  const getConfidenceBadge = (
+    field: string,
+    confidence?: Record<string, number>,
+  ) => {
     if (!confidence || confidence[field] === undefined) return null;
 
     const level = confidence[field];
-    const color = level >= 0.8 ? '#10b981' : level >= 0.5 ? '#f59e0b' : '#ef4444';
+    const color =
+      level >= 0.8 ? '#10b981' : level >= 0.5 ? '#f59e0b' : '#ef4444';
     const text = level >= 0.8 ? 'High' : level >= 0.5 ? 'Medium' : 'Low';
 
     return (
@@ -348,7 +365,9 @@ export default function CreateParticipantAgentPage() {
             <Text color="link">← Back to Participants</Text>
           </Link>
           <Heading level={1}>Create Participant with AI Agent</Heading>
-          <Text>Select a program, then describe the participant in natural language</Text>
+          <Text>
+            Select a program, then describe the participant in natural language
+          </Text>
         </Stack>
 
         {/* Program Selection */}
@@ -356,7 +375,8 @@ export default function CreateParticipantAgentPage() {
           <Stack space="400">
             <Heading level={2}>Select Program</Heading>
             <Text color="subdued">
-              Choose which program this participant will be enrolled in. The AI will ask questions based on that program's demographics.
+              Choose which program this participant will be enrolled in. The AI
+              will ask questions based on that program's demographics.
             </Text>
             <Stack space="300">
               {availablePrograms.map((program) => (
@@ -397,7 +417,13 @@ export default function CreateParticipantAgentPage() {
 
         {/* AI Chat Interface */}
         {showChat && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '24px',
+            }}
+          >
             {/* Chat */}
             <div
               style={{
@@ -425,7 +451,8 @@ export default function CreateParticipantAgentPage() {
                     key={message.id}
                     style={{
                       display: 'flex',
-                      justifyContent: message.role === 'user' ? 'flex-end' : 'flex-start',
+                      justifyContent:
+                        message.role === 'user' ? 'flex-end' : 'flex-start',
                     }}
                   >
                     <div
@@ -437,17 +464,22 @@ export default function CreateParticipantAgentPage() {
                           message.role === 'user'
                             ? '#7c3aed'
                             : message.role === 'system'
-                            ? '#f3f4f6'
-                            : '#f9fafb',
+                              ? '#f3f4f6'
+                              : '#f9fafb',
                         color: message.role === 'user' ? 'white' : '#111827',
                       }}
                     >
-                      <div style={{ fontSize: '14px', whiteSpace: 'pre-wrap' }}>{message.content}</div>
+                      <div style={{ fontSize: '14px', whiteSpace: 'pre-wrap' }}>
+                        {message.content}
+                      </div>
                       <div
                         style={{
                           fontSize: '11px',
                           marginTop: '4px',
-                          color: message.role === 'user' ? 'rgba(255,255,255,0.7)' : '#6b7280',
+                          color:
+                            message.role === 'user'
+                              ? 'rgba(255,255,255,0.7)'
+                              : '#6b7280',
                         }}
                       >
                         {formatTime(message.timestamp)}
@@ -457,7 +489,9 @@ export default function CreateParticipantAgentPage() {
                 ))}
 
                 {isTyping && (
-                  <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                  <div
+                    style={{ display: 'flex', justifyContent: 'flex-start' }}
+                  >
                     <div
                       style={{
                         backgroundColor: '#f9fafb',
@@ -509,7 +543,10 @@ export default function CreateParticipantAgentPage() {
                   backgroundColor: '#f9fafb',
                 }}
               >
-                <form onSubmit={handleSubmit} style={{ display: 'flex', gap: '12px' }}>
+                <form
+                  onSubmit={handleSubmit}
+                  style={{ display: 'flex', gap: '12px' }}
+                >
                   <div style={{ flex: 1 }}>
                     <TextField
                       value={input}
@@ -519,7 +556,12 @@ export default function CreateParticipantAgentPage() {
                       aria-label="Message input"
                     />
                   </div>
-                  <Button type="submit" variant="primary" isDisabled={!input.trim() || isTyping} onPress={() => {}}>
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    isDisabled={!input.trim() || isTyping}
+                    onPress={() => {}}
+                  >
                     Send
                   </Button>
                 </form>
@@ -544,8 +586,16 @@ export default function CreateParticipantAgentPage() {
                 {/* Progress Bar */}
                 {(extractedData.firstName || extractedData.lastName) && (
                   <div style={{ marginTop: '16px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                      <Text variant="sm" weight="500">Progress</Text>
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        marginBottom: '8px',
+                      }}
+                    >
+                      <Text variant="sm" weight="500">
+                        Progress
+                      </Text>
                       <Text variant="sm" color="subdued">
                         {completedRequired} of {totalRequired} required fields
                       </Text>
@@ -580,7 +630,12 @@ export default function CreateParticipantAgentPage() {
                   }}
                 >
                   <svg
-                    style={{ width: '64px', height: '64px', color: '#d1d5db', margin: '0 auto 16px' }}
+                    style={{
+                      width: '64px',
+                      height: '64px',
+                      color: '#d1d5db',
+                      margin: '0 auto 16px',
+                    }}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -607,11 +662,21 @@ export default function CreateParticipantAgentPage() {
                       borderRadius: '6px',
                     }}
                   >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        marginBottom: '8px',
+                      }}
+                    >
                       <Text weight="500" style={{ color: '#6d28d9' }}>
                         {extractedData.firstName} {extractedData.lastName}
                       </Text>
-                      <Button variant="secondary" size="sm" onPress={() => setIsEditing(!isEditing)}>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onPress={() => setIsEditing(!isEditing)}
+                      >
                         {isEditing ? 'Done' : 'Edit'}
                       </Button>
                     </div>
@@ -620,7 +685,13 @@ export default function CreateParticipantAgentPage() {
                   {isEditing ? (
                     <Stack space="300">
                       {/* Basic Info Fields */}
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                      <div
+                        style={{
+                          display: 'grid',
+                          gridTemplateColumns: '1fr 1fr',
+                          gap: '12px',
+                        }}
+                      >
                         <TextField
                           label="First Name"
                           value={extractedData.firstName || ''}
@@ -633,15 +704,30 @@ export default function CreateParticipantAgentPage() {
                         />
                       </div>
 
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                      <div
+                        style={{
+                          display: 'grid',
+                          gridTemplateColumns: '1fr 1fr',
+                          gap: '12px',
+                        }}
+                      >
                         <div>
-                          <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', marginBottom: '8px' }}>
+                          <label
+                            style={{
+                              display: 'block',
+                              fontSize: '14px',
+                              fontWeight: '500',
+                              marginBottom: '8px',
+                            }}
+                          >
                             Date of Birth
                           </label>
                           <input
                             type="date"
                             value={extractedData.dateOfBirth || ''}
-                            onChange={(e) => updateField('dateOfBirth', e.target.value)}
+                            onChange={(e) =>
+                              updateField('dateOfBirth', e.target.value)
+                            }
                             style={{
                               width: '100%',
                               padding: '8px 12px',
@@ -652,14 +738,26 @@ export default function CreateParticipantAgentPage() {
                           />
                         </div>
                         <div>
-                          <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', marginBottom: '8px' }}>
+                          <label
+                            style={{
+                              display: 'block',
+                              fontSize: '14px',
+                              fontWeight: '500',
+                              marginBottom: '8px',
+                            }}
+                          >
                             Approximate Age
                           </label>
                           <input
                             type="number"
                             value={extractedData.approximateAge || ''}
                             onChange={(e) =>
-                              updateField('approximateAge', e.target.value ? parseInt(e.target.value) : undefined)
+                              updateField(
+                                'approximateAge',
+                                e.target.value
+                                  ? parseInt(e.target.value)
+                                  : undefined,
+                              )
                             }
                             style={{
                               width: '100%',
@@ -673,12 +771,25 @@ export default function CreateParticipantAgentPage() {
                       </div>
 
                       <div>
-                        <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', marginBottom: '8px' }}>
+                        <label
+                          style={{
+                            display: 'block',
+                            fontSize: '14px',
+                            fontWeight: '500',
+                            marginBottom: '8px',
+                          }}
+                        >
                           Gender
                         </label>
                         <select
-                          value={extractedData.gender !== undefined ? extractedData.gender : 99}
-                          onChange={(e) => updateField('gender', parseInt(e.target.value))}
+                          value={
+                            extractedData.gender !== undefined
+                              ? extractedData.gender
+                              : 99
+                          }
+                          onChange={(e) =>
+                            updateField('gender', parseInt(e.target.value))
+                          }
                           style={{
                             width: '100%',
                             padding: '8px 12px',
@@ -692,7 +803,9 @@ export default function CreateParticipantAgentPage() {
                           <option value={1}>Male</option>
                           <option value={2}>Transgender</option>
                           <option value={3}>Non-Binary</option>
-                          <option value={4}>Culturally Specific Identity</option>
+                          <option value={4}>
+                            Culturally Specific Identity
+                          </option>
                           <option value={5}>Different Identity</option>
                           <option value={99}>Data Not Collected</option>
                         </select>
@@ -729,17 +842,35 @@ export default function CreateParticipantAgentPage() {
                             <Text weight="500">Program Demographics</Text>
                           </div>
                           {programCustomFields.map((field) => {
-                            const value = extractedData.customFields?.[field.name];
+                            const value =
+                              extractedData.customFields?.[field.name];
 
                             if (field.fieldType === 'dropdown') {
                               return (
                                 <div key={field.name}>
-                                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', marginBottom: '8px' }}>
-                                    {field.label} {field.required && <span style={{ color: '#dc2626' }}>*</span>}
+                                  <label
+                                    style={{
+                                      display: 'block',
+                                      fontSize: '14px',
+                                      fontWeight: '500',
+                                      marginBottom: '8px',
+                                    }}
+                                  >
+                                    {field.label}{' '}
+                                    {field.required && (
+                                      <span style={{ color: '#dc2626' }}>
+                                        *
+                                      </span>
+                                    )}
                                   </label>
                                   <select
                                     value={value || ''}
-                                    onChange={(e) => updateCustomField(field.name, e.target.value)}
+                                    onChange={(e) =>
+                                      updateCustomField(
+                                        field.name,
+                                        e.target.value,
+                                      )
+                                    }
                                     style={{
                                       width: '100%',
                                       padding: '8px 12px',
@@ -763,9 +894,13 @@ export default function CreateParticipantAgentPage() {
                             return (
                               <TextField
                                 key={field.name}
-                                label={field.label + (field.required ? ' *' : '')}
+                                label={
+                                  field.label + (field.required ? ' *' : '')
+                                }
                                 value={value || ''}
-                                onChange={(val) => updateCustomField(field.name, val)}
+                                onChange={(val) =>
+                                  updateCustomField(field.name, val)
+                                }
                               />
                             );
                           })}
@@ -775,8 +910,18 @@ export default function CreateParticipantAgentPage() {
                   ) : (
                     <div>
                       {/* Edit Button */}
-                      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '16px' }}>
-                        <Button variant="secondary" size="sm" onPress={() => setIsEditing(true)}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'flex-end',
+                          marginBottom: '16px',
+                        }}
+                      >
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onPress={() => setIsEditing(true)}
+                        >
                           Edit
                         </Button>
                       </div>
@@ -797,14 +942,25 @@ export default function CreateParticipantAgentPage() {
                           </div>
                           <Stack space="300">
                             <div>
-                              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  marginBottom: '4px',
+                                }}
+                              >
                                 <Text variant="sm" weight="500">
                                   Program
                                 </Text>
-                                {getConfidenceBadge('program', extractedData.confidence)}
+                                {getConfidenceBadge(
+                                  'program',
+                                  extractedData.confidence,
+                                )}
                               </div>
                               <Text variant="sm" color="subdued">
-                                {programs.find((p) => p.id === selectedProgramId)?.name || 'Not selected'}
+                                {programs.find(
+                                  (p) => p.id === selectedProgramId,
+                                )?.name || 'Not selected'}
                               </Text>
                             </div>
                           </Stack>
@@ -826,45 +982,92 @@ export default function CreateParticipantAgentPage() {
                           <Stack space="300">
                             {/* First Name */}
                             <div>
-                              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  marginBottom: '4px',
+                                }}
+                              >
                                 <Text variant="sm" weight="500">
                                   First Name
                                 </Text>
-                                {getConfidenceBadge('firstName', extractedData.confidence)}
+                                {getConfidenceBadge(
+                                  'firstName',
+                                  extractedData.confidence,
+                                )}
                               </div>
-                              <Text variant="sm" color={extractedData.firstName ? 'default' : 'subdued'}>
-                                {extractedData.firstName || <em>Not provided</em>}
+                              <Text
+                                variant="sm"
+                                color={
+                                  extractedData.firstName
+                                    ? 'default'
+                                    : 'subdued'
+                                }
+                              >
+                                {extractedData.firstName || (
+                                  <em>Not provided</em>
+                                )}
                               </Text>
                             </div>
 
                             {/* Last Name */}
                             <div>
-                              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  marginBottom: '4px',
+                                }}
+                              >
                                 <Text variant="sm" weight="500">
                                   Last Name
                                 </Text>
-                                {getConfidenceBadge('lastName', extractedData.confidence)}
+                                {getConfidenceBadge(
+                                  'lastName',
+                                  extractedData.confidence,
+                                )}
                               </div>
-                              <Text variant="sm" color={extractedData.lastName ? 'default' : 'subdued'}>
-                                {extractedData.lastName || <em>Not provided</em>}
+                              <Text
+                                variant="sm"
+                                color={
+                                  extractedData.lastName ? 'default' : 'subdued'
+                                }
+                              >
+                                {extractedData.lastName || (
+                                  <em>Not provided</em>
+                                )}
                               </Text>
                             </div>
 
                             {/* Date of Birth */}
                             <div>
-                              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  marginBottom: '4px',
+                                }}
+                              >
                                 <Text variant="sm" weight="500">
                                   Date of Birth
                                 </Text>
-                                {getConfidenceBadge('dateOfBirth', extractedData.confidence)}
+                                {getConfidenceBadge(
+                                  'dateOfBirth',
+                                  extractedData.confidence,
+                                )}
                               </div>
                               {extractedData.dateOfBirth ? (
                                 <Text variant="sm">
-                                  {new Date(extractedData.dateOfBirth).toLocaleDateString()}
+                                  {new Date(
+                                    extractedData.dateOfBirth,
+                                  ).toLocaleDateString()}
                                 </Text>
                               ) : extractedData.approximateAge ? (
                                 <div>
-                                  <Text variant="sm">~{extractedData.approximateAge} years old</Text>
+                                  <Text variant="sm">
+                                    ~{extractedData.approximateAge} years old
+                                  </Text>
                                   <Text variant="xs" color="subdued">
                                     Approximate or partial DOB reported
                                   </Text>
@@ -878,16 +1081,35 @@ export default function CreateParticipantAgentPage() {
 
                             {/* Gender */}
                             <div>
-                              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  marginBottom: '4px',
+                                }}
+                              >
                                 <Text variant="sm" weight="500">
                                   Gender
                                 </Text>
-                                {getConfidenceBadge('gender', extractedData.confidence)}
+                                {getConfidenceBadge(
+                                  'gender',
+                                  extractedData.confidence,
+                                )}
                               </div>
-                              <Text variant="sm" color={extractedData.gender !== undefined && extractedData.gender !== 99 ? 'default' : 'subdued'}>
-                                {extractedData.gender !== undefined
-                                  ? HMIS_GENDER_CODES[extractedData.gender]
-                                  : <em>Not provided</em>}
+                              <Text
+                                variant="sm"
+                                color={
+                                  extractedData.gender !== undefined &&
+                                  extractedData.gender !== 99
+                                    ? 'default'
+                                    : 'subdued'
+                                }
+                              >
+                                {extractedData.gender !== undefined ? (
+                                  HMIS_GENDER_CODES[extractedData.gender]
+                                ) : (
+                                  <em>Not provided</em>
+                                )}
                               </Text>
                             </div>
                           </Stack>
@@ -909,19 +1131,41 @@ export default function CreateParticipantAgentPage() {
                             </div>
                             <Stack space="300">
                               {programCustomFields.map((field) => {
-                                const value = extractedData.customFields?.[field.name];
+                                const value =
+                                  extractedData.customFields?.[field.name];
                                 return (
                                   <div key={field.name}>
-                                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
+                                    <div
+                                      style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        marginBottom: '4px',
+                                      }}
+                                    >
                                       <Text variant="sm" weight="500">
                                         {field.label}
                                         {!field.required && (
-                                          <span style={{ color: '#6b7280', fontWeight: '400' }}> (optional)</span>
+                                          <span
+                                            style={{
+                                              color: '#6b7280',
+                                              fontWeight: '400',
+                                            }}
+                                          >
+                                            {' '}
+                                            (optional)
+                                          </span>
                                         )}
                                       </Text>
-                                      {value && getConfidenceBadge(field.name, extractedData.confidence)}
+                                      {value &&
+                                        getConfidenceBadge(
+                                          field.name,
+                                          extractedData.confidence,
+                                        )}
                                     </div>
-                                    <Text variant="sm" color={value ? 'default' : 'subdued'}>
+                                    <Text
+                                      variant="sm"
+                                      color={value ? 'default' : 'subdued'}
+                                    >
                                       {value || <em>Not provided</em>}
                                     </Text>
                                   </div>
@@ -947,39 +1191,112 @@ export default function CreateParticipantAgentPage() {
                           <Stack space="300">
                             {/* Phone Number */}
                             <div>
-                              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  marginBottom: '4px',
+                                }}
+                              >
                                 <Text variant="sm" weight="500">
-                                  Phone Number <span style={{ color: '#6b7280', fontWeight: '400' }}>(optional)</span>
+                                  Phone Number{' '}
+                                  <span
+                                    style={{
+                                      color: '#6b7280',
+                                      fontWeight: '400',
+                                    }}
+                                  >
+                                    (optional)
+                                  </span>
                                 </Text>
-                                {extractedData.phoneNumber && getConfidenceBadge('phoneNumber', extractedData.confidence)}
+                                {extractedData.phoneNumber &&
+                                  getConfidenceBadge(
+                                    'phoneNumber',
+                                    extractedData.confidence,
+                                  )}
                               </div>
-                              <Text variant="sm" color={extractedData.phoneNumber ? 'default' : 'subdued'}>
-                                {extractedData.phoneNumber || <em>Not provided</em>}
+                              <Text
+                                variant="sm"
+                                color={
+                                  extractedData.phoneNumber
+                                    ? 'default'
+                                    : 'subdued'
+                                }
+                              >
+                                {extractedData.phoneNumber || (
+                                  <em>Not provided</em>
+                                )}
                               </Text>
                             </div>
 
                             {/* Email */}
                             <div>
-                              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  marginBottom: '4px',
+                                }}
+                              >
                                 <Text variant="sm" weight="500">
-                                  Email <span style={{ color: '#6b7280', fontWeight: '400' }}>(optional)</span>
+                                  Email{' '}
+                                  <span
+                                    style={{
+                                      color: '#6b7280',
+                                      fontWeight: '400',
+                                    }}
+                                  >
+                                    (optional)
+                                  </span>
                                 </Text>
-                                {extractedData.email && getConfidenceBadge('email', extractedData.confidence)}
+                                {extractedData.email &&
+                                  getConfidenceBadge(
+                                    'email',
+                                    extractedData.confidence,
+                                  )}
                               </div>
-                              <Text variant="sm" color={extractedData.email ? 'default' : 'subdued'}>
+                              <Text
+                                variant="sm"
+                                color={
+                                  extractedData.email ? 'default' : 'subdued'
+                                }
+                              >
                                 {extractedData.email || <em>Not provided</em>}
                               </Text>
                             </div>
 
                             {/* Address */}
                             <div>
-                              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  marginBottom: '4px',
+                                }}
+                              >
                                 <Text variant="sm" weight="500">
-                                  Address <span style={{ color: '#6b7280', fontWeight: '400' }}>(optional)</span>
+                                  Address{' '}
+                                  <span
+                                    style={{
+                                      color: '#6b7280',
+                                      fontWeight: '400',
+                                    }}
+                                  >
+                                    (optional)
+                                  </span>
                                 </Text>
-                                {extractedData.address && getConfidenceBadge('address', extractedData.confidence)}
+                                {extractedData.address &&
+                                  getConfidenceBadge(
+                                    'address',
+                                    extractedData.confidence,
+                                  )}
                               </div>
-                              <Text variant="sm" color={extractedData.address ? 'default' : 'subdued'}>
+                              <Text
+                                variant="sm"
+                                color={
+                                  extractedData.address ? 'default' : 'subdued'
+                                }
+                              >
                                 {extractedData.address || <em>Not provided</em>}
                               </Text>
                             </div>
@@ -991,7 +1308,13 @@ export default function CreateParticipantAgentPage() {
 
                   {/* Create Button - Always shown when data exists */}
                   {(extractedData.firstName || extractedData.lastName) && (
-                    <div style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px solid #e5e7eb' }}>
+                    <div
+                      style={{
+                        marginTop: '24px',
+                        paddingTop: '24px',
+                        borderTop: '1px solid #e5e7eb',
+                      }}
+                    >
                       <Button
                         variant="primary"
                         onPress={handleCreateParticipant}

@@ -141,12 +141,13 @@ function getBedrockClient(): BedrockRuntimeClient {
 
 export async function POST(req: NextRequest) {
   try {
-    const { participantId, noteText, participantContext, touchpointFields } = await req.json();
+    const { participantId, noteText, participantContext, touchpointFields } =
+      await req.json();
 
     if (!noteText || noteText.trim().length < 20) {
       return new Response(
         JSON.stringify({ error: 'Note text must be at least 20 characters' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
+        { status: 400, headers: { 'Content-Type': 'application/json' } },
       );
     }
 
@@ -201,8 +202,8 @@ export async function POST(req: NextRequest) {
 
               controller.enqueue(
                 encoder.encode(
-                  `data: ${JSON.stringify({ type: 'extraction', data: extracted })}\n\n`
-                )
+                  `data: ${JSON.stringify({ type: 'extraction', data: extracted })}\n\n`,
+                ),
               );
             }
           }
@@ -214,7 +215,7 @@ export async function POST(req: NextRequest) {
               const triggeredFields = touchpointFields.filter((field: any) => {
                 const noteTextLower = noteText.toLowerCase();
                 return field.trigger.keywords.some((keyword: string) =>
-                  noteTextLower.includes(keyword.toLowerCase())
+                  noteTextLower.includes(keyword.toLowerCase()),
                 );
               });
 
@@ -226,13 +227,17 @@ CASE NOTES:
 ${noteText}
 
 FIELDS TO EXTRACT:
-${triggeredFields.map((field: any) => `
+${triggeredFields
+  .map(
+    (field: any) => `
 - ${field.name} (${field.fieldType}):
   Description: ${field.description || 'N/A'}
   ${field.options ? `Options: ${field.options.join(', ')}` : ''}
   ${field.min !== undefined ? `Min: ${field.min}` : ''}
   ${field.max !== undefined ? `Max: ${field.max}` : ''}
-`).join('\n')}
+`,
+  )
+  .join('\n')}
 
 Return JSON:
 {
@@ -263,7 +268,11 @@ Guidelines:
                       content: [{ text: fieldPrompt }],
                     },
                   ],
-                  system: [{ text: 'You are a data extraction assistant. Return only valid JSON.' }],
+                  system: [
+                    {
+                      text: 'You are a data extraction assistant. Return only valid JSON.',
+                    },
+                  ],
                   inferenceConfig: {
                     maxTokens: 2048,
                     temperature: 0.3,
@@ -284,16 +293,19 @@ Guidelines:
 
                       controller.enqueue(
                         encoder.encode(
-                          `data: ${JSON.stringify({ type: 'customFields', data: fieldData })}\n\n`
-                        )
+                          `data: ${JSON.stringify({ type: 'customFields', data: fieldData })}\n\n`,
+                        ),
                       );
                     } catch (parseError) {
-                      console.error('Failed to parse custom field JSON:', parseError);
+                      console.error(
+                        'Failed to parse custom field JSON:',
+                        parseError,
+                      );
                       // Send empty custom fields on parse error
                       controller.enqueue(
                         encoder.encode(
-                          `data: ${JSON.stringify({ type: 'customFields', data: { fieldValues: [] } })}\n\n`
-                        )
+                          `data: ${JSON.stringify({ type: 'customFields', data: { fieldValues: [] } })}\n\n`,
+                        ),
                       );
                     }
                   }
@@ -306,7 +318,7 @@ Guidelines:
           }
 
           controller.enqueue(
-            encoder.encode(`data: ${JSON.stringify({ type: 'done' })}\n\n`)
+            encoder.encode(`data: ${JSON.stringify({ type: 'done' })}\n\n`),
           );
 
           controller.close();
@@ -317,8 +329,8 @@ Guidelines:
               `data: ${JSON.stringify({
                 type: 'error',
                 error: error instanceof Error ? error.message : 'Unknown error',
-              })}\n\n`
-            )
+              })}\n\n`,
+            ),
           );
           controller.close();
         }
@@ -329,7 +341,7 @@ Guidelines:
       headers: {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive',
+        Connection: 'keep-alive',
       },
     });
   } catch (error) {
@@ -338,7 +350,7 @@ Guidelines:
       JSON.stringify({
         error: error instanceof Error ? error.message : 'Unknown error',
       }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      { status: 500, headers: { 'Content-Type': 'application/json' } },
     );
   }
 }

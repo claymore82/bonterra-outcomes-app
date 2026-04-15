@@ -63,7 +63,9 @@ export default function SideNav() {
   const pathname = usePathname();
   const { currentUser } = useUserStore();
 
-  const isAdmin = currentUser?.role === 'program_manager' || currentUser?.role === 'super_admin';
+  const isAdmin =
+    currentUser?.role === 'program_manager' ||
+    currentUser?.role === 'super_admin';
 
   const updatedAppNavItems = appNavItems.map((item) => ({
     ...item,

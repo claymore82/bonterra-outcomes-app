@@ -44,11 +44,56 @@ interface ExtractedSiteData {
 }
 
 const US_STATES = [
-  'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA',
-  'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD',
-  'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ',
-  'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC',
-  'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'
+  'AL',
+  'AK',
+  'AZ',
+  'AR',
+  'CA',
+  'CO',
+  'CT',
+  'DE',
+  'FL',
+  'GA',
+  'HI',
+  'ID',
+  'IL',
+  'IN',
+  'IA',
+  'KS',
+  'KY',
+  'LA',
+  'ME',
+  'MD',
+  'MA',
+  'MI',
+  'MN',
+  'MS',
+  'MO',
+  'MT',
+  'NE',
+  'NV',
+  'NH',
+  'NJ',
+  'NM',
+  'NY',
+  'NC',
+  'ND',
+  'OH',
+  'OK',
+  'OR',
+  'PA',
+  'RI',
+  'SC',
+  'SD',
+  'TN',
+  'TX',
+  'UT',
+  'VT',
+  'VA',
+  'WA',
+  'WV',
+  'WI',
+  'WY',
 ];
 
 export default function CreateSiteAgentPage() {
@@ -59,7 +104,8 @@ export default function CreateSiteAgentPage() {
     {
       id: '1',
       role: 'assistant',
-      content: "Hello! I'll help you create a new site. You can tell me about the site in natural language, like 'Create a new emergency shelter at 123 Main St, Seattle, WA 98101 with capacity for 50 people.' What site would you like to add?",
+      content:
+        "Hello! I'll help you create a new site. You can tell me about the site in natural language, like 'Create a new emergency shelter at 123 Main St, Seattle, WA 98101 with capacity for 50 people.' What site would you like to add?",
       timestamp: new Date(),
     },
   ]);
@@ -106,7 +152,10 @@ export default function CreateSiteAgentPage() {
               role: msg.role,
               content: msg.content,
             })),
-            availablePrograms: programs.map(p => ({ id: p.id, name: p.name })),
+            availablePrograms: programs.map((p) => ({
+              id: p.id,
+              name: p.name,
+            })),
           }),
         });
 
@@ -142,8 +191,13 @@ export default function CreateSiteAgentPage() {
                     setMessages((prev) => {
                       const newMessages = [...prev];
                       const lastMessage = newMessages[newMessages.length - 1];
-                      if (lastMessage?.role === 'assistant' && lastMessage.id === assistantMessage.id) {
-                        newMessages[newMessages.length - 1] = { ...assistantMessage };
+                      if (
+                        lastMessage?.role === 'assistant' &&
+                        lastMessage.id === assistantMessage.id
+                      ) {
+                        newMessages[newMessages.length - 1] = {
+                          ...assistantMessage,
+                        };
                       } else {
                         newMessages.push({ ...assistantMessage });
                       }
@@ -159,16 +213,27 @@ export default function CreateSiteAgentPage() {
                       setShowForm(true);
 
                       let programIds: string[] = [];
-                      if (data.data.programNames && data.data.programNames.length > 0) {
+                      if (
+                        data.data.programNames &&
+                        data.data.programNames.length > 0
+                      ) {
                         programIds = data.data.programNames
                           .map((name: string) => {
-                            const program = programs.find(p =>
-                              p.name.toLowerCase().includes(name.toLowerCase()) ||
-                              name.toLowerCase().includes(p.name.toLowerCase())
+                            const program = programs.find(
+                              (p) =>
+                                p.name
+                                  .toLowerCase()
+                                  .includes(name.toLowerCase()) ||
+                                name
+                                  .toLowerCase()
+                                  .includes(p.name.toLowerCase()),
                             );
                             return program?.id;
                           })
-                          .filter((id: string | undefined): id is string => id !== undefined);
+                          .filter(
+                            (id: string | undefined): id is string =>
+                              id !== undefined,
+                          );
                       }
 
                       setFormData({
@@ -183,7 +248,8 @@ export default function CreateSiteAgentPage() {
                         programIds: programIds,
                         status: data.data.status || 'active',
                         hoursOfOperation: data.data.hoursOfOperation || '',
-                        accessibilityFeatures: data.data.accessibilityFeatures || [],
+                        accessibilityFeatures:
+                          data.data.accessibilityFeatures || [],
                         contactPerson: data.data.contactPerson || '',
                       });
                     }
@@ -215,13 +281,19 @@ export default function CreateSiteAgentPage() {
         setMessages((prev) => [...prev, errorMessage]);
       }
     },
-    [messages, programs]
+    [messages, programs],
   );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.address || !formData.city || !formData.state || !formData.zipCode) {
+    if (
+      !formData.name ||
+      !formData.address ||
+      !formData.city ||
+      !formData.state ||
+      !formData.zipCode
+    ) {
       alert('Please fill in all required fields');
       return;
     }
@@ -246,10 +318,10 @@ export default function CreateSiteAgentPage() {
   };
 
   const toggleProgram = (programId: string) => {
-    setFormData(prev => {
+    setFormData((prev) => {
       const currentIds = prev.programIds || [];
       const newIds = currentIds.includes(programId)
-        ? currentIds.filter(id => id !== programId)
+        ? currentIds.filter((id) => id !== programId)
         : [...currentIds, programId];
       return { ...prev, programIds: newIds };
     });
@@ -264,41 +336,55 @@ export default function CreateSiteAgentPage() {
             <Text color="link">← Back to Sites</Text>
           </Link>
           <Heading level={1}>Create Site with AI Agent</Heading>
-          <Text>Describe the site in natural language and the AI will extract the details</Text>
+          <Text>
+            Describe the site in natural language and the AI will extract the
+            details
+          </Text>
         </Stack>
 
         {/* Main Content - Chat + Form */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '24px',
+          }}
+        >
           {/* Chat Interface */}
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            backgroundColor: 'white',
-            borderRadius: '8px',
-            border: '1px solid #e5e7eb',
-            height: 'calc(100vh - 300px)',
-            minHeight: '600px',
-          }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              backgroundColor: 'white',
+              borderRadius: '8px',
+              border: '1px solid #e5e7eb',
+              height: 'calc(100vh - 300px)',
+              minHeight: '600px',
+            }}
+          >
             {/* Header */}
             <div style={{ padding: '16px', borderBottom: '1px solid #e5e7eb' }}>
               <Heading level={2}>Conversation</Heading>
             </div>
 
             {/* Messages */}
-            <div style={{
-              flex: 1,
-              overflowY: 'auto',
-              padding: '16px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '16px',
-            }}>
+            <div
+              style={{
+                flex: 1,
+                overflowY: 'auto',
+                padding: '16px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '16px',
+              }}
+            >
               {messages.map((message) => (
                 <div
                   key={message.id}
                   style={{
                     display: 'flex',
-                    justifyContent: message.role === 'user' ? 'flex-end' : 'flex-start',
+                    justifyContent:
+                      message.role === 'user' ? 'flex-end' : 'flex-start',
                   }}
                 >
                   <div
@@ -306,46 +392,63 @@ export default function CreateSiteAgentPage() {
                       maxWidth: '80%',
                       borderRadius: '8px',
                       padding: '12px',
-                      backgroundColor: message.role === 'user' ? '#7c3aed' :
-                                      message.role === 'system' ? '#fef3c7' : '#f9fafb',
+                      backgroundColor:
+                        message.role === 'user'
+                          ? '#7c3aed'
+                          : message.role === 'system'
+                            ? '#fef3c7'
+                            : '#f9fafb',
                       color: message.role === 'user' ? 'white' : '#111827',
-                      border: message.role === 'system' ? '1px solid #fcd34d' : 'none',
+                      border:
+                        message.role === 'system'
+                          ? '1px solid #fcd34d'
+                          : 'none',
                     }}
                   >
-                    <div style={{ fontSize: '14px', whiteSpace: 'pre-wrap' }}>{message.content}</div>
+                    <div style={{ fontSize: '14px', whiteSpace: 'pre-wrap' }}>
+                      {message.content}
+                    </div>
                   </div>
                 </div>
               ))}
 
               {isTyping && (
                 <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-                  <div style={{
-                    backgroundColor: '#f9fafb',
-                    borderRadius: '8px',
-                    padding: '12px',
-                  }}>
+                  <div
+                    style={{
+                      backgroundColor: '#f9fafb',
+                      borderRadius: '8px',
+                      padding: '12px',
+                    }}
+                  >
                     <div style={{ display: 'flex', gap: '8px' }}>
-                      <div style={{
-                        width: '8px',
-                        height: '8px',
-                        backgroundColor: '#9ca3af',
-                        borderRadius: '50%',
-                        animation: 'bounce 1s infinite',
-                      }}></div>
-                      <div style={{
-                        width: '8px',
-                        height: '8px',
-                        backgroundColor: '#9ca3af',
-                        borderRadius: '50%',
-                        animation: 'bounce 1s infinite 0.1s',
-                      }}></div>
-                      <div style={{
-                        width: '8px',
-                        height: '8px',
-                        backgroundColor: '#9ca3af',
-                        borderRadius: '50%',
-                        animation: 'bounce 1s infinite 0.2s',
-                      }}></div>
+                      <div
+                        style={{
+                          width: '8px',
+                          height: '8px',
+                          backgroundColor: '#9ca3af',
+                          borderRadius: '50%',
+                          animation: 'bounce 1s infinite',
+                        }}
+                      ></div>
+                      <div
+                        style={{
+                          width: '8px',
+                          height: '8px',
+                          backgroundColor: '#9ca3af',
+                          borderRadius: '50%',
+                          animation: 'bounce 1s infinite 0.1s',
+                        }}
+                      ></div>
+                      <div
+                        style={{
+                          width: '8px',
+                          height: '8px',
+                          backgroundColor: '#9ca3af',
+                          borderRadius: '50%',
+                          animation: 'bounce 1s infinite 0.2s',
+                        }}
+                      ></div>
                     </div>
                   </div>
                 </div>
@@ -357,7 +460,9 @@ export default function CreateSiteAgentPage() {
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
-                  const input = e.currentTarget.elements.namedItem('message') as HTMLInputElement;
+                  const input = e.currentTarget.elements.namedItem(
+                    'message',
+                  ) as HTMLInputElement;
                   if (input.value.trim()) {
                     handleSendMessage(input.value);
                     input.value = '';
@@ -391,24 +496,49 @@ export default function CreateSiteAgentPage() {
           </div>
 
           {/* Form Panel */}
-          <div style={{
-            backgroundColor: 'white',
-            borderRadius: '8px',
-            border: '1px solid #e5e7eb',
-            padding: '24px',
-            height: 'calc(100vh - 300px)',
-            minHeight: '600px',
-            overflowY: 'auto',
-          }}>
+          <div
+            style={{
+              backgroundColor: 'white',
+              borderRadius: '8px',
+              border: '1px solid #e5e7eb',
+              padding: '24px',
+              height: 'calc(100vh - 300px)',
+              minHeight: '600px',
+              overflowY: 'auto',
+            }}
+          >
             <Heading level={2}>Site Details</Heading>
 
             {!showForm ? (
               <div style={{ textAlign: 'center', padding: '48px 0' }}>
-                <svg style={{ width: '64px', height: '64px', color: '#d1d5db', margin: '0 auto 16px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                <svg
+                  style={{
+                    width: '64px',
+                    height: '64px',
+                    color: '#d1d5db',
+                    margin: '0 auto 16px',
+                  }}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
                 </svg>
-                <Text>Start describing the site in the chat, and extracted details will appear here.</Text>
+                <Text>
+                  Start describing the site in the chat, and extracted details
+                  will appear here.
+                </Text>
               </div>
             ) : (
               <form onSubmit={handleSubmit}>
@@ -416,28 +546,42 @@ export default function CreateSiteAgentPage() {
                   <TextField
                     label="Site Name"
                     value={formData.name || ''}
-                    onChange={(val) => setFormData(prev => ({ ...prev, name: val }))}
+                    onChange={(val) =>
+                      setFormData((prev) => ({ ...prev, name: val }))
+                    }
                     isRequired
                   />
 
                   <TextField
                     label="Address"
                     value={formData.address || ''}
-                    onChange={(val) => setFormData(prev => ({ ...prev, address: val }))}
+                    onChange={(val) =>
+                      setFormData((prev) => ({ ...prev, address: val }))
+                    }
                     isRequired
                   />
 
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: '1fr 1fr',
+                      gap: '12px',
+                    }}
+                  >
                     <TextField
                       label="City"
                       value={formData.city || ''}
-                      onChange={(val) => setFormData(prev => ({ ...prev, city: val }))}
+                      onChange={(val) =>
+                        setFormData((prev) => ({ ...prev, city: val }))
+                      }
                       isRequired
                     />
                     <TextField
                       label="ZIP Code"
                       value={formData.zipCode || ''}
-                      onChange={(val) => setFormData(prev => ({ ...prev, zipCode: val }))}
+                      onChange={(val) =>
+                        setFormData((prev) => ({ ...prev, zipCode: val }))
+                      }
                       isRequired
                     />
                   </div>
@@ -445,7 +589,9 @@ export default function CreateSiteAgentPage() {
                   <Select
                     label="State"
                     selectedKey={formData.state}
-                    onSelectionChange={(key) => setFormData(prev => ({ ...prev, state: key as string }))}
+                    onSelectionChange={(key) =>
+                      setFormData((prev) => ({ ...prev, state: key as string }))
+                    }
                   >
                     {US_STATES.map((state) => (
                       <SelectItem key={state} id={state}>
@@ -454,38 +600,54 @@ export default function CreateSiteAgentPage() {
                     ))}
                   </Select>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: '1fr 1fr',
+                      gap: '12px',
+                    }}
+                  >
                     <TextField
                       label="Phone"
                       type="tel"
                       value={formData.phone || ''}
-                      onChange={(val) => setFormData(prev => ({ ...prev, phone: val }))}
+                      onChange={(val) =>
+                        setFormData((prev) => ({ ...prev, phone: val }))
+                      }
                     />
                     <TextField
                       label="Capacity"
                       type="number"
                       value={formData.capacity?.toString() || ''}
-                      onChange={(val) => setFormData(prev => ({
-                        ...prev,
-                        capacity: val ? parseInt(val) : undefined
-                      }))}
+                      onChange={(val) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          capacity: val ? parseInt(val) : undefined,
+                        }))
+                      }
                     />
                   </div>
 
                   <div>
-                    <Text weight="600" style={{ marginBottom: '8px' }}>Programs</Text>
-                    <div style={{
-                      border: '1px solid #d1d5db',
-                      borderRadius: '6px',
-                      padding: '12px',
-                      maxHeight: '192px',
-                      overflowY: 'auto',
-                    }}>
+                    <Text weight="600" style={{ marginBottom: '8px' }}>
+                      Programs
+                    </Text>
+                    <div
+                      style={{
+                        border: '1px solid #d1d5db',
+                        borderRadius: '6px',
+                        padding: '12px',
+                        maxHeight: '192px',
+                        overflowY: 'auto',
+                      }}
+                    >
                       <Stack space="200">
                         {programs.map((program) => (
                           <Checkbox
                             key={program.id}
-                            isSelected={(formData.programIds || []).includes(program.id)}
+                            isSelected={(formData.programIds || []).includes(
+                              program.id,
+                            )}
                             onChange={() => toggleProgram(program.id)}
                           >
                             {program.name}
@@ -498,25 +660,45 @@ export default function CreateSiteAgentPage() {
                   <TextField
                     label="Hours of Operation"
                     value={formData.hoursOfOperation || ''}
-                    onChange={(val) => setFormData(prev => ({ ...prev, hoursOfOperation: val }))}
+                    onChange={(val) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        hoursOfOperation: val,
+                      }))
+                    }
                   />
 
                   <TextField
                     label="Contact Person"
                     value={formData.contactPerson || ''}
-                    onChange={(val) => setFormData(prev => ({ ...prev, contactPerson: val }))}
+                    onChange={(val) =>
+                      setFormData((prev) => ({ ...prev, contactPerson: val }))
+                    }
                   />
 
                   <Select
                     label="Status"
                     selectedKey={formData.status}
-                    onSelectionChange={(key) => setFormData(prev => ({ ...prev, status: key as 'active' | 'inactive' }))}
+                    onSelectionChange={(key) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        status: key as 'active' | 'inactive',
+                      }))
+                    }
                   >
-                    <SelectItem key="active" id="active">Active</SelectItem>
-                    <SelectItem key="inactive" id="inactive">Inactive</SelectItem>
+                    <SelectItem key="active" id="active">
+                      Active
+                    </SelectItem>
+                    <SelectItem key="inactive" id="inactive">
+                      Inactive
+                    </SelectItem>
                   </Select>
 
-                  <Button type="submit" variant="primary" style={{ width: '100%' }}>
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    style={{ width: '100%' }}
+                  >
                     Create Site
                   </Button>
                 </Stack>

@@ -7,14 +7,21 @@ interface HouseholdStore {
 
   // CRUD Operations
   getHouseholdById: (id: string) => Household | undefined;
-  createHousehold: (headOfHouseholdId: string, members: HouseholdMember[]) => Household;
+  createHousehold: (
+    headOfHouseholdId: string,
+    members: HouseholdMember[],
+  ) => Household;
   updateHousehold: (id: string, updates: Partial<Household>) => void;
   deleteHousehold: (id: string) => void;
 
   // Member Operations
   addMemberToHousehold: (householdId: string, member: HouseholdMember) => void;
   removeMemberFromHousehold: (householdId: string, memberId: string) => void;
-  updateMember: (householdId: string, memberId: string, updates: Partial<HouseholdMember>) => void;
+  updateMember: (
+    householdId: string,
+    memberId: string,
+    updates: Partial<HouseholdMember>,
+  ) => void;
   setHeadOfHousehold: (householdId: string, newHeadId: string) => void;
 
   // Queries
@@ -29,7 +36,7 @@ export const useHouseholdStore = create<HouseholdStore>((set, get) => ({
 
   // CRUD Operations
   getHouseholdById: (id: string) => {
-    return get().households.find(h => h.id === id);
+    return get().households.find((h) => h.id === id);
   },
 
   createHousehold: (headOfHouseholdId: string, members: HouseholdMember[]) => {
@@ -50,7 +57,7 @@ export const useHouseholdStore = create<HouseholdStore>((set, get) => ({
   updateHousehold: (id: string, updates: Partial<Household>) => {
     set((state) => ({
       households: state.households.map((h) =>
-        h.id === id ? { ...h, ...updates } : h
+        h.id === id ? { ...h, ...updates } : h,
       ),
     }));
   },
@@ -65,9 +72,7 @@ export const useHouseholdStore = create<HouseholdStore>((set, get) => ({
   addMemberToHousehold: (householdId: string, member: HouseholdMember) => {
     set((state) => ({
       households: state.households.map((h) =>
-        h.id === householdId
-          ? { ...h, members: [...h.members, member] }
-          : h
+        h.id === householdId ? { ...h, members: [...h.members, member] } : h,
       ),
     }));
   },
@@ -76,23 +81,27 @@ export const useHouseholdStore = create<HouseholdStore>((set, get) => ({
     set((state) => ({
       households: state.households.map((h) =>
         h.id === householdId
-          ? { ...h, members: h.members.filter(m => m.id !== memberId) }
-          : h
+          ? { ...h, members: h.members.filter((m) => m.id !== memberId) }
+          : h,
       ),
     }));
   },
 
-  updateMember: (householdId: string, memberId: string, updates: Partial<HouseholdMember>) => {
+  updateMember: (
+    householdId: string,
+    memberId: string,
+    updates: Partial<HouseholdMember>,
+  ) => {
     set((state) => ({
       households: state.households.map((h) =>
         h.id === householdId
           ? {
               ...h,
-              members: h.members.map(m =>
-                m.id === memberId ? { ...m, ...updates } : m
+              members: h.members.map((m) =>
+                m.id === memberId ? { ...m, ...updates } : m,
               ),
             }
-          : h
+          : h,
       ),
     }));
   },
@@ -103,7 +112,7 @@ export const useHouseholdStore = create<HouseholdStore>((set, get) => ({
         if (h.id !== householdId) return h;
 
         // Update relationship for old head (if they're staying in household)
-        const updatedMembers = h.members.map(m => {
+        const updatedMembers = h.members.map((m) => {
           if (m.id === h.headOfHouseholdId) {
             return { ...m, relationshipToHoH: 'other' as const };
           }
@@ -124,8 +133,10 @@ export const useHouseholdStore = create<HouseholdStore>((set, get) => ({
 
   // Queries
   getHouseholdByParticipant: (participantId: string) => {
-    return get().households.find(h =>
-      h.members.some(m => m.id === participantId) || h.headOfHouseholdId === participantId
+    return get().households.find(
+      (h) =>
+        h.members.some((m) => m.id === participantId) ||
+        h.headOfHouseholdId === participantId,
     );
   },
 
@@ -139,8 +150,10 @@ export const useHouseholdStore = create<HouseholdStore>((set, get) => ({
   },
 
   isParticipantInHousehold: (participantId: string) => {
-    return get().households.some(h =>
-      h.members.some(m => m.id === participantId) || h.headOfHouseholdId === participantId
+    return get().households.some(
+      (h) =>
+        h.members.some((m) => m.id === participantId) ||
+        h.headOfHouseholdId === participantId,
     );
   },
 }));

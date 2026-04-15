@@ -14,7 +14,9 @@ interface TouchpointStore {
   getTouchpointsByCaseWorker: (caseWorkerId: string) => Touchpoint[];
 
   // Write operations
-  createTouchpoint: (touchpoint: Omit<Touchpoint, 'id' | 'createdAt' | 'updatedAt'>) => Touchpoint;
+  createTouchpoint: (
+    touchpoint: Omit<Touchpoint, 'id' | 'createdAt' | 'updatedAt'>,
+  ) => Touchpoint;
   updateTouchpoint: (id: string, updates: Partial<Touchpoint>) => void;
   deleteTouchpoint: (id: string) => void;
 }
@@ -64,7 +66,7 @@ export const useTouchpointStore = create<TouchpointStore>((set, get) => ({
               ...updates,
               updatedAt: new Date(),
             }
-          : t
+          : t,
       ),
     }));
   },

@@ -12,7 +12,12 @@ export type FieldType =
 
 export type FieldAppliesTo = 'individual' | 'household' | 'entity' | 'all';
 
-export type DemographicProfile = 'hmis' | 'workforce' | 'healthcare' | 'general' | 'custom';
+export type DemographicProfile =
+  | 'hmis'
+  | 'workforce'
+  | 'healthcare'
+  | 'general'
+  | 'custom';
 
 export const PROFILE_LABELS: Record<DemographicProfile, string> = {
   hmis: 'HMIS',
@@ -75,7 +80,14 @@ export interface CustomFieldTemplate {
   validation?: CustomFieldValidation;
   helpText?: string;
   hmisCompliant: boolean;
-  category: 'demographics' | 'contact' | 'housing' | 'income' | 'health' | 'hmis' | 'other';
+  category:
+    | 'demographics'
+    | 'contact'
+    | 'housing'
+    | 'income'
+    | 'health'
+    | 'hmis'
+    | 'other';
 
   // NEW
   appliesTo: FieldAppliesTo;

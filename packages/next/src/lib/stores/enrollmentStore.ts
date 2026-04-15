@@ -1,5 +1,10 @@
 import { create } from 'zustand';
-import { Enrollment, ServiceReceived, EnrollmentStatus, EnrolleeType } from '@/types/poc';
+import {
+  Enrollment,
+  ServiceReceived,
+  EnrollmentStatus,
+  EnrolleeType,
+} from '@/types/poc';
 import { mockEnrollments } from '@/lib/mockData';
 
 interface EnrollmentStore {
@@ -7,13 +12,21 @@ interface EnrollmentStore {
 
   // CRUD Operations
   getEnrollmentById: (id: string) => Enrollment | undefined;
-  createEnrollment: (enrollment: Omit<Enrollment, 'id' | 'createdAt' | 'updatedAt'>) => Enrollment;
+  createEnrollment: (
+    enrollment: Omit<Enrollment, 'id' | 'createdAt' | 'updatedAt'>,
+  ) => Enrollment;
   updateEnrollment: (id: string, updates: Partial<Enrollment>) => void;
   deleteEnrollment: (id: string) => void;
 
   // Query Operations - Generic (new)
-  getEnrollmentsByEnrollee: (enrolleeType: EnrolleeType, enrolleeId: string) => Enrollment[];
-  getActiveEnrollmentsByEnrollee: (enrolleeType: EnrolleeType, enrolleeId: string) => Enrollment[];
+  getEnrollmentsByEnrollee: (
+    enrolleeType: EnrolleeType,
+    enrolleeId: string,
+  ) => Enrollment[];
+  getActiveEnrollmentsByEnrollee: (
+    enrolleeType: EnrolleeType,
+    enrolleeId: string,
+  ) => Enrollment[];
 
   // Query Operations - Legacy (backward compatibility)
   getEnrollmentsByParticipant: (participantId: string) => Enrollment[];
@@ -29,24 +42,28 @@ interface EnrollmentStore {
     id: string,
     reason: string,
     outcomes?: string[],
-    servicesReceived?: ServiceReceived[]
+    servicesReceived?: ServiceReceived[],
   ) => void;
   completeEnrollment: (
     id: string,
     outcomes: string[],
-    servicesReceived?: ServiceReceived[]
+    servicesReceived?: ServiceReceived[],
   ) => void;
   transferEnrollment: (
     id: string,
     newProgramId: string,
     newCaseWorkerId: string,
-    reason?: string
+    reason?: string,
   ) => void;
 
   // Outcome and Services Operations
   updateEnrollmentOutcomes: (id: string, outcomes: string[]) => void;
   addServiceReceived: (id: string, service: ServiceReceived) => void;
-  updateServiceReceived: (enrollmentId: string, serviceId: string, updates: Partial<ServiceReceived>) => void;
+  updateServiceReceived: (
+    enrollmentId: string,
+    serviceId: string,
+    updates: Partial<ServiceReceived>,
+  ) => void;
   removeServiceReceived: (enrollmentId: string, serviceId: string) => void;
 
   // Utility
@@ -59,7 +76,7 @@ export const useEnrollmentStore = create<EnrollmentStore>((set, get) => ({
 
   // CRUD Operations
   getEnrollmentById: (id: string) => {
-    return get().enrollments.find(e => e.id === id);
+    return get().enrollments.find((e) => e.id === id);
   },
 
   createEnrollment: (enrollment) => {
@@ -80,7 +97,7 @@ export const useEnrollmentStore = create<EnrollmentStore>((set, get) => ({
   updateEnrollment: (id, updates) => {
     set((state) => ({
       enrollments: state.enrollments.map((e) =>
-        e.id === id ? { ...e, ...updates, updatedAt: new Date() } : e
+        e.id === id ? { ...e, ...updates, updatedAt: new Date() } : e,
       ),
     }));
   },
@@ -92,65 +109,78 @@ export const useEnrollmentStore = create<EnrollmentStore>((set, get) => ({
   },
 
   // Query Operations - Generic (new)
-  getEnrollmentsByEnrollee: (enrolleeType: EnrolleeType, enrolleeId: string) => {
-    return get().enrollments.filter(e =>
-      e.enrolleeType === enrolleeType && e.enrolleeId === enrolleeId
+  getEnrollmentsByEnrollee: (
+    enrolleeType: EnrolleeType,
+    enrolleeId: string,
+  ) => {
+    return get().enrollments.filter(
+      (e) => e.enrolleeType === enrolleeType && e.enrolleeId === enrolleeId,
     );
   },
 
-  getActiveEnrollmentsByEnrollee: (enrolleeType: EnrolleeType, enrolleeId: string) => {
-    return get().enrollments.filter(e =>
-      e.enrolleeType === enrolleeType &&
-      e.enrolleeId === enrolleeId &&
-      e.status === 'active' &&
-      e.endDate === null
+  getActiveEnrollmentsByEnrollee: (
+    enrolleeType: EnrolleeType,
+    enrolleeId: string,
+  ) => {
+    return get().enrollments.filter(
+      (e) =>
+        e.enrolleeType === enrolleeType &&
+        e.enrolleeId === enrolleeId &&
+        e.status === 'active' &&
+        e.endDate === null,
     );
   },
 
   // Query Operations - Legacy (backward compatibility)
   getEnrollmentsByParticipant: (participantId: string) => {
-    return get().enrollments.filter(e =>
-      (e.enrolleeType === 'participant' && e.enrolleeId === participantId) ||
-      e.participantId === participantId // Legacy support
+    return get().enrollments.filter(
+      (e) =>
+        (e.enrolleeType === 'participant' && e.enrolleeId === participantId) ||
+        e.participantId === participantId, // Legacy support
     );
   },
 
   getEnrollmentsByFamily: (familyId: string) => {
-    return get().enrollments.filter(e =>
-      (e.enrolleeType === 'family' && e.enrolleeId === familyId) ||
-      e.householdId === familyId // Legacy support
+    return get().enrollments.filter(
+      (e) =>
+        (e.enrolleeType === 'family' && e.enrolleeId === familyId) ||
+        e.householdId === familyId, // Legacy support
     );
   },
 
   getEnrollmentsByEntity: (entityId: string) => {
-    return get().enrollments.filter(e =>
-      e.enrolleeType === 'entity' && e.enrolleeId === entityId
+    return get().enrollments.filter(
+      (e) => e.enrolleeType === 'entity' && e.enrolleeId === entityId,
     );
   },
 
   getActiveEnrollments: (participantId?: string) => {
-    const enrollments = get().enrollments.filter(e => e.status === 'active' && e.endDate === null);
+    const enrollments = get().enrollments.filter(
+      (e) => e.status === 'active' && e.endDate === null,
+    );
     if (participantId) {
-      return enrollments.filter(e =>
-        (e.enrolleeType === 'participant' && e.enrolleeId === participantId) ||
-        e.participantId === participantId // Legacy support
+      return enrollments.filter(
+        (e) =>
+          (e.enrolleeType === 'participant' &&
+            e.enrolleeId === participantId) ||
+          e.participantId === participantId, // Legacy support
       );
     }
     return enrollments;
   },
 
   getEnrollmentHistory: (participantId: string) => {
-    return get().enrollments
-      .filter(e => e.participantId === participantId)
+    return get()
+      .enrollments.filter((e) => e.participantId === participantId)
       .sort((a, b) => b.startDate.getTime() - a.startDate.getTime());
   },
 
   getEnrollmentsByProgram: (programId: string) => {
-    return get().enrollments.filter(e => e.programId === programId);
+    return get().enrollments.filter((e) => e.programId === programId);
   },
 
   getEnrollmentsByCaseWorker: (caseWorkerId: string) => {
-    return get().enrollments.filter(e => e.caseWorkerId === caseWorkerId);
+    return get().enrollments.filter((e) => e.caseWorkerId === caseWorkerId);
   },
 
   // Enrollment Status Operations
@@ -167,7 +197,7 @@ export const useEnrollmentStore = create<EnrollmentStore>((set, get) => ({
               servicesReceived: [...e.servicesReceived, ...servicesReceived],
               updatedAt: new Date(),
             }
-          : e
+          : e,
       ),
     }));
   },
@@ -184,7 +214,7 @@ export const useEnrollmentStore = create<EnrollmentStore>((set, get) => ({
               servicesReceived: [...e.servicesReceived, ...servicesReceived],
               updatedAt: new Date(),
             }
-          : e
+          : e,
       ),
     }));
   },
@@ -200,7 +230,7 @@ export const useEnrollmentStore = create<EnrollmentStore>((set, get) => ({
               dismissalReason: reason,
               updatedAt: new Date(),
             }
-          : e
+          : e,
       ),
     }));
 
@@ -221,7 +251,9 @@ export const useEnrollmentStore = create<EnrollmentStore>((set, get) => ({
         outcomes: [],
         servicesReceived: [],
         outcomeGoals: oldEnrollment.outcomeGoals,
-        notes: reason ? `Transferred from previous program. Reason: ${reason}` : 'Transferred from previous program',
+        notes: reason
+          ? `Transferred from previous program. Reason: ${reason}`
+          : 'Transferred from previous program',
       });
     }
   },
@@ -230,7 +262,7 @@ export const useEnrollmentStore = create<EnrollmentStore>((set, get) => ({
   updateEnrollmentOutcomes: (id, outcomes) => {
     set((state) => ({
       enrollments: state.enrollments.map((e) =>
-        e.id === id ? { ...e, outcomes, updatedAt: new Date() } : e
+        e.id === id ? { ...e, outcomes, updatedAt: new Date() } : e,
       ),
     }));
   },
@@ -244,7 +276,7 @@ export const useEnrollmentStore = create<EnrollmentStore>((set, get) => ({
               servicesReceived: [...e.servicesReceived, service],
               updatedAt: new Date(),
             }
-          : e
+          : e,
       ),
     }));
   },
@@ -256,11 +288,11 @@ export const useEnrollmentStore = create<EnrollmentStore>((set, get) => ({
           ? {
               ...e,
               servicesReceived: e.servicesReceived.map((s) =>
-                s.id === serviceId ? { ...s, ...updates } : s
+                s.id === serviceId ? { ...s, ...updates } : s,
               ),
               updatedAt: new Date(),
             }
-          : e
+          : e,
       ),
     }));
   },
@@ -271,10 +303,12 @@ export const useEnrollmentStore = create<EnrollmentStore>((set, get) => ({
         e.id === enrollmentId
           ? {
               ...e,
-              servicesReceived: e.servicesReceived.filter((s) => s.id !== serviceId),
+              servicesReceived: e.servicesReceived.filter(
+                (s) => s.id !== serviceId,
+              ),
               updatedAt: new Date(),
             }
-          : e
+          : e,
       ),
     }));
   },
@@ -282,7 +316,9 @@ export const useEnrollmentStore = create<EnrollmentStore>((set, get) => ({
   // Utility
   isEnrollmentActive: (id) => {
     const enrollment = get().getEnrollmentById(id);
-    return enrollment ? enrollment.status === 'active' && enrollment.endDate === null : false;
+    return enrollment
+      ? enrollment.status === 'active' && enrollment.endDate === null
+      : false;
   },
 
   getEnrollmentDuration: (id) => {

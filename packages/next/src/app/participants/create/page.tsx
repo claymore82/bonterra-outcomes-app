@@ -57,7 +57,9 @@ export default function CreateParticipantPage() {
         customData: {},
       });
 
-      alert(`Successfully created participant ${participant.firstName} ${participant.lastName}`);
+      alert(
+        `Successfully created participant ${participant.firstName} ${participant.lastName}`,
+      );
       router.push(`/participants/${participant.id}`);
     } catch (error) {
       console.error('Error creating participant:', error);
@@ -79,9 +81,7 @@ export default function CreateParticipantPage() {
             <Text color="link">← Back to Participants</Text>
           </Link>
           <Heading level={1}>Create New Participant</Heading>
-          <Text color="subdued">
-            Add a new participant to the system
-          </Text>
+          <Text color="subdued">Add a new participant to the system</Text>
         </Stack>
 
         {/* Form */}
@@ -90,7 +90,13 @@ export default function CreateParticipantPage() {
             <Heading level={2}>Participant Information</Heading>
 
             {/* Name Fields */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '16px',
+              }}
+            >
               <TextField
                 label="First Name"
                 value={firstName}
@@ -108,9 +114,22 @@ export default function CreateParticipantPage() {
             </div>
 
             {/* Date of Birth and Gender */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '16px',
+              }}
+            >
               <div>
-                <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', marginBottom: '8px' }}>
+                <label
+                  style={{
+                    display: 'block',
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    marginBottom: '8px',
+                  }}
+                >
                   Date of Birth <span style={{ color: '#dc2626' }}>*</span>
                 </label>
                 <input
@@ -129,7 +148,9 @@ export default function CreateParticipantPage() {
               <Select
                 label="Gender"
                 selectedKey={gender.toString()}
-                onSelectionChange={(key) => setGender(parseInt(key as string) as typeof gender)}
+                onSelectionChange={(key) =>
+                  setGender(parseInt(key as string) as typeof gender)
+                }
               >
                 <SelectItem id="99">Data Not Collected</SelectItem>
                 <SelectItem id="0">Female</SelectItem>

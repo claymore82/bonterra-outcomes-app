@@ -22,7 +22,7 @@ export const RELATIONSHIP_LABELS: Record<RelationshipType, string> = {
   guardian: 'Guardian',
   grandparent: 'Grandparent',
   grandchild: 'Grandchild',
-  other: 'Other Relation'
+  other: 'Other Relation',
 };
 
 export interface HouseholdMember {

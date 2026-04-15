@@ -66,7 +66,12 @@ interface CaseWorkerStore {
   getCaseWorker: (id: string) => CaseWorker | undefined;
   getActiveCaseWorkers: () => CaseWorker[];
   getCaseWorkersByProgram: (programId: string) => CaseWorker[];
-  createCaseWorker: (caseWorker: Omit<CaseWorker, 'id' | 'createdAt' | 'updatedAt' | 'currentCaseload'>) => CaseWorker;
+  createCaseWorker: (
+    caseWorker: Omit<
+      CaseWorker,
+      'id' | 'createdAt' | 'updatedAt' | 'currentCaseload'
+    >,
+  ) => CaseWorker;
   updateCaseWorker: (id: string, updates: Partial<CaseWorker>) => void;
   deleteCaseWorker: (id: string) => void;
   incrementCaseload: (id: string) => void;
@@ -112,9 +117,7 @@ export const useCaseWorkerStore = create<CaseWorkerStore>((set, get) => ({
   updateCaseWorker: (id, updates) => {
     set((state) => ({
       caseWorkers: state.caseWorkers.map((cw) =>
-        cw.id === id
-          ? { ...cw, ...updates, updatedAt: new Date() }
-          : cw
+        cw.id === id ? { ...cw, ...updates, updatedAt: new Date() } : cw,
       ),
     }));
   },
@@ -129,8 +132,12 @@ export const useCaseWorkerStore = create<CaseWorkerStore>((set, get) => ({
     set((state) => ({
       caseWorkers: state.caseWorkers.map((cw) =>
         cw.id === id
-          ? { ...cw, currentCaseload: (cw.currentCaseload || 0) + 1, updatedAt: new Date() }
-          : cw
+          ? {
+              ...cw,
+              currentCaseload: (cw.currentCaseload || 0) + 1,
+              updatedAt: new Date(),
+            }
+          : cw,
       ),
     }));
   },
@@ -139,8 +146,12 @@ export const useCaseWorkerStore = create<CaseWorkerStore>((set, get) => ({
     set((state) => ({
       caseWorkers: state.caseWorkers.map((cw) =>
         cw.id === id
-          ? { ...cw, currentCaseload: Math.max(0, (cw.currentCaseload || 0) - 1), updatedAt: new Date() }
-          : cw
+          ? {
+              ...cw,
+              currentCaseload: Math.max(0, (cw.currentCaseload || 0) - 1),
+              updatedAt: new Date(),
+            }
+          : cw,
       ),
     }));
   },

@@ -7,7 +7,9 @@ interface ParticipantStore {
 
   // CRUD Operations
   getParticipantById: (id: string) => Participant | undefined;
-  createParticipant: (participant: Omit<Participant, 'id' | 'createdAt' | 'lastSeenAt'>) => Participant;
+  createParticipant: (
+    participant: Omit<Participant, 'id' | 'createdAt' | 'lastSeenAt'>,
+  ) => Participant;
   updateParticipant: (id: string, updates: Partial<Participant>) => void;
   deleteParticipant: (id: string) => void;
 
@@ -22,7 +24,7 @@ export const useParticipantStore = create<ParticipantStore>((set, get) => ({
 
   // CRUD Operations
   getParticipantById: (id: string) => {
-    return get().participants.find(p => p.id === id);
+    return get().participants.find((p) => p.id === id);
   },
 
   createParticipant: (participant) => {
@@ -43,7 +45,7 @@ export const useParticipantStore = create<ParticipantStore>((set, get) => ({
   updateParticipant: (id, updates) => {
     set((state) => ({
       participants: state.participants.map((p) =>
-        p.id === id ? { ...p, ...updates, lastSeenAt: new Date() } : p
+        p.id === id ? { ...p, ...updates, lastSeenAt: new Date() } : p,
       ),
     }));
   },
@@ -66,14 +68,14 @@ export const useParticipantStore = create<ParticipantStore>((set, get) => ({
         p.firstName.toLowerCase().includes(lowercaseQuery) ||
         p.lastName.toLowerCase().includes(lowercaseQuery) ||
         p.email?.toLowerCase().includes(lowercaseQuery) ||
-        p.phoneNumber?.includes(query)
+        p.phoneNumber?.includes(query),
     );
   },
 
   updateLastSeen: (id: string) => {
     set((state) => ({
       participants: state.participants.map((p) =>
-        p.id === id ? { ...p, lastSeenAt: new Date() } : p
+        p.id === id ? { ...p, lastSeenAt: new Date() } : p,
       ),
     }));
   },

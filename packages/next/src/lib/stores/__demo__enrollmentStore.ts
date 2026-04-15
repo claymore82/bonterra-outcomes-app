@@ -45,7 +45,9 @@ export function demoGetEnrollmentHistory() {
   history.forEach((enrollment, index) => {
     console.log(`${index + 1}. ${enrollment.programId}: ${enrollment.status}`);
     console.log(`   Start: ${enrollment.startDate.toLocaleDateString()}`);
-    console.log(`   End: ${enrollment.endDate?.toLocaleDateString() || 'Active'}`);
+    console.log(
+      `   End: ${enrollment.endDate?.toLocaleDateString() || 'Active'}`,
+    );
   });
 
   /*
@@ -62,8 +64,10 @@ export function demoServicesReceived() {
 
   if (enrollment) {
     console.log('Services received:');
-    enrollment.servicesReceived.forEach(service => {
-      console.log(`- ${service.serviceType}: ${service.amount} ${service.unit}`);
+    enrollment.servicesReceived.forEach((service) => {
+      console.log(
+        `- ${service.serviceType}: ${service.amount} ${service.unit}`,
+      );
       console.log(`  Date: ${service.date.toLocaleDateString()}`);
       console.log(`  Provider: ${service.providedBy}`);
     });
@@ -80,7 +84,8 @@ export function demoServicesReceived() {
 
 // Example 5: Add a new service to an enrollment
 export function demoAddService() {
-  const { addServiceReceived, getEnrollmentById } = useEnrollmentStore.getState();
+  const { addServiceReceived, getEnrollmentById } =
+    useEnrollmentStore.getState();
 
   // Add a new service to John's Rapid Rehousing
   addServiceReceived('ENR-003', {
@@ -90,7 +95,7 @@ export function demoAddService() {
     amount: 1200,
     unit: 'dollars',
     providedBy: 'Hope Housing Services',
-    notes: 'Monthly rent assistance - month 3'
+    notes: 'Monthly rent assistance - month 3',
   });
 
   const enrollment = getEnrollmentById('ENR-003');
@@ -99,13 +104,14 @@ export function demoAddService() {
 
 // Example 6: Complete an enrollment with outcomes
 export function demoCompleteEnrollment() {
-  const { completeEnrollment, getEnrollmentById } = useEnrollmentStore.getState();
+  const { completeEnrollment, getEnrollmentById } =
+    useEnrollmentStore.getState();
 
   // Complete Jane's job training
   completeEnrollment('ENR-005', [
     'Completed IT certification',
     'Obtained full-time employment as junior developer',
-    'Earning $55,000/year'
+    'Earning $55,000/year',
   ]);
 
   const enrollment = getEnrollmentById('ENR-005');
@@ -115,21 +121,24 @@ export function demoCompleteEnrollment() {
 
 // Example 7: Dismiss an enrollment with reason
 export function demoDismissEnrollment() {
-  const { dismissEnrollment, getEnrollmentById } = useEnrollmentStore.getState();
+  const { dismissEnrollment, getEnrollmentById } =
+    useEnrollmentStore.getState();
 
   dismissEnrollment(
     'ENR-007',
     'Moved out of service area',
     ['Referred to services in new location'],
-    [{
-      id: 'SVC-NEW',
-      serviceType: 'Referral to external agency',
-      date: new Date(),
-      amount: 1,
-      unit: 'referral',
-      providedBy: 'Emily Rodriguez',
-      notes: 'Connected with shelter in Portland, OR'
-    }]
+    [
+      {
+        id: 'SVC-NEW',
+        serviceType: 'Referral to external agency',
+        date: new Date(),
+        amount: 1,
+        unit: 'referral',
+        providedBy: 'Emily Rodriguez',
+        notes: 'Connected with shelter in Portland, OR',
+      },
+    ],
   );
 
   const enrollment = getEnrollmentById('ENR-007');
@@ -139,14 +148,15 @@ export function demoDismissEnrollment() {
 
 // Example 8: Transfer to a new program
 export function demoTransferEnrollment() {
-  const { transferEnrollment, getEnrollmentsByParticipant } = useEnrollmentStore.getState();
+  const { transferEnrollment, getEnrollmentsByParticipant } =
+    useEnrollmentStore.getState();
 
   // Transfer participant from Emergency Shelter to Transitional Housing
   transferEnrollment(
     'ENR-001',
     'PROG-006', // Transitional Housing
     '1', // Sarah Johnson
-    'Participant ready for more independent living arrangement'
+    'Participant ready for more independent living arrangement',
   );
 
   const enrollments = getEnrollmentsByParticipant('P-001');
@@ -177,11 +187,19 @@ export function demoEnrollmentsByProgram() {
 
   // How many people have been in Emergency Shelter?
   const shelterEnrollments = getEnrollmentsByProgram('PROG-001');
-  console.log(`Total Emergency Shelter enrollments: ${shelterEnrollments.length}`);
+  console.log(
+    `Total Emergency Shelter enrollments: ${shelterEnrollments.length}`,
+  );
 
-  const activeCount = shelterEnrollments.filter(e => e.status === 'active').length;
-  const completedCount = shelterEnrollments.filter(e => e.status === 'completed').length;
-  const dismissedCount = shelterEnrollments.filter(e => e.status === 'dismissed').length;
+  const activeCount = shelterEnrollments.filter(
+    (e) => e.status === 'active',
+  ).length;
+  const completedCount = shelterEnrollments.filter(
+    (e) => e.status === 'completed',
+  ).length;
+  const dismissedCount = shelterEnrollments.filter(
+    (e) => e.status === 'dismissed',
+  ).length;
 
   console.log(`Active: ${activeCount}`);
   console.log(`Completed: ${completedCount}`);
@@ -190,19 +208,24 @@ export function demoEnrollmentsByProgram() {
 
 // Example 11: Query case worker workload
 export function demoCaseWorkerWorkload() {
-  const { getEnrollmentsByCaseWorker, getActiveEnrollments } = useEnrollmentStore.getState();
+  const { getEnrollmentsByCaseWorker, getActiveEnrollments } =
+    useEnrollmentStore.getState();
 
   // Sarah Johnson's enrollments
   const sarahEnrollments = getEnrollmentsByCaseWorker('1');
-  const sarahActiveEnrollments = sarahEnrollments.filter(e => e.status === 'active');
+  const sarahActiveEnrollments = sarahEnrollments.filter(
+    (e) => e.status === 'active',
+  );
 
   console.log(`Sarah Johnson:`);
   console.log(`  Total enrollments: ${sarahEnrollments.length}`);
   console.log(`  Active case load: ${sarahActiveEnrollments.length}`);
 
   // List active participants
-  sarahActiveEnrollments.forEach(enrollment => {
-    console.log(`  - Participant ${enrollment.participantId} in ${enrollment.programId}`);
+  sarahActiveEnrollments.forEach((enrollment) => {
+    console.log(
+      `  - Participant ${enrollment.participantId} in ${enrollment.programId}`,
+    );
   });
 }
 
@@ -223,9 +246,9 @@ export function demoCreateEnrollment() {
     outcomeGoals: [
       'Complete vocational training',
       'Obtain industry certification',
-      'Secure employment'
+      'Secure employment',
     ],
-    notes: 'Participant expressing strong interest in technical career path'
+    notes: 'Participant expressing strong interest in technical career path',
   });
 
   console.log(`Created new enrollment: ${newEnrollment.id}`);
@@ -240,16 +263,16 @@ export function demoCaseManagerDashboard(caseWorkerId: string) {
   const {
     getEnrollmentsByCaseWorker,
     getEnrollmentDuration,
-    getEnrollmentById
+    getEnrollmentById,
   } = useEnrollmentStore.getState();
 
   const myEnrollments = getEnrollmentsByCaseWorker(caseWorkerId);
-  const active = myEnrollments.filter(e => e.status === 'active');
+  const active = myEnrollments.filter((e) => e.status === 'active');
 
   console.log(`\n=== Case Manager Dashboard ===`);
   console.log(`Active case load: ${active.length} participants\n`);
 
-  active.forEach(enrollment => {
+  active.forEach((enrollment) => {
     const days = getEnrollmentDuration(enrollment.id);
     const servicesCount = enrollment.servicesReceived.length;
 

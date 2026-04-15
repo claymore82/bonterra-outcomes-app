@@ -43,7 +43,8 @@ export default function CompleteEnrollmentModal({
   onClose,
 }: CompleteEnrollmentModalProps) {
   const router = useRouter();
-  const { completeEnrollment, dismissEnrollment, transferEnrollment } = useEnrollmentStore();
+  const { completeEnrollment, dismissEnrollment, transferEnrollment } =
+    useEnrollmentStore();
   const { programs } = useProgramStore();
   const { users } = useUserStore();
 
@@ -57,14 +58,18 @@ export default function CompleteEnrollmentModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Get available programs (excluding current program)
-  const availablePrograms = programs.filter(p => p.id !== enrollment.programId && p.active);
+  const availablePrograms = programs.filter(
+    (p) => p.id !== enrollment.programId && p.active,
+  );
 
   // Get case workers
-  const caseWorkers = users.filter(u => u.role === 'case_worker' && u.status === 'active');
+  const caseWorkers = users.filter(
+    (u) => u.role === 'case_worker' && u.status === 'active',
+  );
 
   // Get case workers for selected transfer program
   const availableCaseWorkers = transferProgramId
-    ? caseWorkers.filter(cw => {
+    ? caseWorkers.filter((cw) => {
         if (!cw.caseWorkerProfile) return false;
         // If programIds is empty, case worker works with all programs
         if (cw.caseWorkerProfile.programIds.length === 0) return true;
@@ -80,14 +85,19 @@ export default function CompleteEnrollmentModal({
         // Complete successfully
         const outcomesList = outcomes
           .split('\n')
-          .map(o => o.trim())
-          .filter(o => o.length > 0);
+          .map((o) => o.trim())
+          .filter((o) => o.length > 0);
 
         completeEnrollment(enrollment.id, outcomesList);
-        alert(`✅ Success!\n\n${participantName} has successfully completed ${currentProgramName}.`);
+        alert(
+          `✅ Success!\n\n${participantName} has successfully completed ${currentProgramName}.`,
+        );
       } else if (actionType === 'dismiss') {
         // Dismiss enrollment
-        const reason = dismissalReason === 'Other (specify below)' ? customReason : dismissalReason;
+        const reason =
+          dismissalReason === 'Other (specify below)'
+            ? customReason
+            : dismissalReason;
 
         if (!reason) {
           alert('Please select or enter a dismissal reason.');
@@ -97,25 +107,34 @@ export default function CompleteEnrollmentModal({
 
         const outcomesList = outcomes
           .split('\n')
-          .map(o => o.trim())
-          .filter(o => o.length > 0);
+          .map((o) => o.trim())
+          .filter((o) => o.length > 0);
 
         dismissEnrollment(enrollment.id, reason, outcomesList);
         alert(`Enrollment dismissed.\n\nReason: ${reason}`);
       } else if (actionType === 'transfer') {
         // Transfer to another program
         if (!transferProgramId || !transferCaseWorkerId) {
-          alert('Please select both a program and a case worker for the transfer.');
+          alert(
+            'Please select both a program and a case worker for the transfer.',
+          );
           setIsSubmitting(false);
           return;
         }
 
-        const transferProgram = programs.find(p => p.id === transferProgramId);
+        const transferProgram = programs.find(
+          (p) => p.id === transferProgramId,
+        );
         const reason = transferReason || `Referred to ${transferProgram?.name}`;
 
-        transferEnrollment(enrollment.id, transferProgramId, transferCaseWorkerId, reason);
+        transferEnrollment(
+          enrollment.id,
+          transferProgramId,
+          transferCaseWorkerId,
+          reason,
+        );
         alert(
-          `✅ Referral Success!\n\n${participantName} has been referred to ${transferProgram?.name}.\n\nA new active enrollment has been created in the new program.`
+          `✅ Referral Success!\n\n${participantName} has been referred to ${transferProgram?.name}.\n\nA new active enrollment has been created in the new program.`,
         );
       }
 
@@ -158,7 +177,11 @@ export default function CompleteEnrollmentModal({
       >
         <Stack space="500">
           {/* Header */}
-          <InlineStack gap="400" verticalAlign="center" distribute="space-between">
+          <InlineStack
+            gap="400"
+            verticalAlign="center"
+            distribute="space-between"
+          >
             <Heading level={2}>Complete Enrollment</Heading>
             <button
               onClick={onClose}
@@ -181,7 +204,14 @@ export default function CompleteEnrollmentModal({
           <Stack space="300">
             <Text weight="600">What would you like to do?</Text>
             <Stack space="200">
-              <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  cursor: 'pointer',
+                }}
+              >
                 <input
                   type="radio"
                   name="actionType"
@@ -198,7 +228,14 @@ export default function CompleteEnrollmentModal({
                 </Stack>
               </label>
 
-              <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  cursor: 'pointer',
+                }}
+              >
                 <input
                   type="radio"
                   name="actionType"
@@ -210,12 +247,20 @@ export default function CompleteEnrollmentModal({
                 <Stack space="50">
                   <Text weight="600">❌ Dismiss</Text>
                   <Text variant="sm" color="subdued">
-                    End enrollment before completion (left early, didn't meet requirements, etc.)
+                    End enrollment before completion (left early, didn't meet
+                    requirements, etc.)
                   </Text>
                 </Stack>
               </label>
 
-              <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  cursor: 'pointer',
+                }}
+              >
                 <input
                   type="radio"
                   name="actionType"
@@ -227,7 +272,8 @@ export default function CompleteEnrollmentModal({
                 <Stack space="50">
                   <Text weight="600">🔄 Refer to Another Program</Text>
                   <Text variant="sm" color="subdued">
-                    Transfer to a different program (e.g., graduated, now needs job training)
+                    Transfer to a different program (e.g., graduated, now needs
+                    job training)
                   </Text>
                 </Stack>
               </label>
@@ -238,7 +284,13 @@ export default function CompleteEnrollmentModal({
           {actionType === 'complete' && (
             <Stack space="300">
               <Stack space="200">
-                <label style={{ display: 'block', fontSize: '14px', fontWeight: 600 }}>
+                <label
+                  style={{
+                    display: 'block',
+                    fontSize: '14px',
+                    fontWeight: 600,
+                  }}
+                >
                   Outcomes Achieved (one per line)
                 </label>
                 <textarea
@@ -257,7 +309,8 @@ export default function CompleteEnrollmentModal({
                   }}
                 />
                 <Text variant="sm" color="subdued">
-                  List the outcomes and goals this participant achieved during the program
+                  List the outcomes and goals this participant achieved during
+                  the program
                 </Text>
               </Stack>
             </Stack>
@@ -267,7 +320,13 @@ export default function CompleteEnrollmentModal({
           {actionType === 'dismiss' && (
             <Stack space="300">
               <Stack space="200">
-                <label style={{ display: 'block', fontSize: '14px', fontWeight: 600 }}>
+                <label
+                  style={{
+                    display: 'block',
+                    fontSize: '14px',
+                    fontWeight: 600,
+                  }}
+                >
                   Reason for Dismissal *
                 </label>
                 <select
@@ -292,7 +351,13 @@ export default function CompleteEnrollmentModal({
 
               {dismissalReason === 'Other (specify below)' && (
                 <Stack space="200">
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: 600 }}>
+                  <label
+                    style={{
+                      display: 'block',
+                      fontSize: '14px',
+                      fontWeight: 600,
+                    }}
+                  >
                     Custom Reason *
                   </label>
                   <input
@@ -312,7 +377,13 @@ export default function CompleteEnrollmentModal({
               )}
 
               <Stack space="200">
-                <label style={{ display: 'block', fontSize: '14px', fontWeight: 600 }}>
+                <label
+                  style={{
+                    display: 'block',
+                    fontSize: '14px',
+                    fontWeight: 600,
+                  }}
+                >
                   Partial Outcomes (optional)
                 </label>
                 <textarea
@@ -338,7 +409,13 @@ export default function CompleteEnrollmentModal({
           {actionType === 'transfer' && (
             <Stack space="300">
               <Stack space="200">
-                <label style={{ display: 'block', fontSize: '14px', fontWeight: 600 }}>
+                <label
+                  style={{
+                    display: 'block',
+                    fontSize: '14px',
+                    fontWeight: 600,
+                  }}
+                >
                   Refer to Program *
                 </label>
                 <select
@@ -360,13 +437,20 @@ export default function CompleteEnrollmentModal({
                   ))}
                 </select>
                 <Text variant="sm" color="subdued">
-                  The participant will be enrolled in the new program immediately
+                  The participant will be enrolled in the new program
+                  immediately
                 </Text>
               </Stack>
 
               {transferProgramId && (
                 <Stack space="200">
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: 600 }}>
+                  <label
+                    style={{
+                      display: 'block',
+                      fontSize: '14px',
+                      fontWeight: 600,
+                    }}
+                  >
                     Assign Case Worker *
                   </label>
                   <select
@@ -384,7 +468,8 @@ export default function CompleteEnrollmentModal({
                     {availableCaseWorkers.map((cw) => (
                       <option key={cw.id} value={cw.id}>
                         {cw.firstName} {cw.lastName}
-                        {cw.caseWorkerProfile && ` (${cw.caseWorkerProfile.currentCaseload} active cases)`}
+                        {cw.caseWorkerProfile &&
+                          ` (${cw.caseWorkerProfile.currentCaseload} active cases)`}
                       </option>
                     ))}
                   </select>
@@ -392,7 +477,13 @@ export default function CompleteEnrollmentModal({
               )}
 
               <Stack space="200">
-                <label style={{ display: 'block', fontSize: '14px', fontWeight: 600 }}>
+                <label
+                  style={{
+                    display: 'block',
+                    fontSize: '14px',
+                    fontWeight: 600,
+                  }}
+                >
                   Referral Notes (optional)
                 </label>
                 <textarea
@@ -416,7 +507,11 @@ export default function CompleteEnrollmentModal({
 
           {/* Action Buttons */}
           <InlineStack gap="300" distribute="flex-end">
-            <Button variant="tertiary" onPress={onClose} isDisabled={isSubmitting}>
+            <Button
+              variant="tertiary"
+              onPress={onClose}
+              isDisabled={isSubmitting}
+            >
               Cancel
             </Button>
             <Button
@@ -424,7 +519,13 @@ export default function CompleteEnrollmentModal({
               onPress={handleSubmit}
               isDisabled={isSubmitting}
             >
-              {isSubmitting ? 'Processing...' : actionType === 'complete' ? 'Complete Enrollment' : actionType === 'dismiss' ? 'Dismiss Enrollment' : 'Refer to Program'}
+              {isSubmitting
+                ? 'Processing...'
+                : actionType === 'complete'
+                  ? 'Complete Enrollment'
+                  : actionType === 'dismiss'
+                    ? 'Dismiss Enrollment'
+                    : 'Refer to Program'}
             </Button>
           </InlineStack>
         </Stack>

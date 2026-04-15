@@ -1,12 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import {
-  Card,
-  Heading,
-  Text,
-  Stack,
-} from '@bonterratech/stitch-extension';
+import { Card, Heading, Text, Stack } from '@bonterratech/stitch-extension';
 import { useCustomFieldStore } from '@/lib/stores/customFieldStore';
 import PageLayout from '../../components/PageLayout';
 
@@ -14,9 +9,10 @@ export default function DemographicsPage() {
   const { customFields } = useCustomFieldStore();
 
   const demographicFields = customFields.filter(
-    (field) => field.profiles?.includes('hmis') ||
-               field.profiles?.includes('general') ||
-               field.hmisCompliant
+    (field) =>
+      field.profiles?.includes('hmis') ||
+      field.profiles?.includes('general') ||
+      field.hmisCompliant,
   );
 
   return (
@@ -34,7 +30,9 @@ export default function DemographicsPage() {
         {/* Demographic Fields */}
         <Card>
           <Stack space="400">
-            <Heading level={2}>Configured Fields ({demographicFields.length})</Heading>
+            <Heading level={2}>
+              Configured Fields ({demographicFields.length})
+            </Heading>
 
             {demographicFields.length === 0 ? (
               <Text>No demographic fields configured yet.</Text>
@@ -44,10 +42,14 @@ export default function DemographicsPage() {
                   <Card key={field.id}>
                     <Stack space="200">
                       <Text weight="600">{field.label}</Text>
-                      <Text variant="sm" color="subdued">{field.name}</Text>
+                      <Text variant="sm" color="subdued">
+                        {field.name}
+                      </Text>
                       <Text variant="sm">Type: {field.fieldType}</Text>
                       {field.hmisCompliant && (
-                        <Text variant="sm" color="success">✓ HMIS Compliant</Text>
+                        <Text variant="sm" color="success">
+                          ✓ HMIS Compliant
+                        </Text>
                       )}
                     </Stack>
                   </Card>
@@ -60,7 +62,8 @@ export default function DemographicsPage() {
         <Card>
           <Stack space="300">
             <Text variant="sm" color="subdued">
-              💡 This is a simplified view. The full demographics page with HMIS mapping will be ported in a later phase.
+              💡 This is a simplified view. The full demographics page with HMIS
+              mapping will be ported in a later phase.
             </Text>
           </Stack>
         </Card>

@@ -27,22 +27,32 @@ interface DemographicsStore {
   getStandardsByAgency: (agency: string) => DemographicsStandard[];
 
   // Mapping management
-  createMapping: (mapping: Omit<DemographicsMapping, 'id' | 'createdAt' | 'updatedAt'>) => DemographicsMapping;
+  createMapping: (
+    mapping: Omit<DemographicsMapping, 'id' | 'createdAt' | 'updatedAt'>,
+  ) => DemographicsMapping;
   updateMapping: (id: string, updates: Partial<DemographicsMapping>) => void;
   deleteMapping: (id: string) => void;
-  getMappingsByCustomField: (customFieldId: string) => DemographicsMapping | undefined;
+  getMappingsByCustomField: (
+    customFieldId: string,
+  ) => DemographicsMapping | undefined;
   getMappingsByStandard: (standardId: string) => DemographicsMapping[];
 
   // Program requirements
-  setProgramRequirements: (programId: string, requirements: ProgramReportingRequirement[]) => void;
+  setProgramRequirements: (
+    programId: string,
+    requirements: ProgramReportingRequirement[],
+  ) => void;
   getProgramRequirements: (programId: string) => ProgramReportingRequirement[];
-  addProgramRequirement: (programId: string, requirement: ProgramReportingRequirement) => void;
+  addProgramRequirement: (
+    programId: string,
+    requirement: ProgramReportingRequirement,
+  ) => void;
   removeProgramRequirement: (programId: string, standardId: string) => void;
 
   // Compliance checking
   checkCompliance: (
     participantData: any,
-    standardId: string
+    standardId: string,
   ) => StandardComplianceCheck;
 
   // Coverage analysis
@@ -89,9 +99,7 @@ export const useDemographicsStore = create<DemographicsStore>((set, get) => ({
   updateMapping: (id, updates) => {
     set((state) => ({
       mappings: state.mappings.map((m) =>
-        m.id === id
-          ? { ...m, ...updates, updatedAt: new Date() }
-          : m
+        m.id === id ? { ...m, ...updates, updatedAt: new Date() } : m,
       ),
     }));
   },
@@ -108,7 +116,7 @@ export const useDemographicsStore = create<DemographicsStore>((set, get) => ({
 
   getMappingsByStandard: (standardId) => {
     return get().mappings.filter((m) =>
-      m.mappings.some((mapping) => mapping.standardId === standardId)
+      m.mappings.some((mapping) => mapping.standardId === standardId),
     );
   },
 
@@ -146,7 +154,7 @@ export const useDemographicsStore = create<DemographicsStore>((set, get) => ({
       const newMap = new Map(state.programRequirements);
       newMap.set(
         programId,
-        current.filter((r) => r.standardId !== standardId)
+        current.filter((r) => r.standardId !== standardId),
       );
       return { programRequirements: newMap };
     });
@@ -205,10 +213,12 @@ export const useDemographicsStore = create<DemographicsStore>((set, get) => ({
     }
 
     const totalRequired = requiredFields.length;
-    const completeFields = totalRequired - missingFields.length - invalidFields.length;
-    const coveragePercentage = totalRequired > 0
-      ? Math.round((completeFields / totalRequired) * 100)
-      : 100;
+    const completeFields =
+      totalRequired - missingFields.length - invalidFields.length;
+    const coveragePercentage =
+      totalRequired > 0
+        ? Math.round((completeFields / totalRequired) * 100)
+        : 100;
 
     return {
       standardId,
@@ -246,9 +256,8 @@ export const useDemographicsStore = create<DemographicsStore>((set, get) => ({
     }
 
     const mappedFields = mappedFieldKeys.size;
-    const percentage = totalFields > 0
-      ? Math.round((mappedFields / totalFields) * 100)
-      : 0;
+    const percentage =
+      totalFields > 0 ? Math.round((mappedFields / totalFields) * 100) : 0;
 
     const unmappedFields = standard.fields
       .filter((f) => !mappedFieldKeys.has(f.fieldKey))

@@ -37,35 +37,45 @@ export default function AddCaseNotePage({ params }: AddCaseNotePageProps) {
   const { id } = use(params);
   const router = useRouter();
   const { participants } = useParticipantStore();
-  const { getEnrollmentById, enrollments, updateEnrollment } = useEnrollmentStore();
+  const { getEnrollmentById, enrollments, updateEnrollment } =
+    useEnrollmentStore();
   const { getActiveFields } = useTouchpointFieldStore();
   const { createTouchpoint } = useTouchpointStore();
   const { getProgram } = useProgramStore();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const participant = participants.find(p => p.id === id);
+  const participant = participants.find((p) => p.id === id);
 
   // Get participant's active enrollments
   const participantEnrollments = enrollments.filter(
-    e => e.participantId === id && e.status === 'active'
+    (e) => e.participantId === id && e.status === 'active',
   );
 
-  const [selectedEnrollmentId, setSelectedEnrollmentId] = useState<string | null>(
-    participantEnrollments.length === 1 ? participantEnrollments[0].id : null
-  );
-  const [touchpointType, setTouchpointType] = useState<TouchpointType>('in-person');
+  const [selectedEnrollmentId, setSelectedEnrollmentId] = useState<
+    string | null
+  >(participantEnrollments.length === 1 ? participantEnrollments[0].id : null);
+  const [touchpointType, setTouchpointType] =
+    useState<TouchpointType>('in-person');
   const [duration, setDuration] = useState<string>('');
   const [location, setLocation] = useState<string>('');
   const [nextCheckInDate, setNextCheckInDate] = useState<string>('');
   const [nextCheckInZoomLink, setNextCheckInZoomLink] = useState<string>('');
   const [noteText, setNoteText] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
-  const [extraction, setExtraction] = useState<TouchpointExtraction | null>(null);
-  const [selectedServices, setSelectedServices] = useState<Set<number>>(new Set());
-  const [extractionTimeout, setExtractionTimeout] = useState<NodeJS.Timeout | null>(null);
-  const [abortController, setAbortController] = useState<AbortController | null>(null);
+  const [extraction, setExtraction] = useState<TouchpointExtraction | null>(
+    null,
+  );
+  const [selectedServices, setSelectedServices] = useState<Set<number>>(
+    new Set(),
+  );
+  const [extractionTimeout, setExtractionTimeout] =
+    useState<NodeJS.Timeout | null>(null);
+  const [abortController, setAbortController] =
+    useState<AbortController | null>(null);
 
-  const selectedEnrollment = selectedEnrollmentId ? getEnrollmentById(selectedEnrollmentId) : null;
+  const selectedEnrollment = selectedEnrollmentId
+    ? getEnrollmentById(selectedEnrollmentId)
+    : null;
 
   useEffect(() => {
     return () => {
@@ -113,13 +123,15 @@ export default function AddCaseNotePage({ params }: AddCaseNotePageProps) {
             participantId: id,
             noteText: text,
             touchpointFields: activeFields,
-            participantContext: participant && selectedEnrollment
-              ? {
-                  name: `${participant.firstName} ${participant.lastName}`,
-                  program: getProgramName(selectedEnrollment.programId),
-                  outcomeGoal: selectedEnrollment.outcomeGoals?.[0] || undefined,
-                }
-              : undefined,
+            participantContext:
+              participant && selectedEnrollment
+                ? {
+                    name: `${participant.firstName} ${participant.lastName}`,
+                    program: getProgramName(selectedEnrollment.programId),
+                    outcomeGoal:
+                      selectedEnrollment.outcomeGoals?.[0] || undefined,
+                  }
+                : undefined,
           }),
         });
 
@@ -152,17 +164,26 @@ export default function AddCaseNotePage({ params }: AddCaseNotePageProps) {
                     if (data.data.servicesProvided) {
                       setSelectedServices(
                         new Set(
-                          data.data.servicesProvided.map((_: any, idx: number) => idx)
-                        )
+                          data.data.servicesProvided.map(
+                            (_: any, idx: number) => idx,
+                          ),
+                        ),
                       );
                     }
                   } else if (data.type === 'customFields') {
                     // Handle custom field extraction
-                    if (data.data.fieldValues && data.data.fieldValues.length > 0) {
-                      setExtraction(prev => prev ? {
-                        ...prev,
-                        customFields: data.data.fieldValues
-                      } : null);
+                    if (
+                      data.data.fieldValues &&
+                      data.data.fieldValues.length > 0
+                    ) {
+                      setExtraction((prev) =>
+                        prev
+                          ? {
+                              ...prev,
+                              customFields: data.data.fieldValues,
+                            }
+                          : null,
+                      );
                     }
                   } else if (data.type === 'done') {
                     setIsProcessing(false);
@@ -253,17 +274,28 @@ export default function AddCaseNotePage({ params }: AddCaseNotePageProps) {
       <Stack space="400">
         <Stack space="200">
           <Link href={`/participants/${id}`}>
-            <Text color="link">← Back to {participant.firstName} {participant.lastName}</Text>
+            <Text color="link">
+              ← Back to {participant.firstName} {participant.lastName}
+            </Text>
           </Link>
           <Heading level={1}>Add Case Note</Heading>
           <Text color="subdued">
-            Record a touchpoint for {participant.firstName} {participant.lastName}
+            Record a touchpoint for {participant.firstName}{' '}
+            {participant.lastName}
           </Text>
         </Stack>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 400px', gap: '24px' }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 400px',
+            gap: '24px',
+          }}
+        >
           {/* Main Form */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div
+            style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}
+          >
             {/* Enrollment Selector */}
             {participantEnrollments.length > 1 && (
               <Card>
@@ -293,7 +325,9 @@ export default function AddCaseNotePage({ params }: AddCaseNotePageProps) {
 
             {participantEnrollments.length === 0 && (
               <Card>
-                <Text color="subdued">This individual has no active enrollments.</Text>
+                <Text color="subdued">
+                  This individual has no active enrollments.
+                </Text>
               </Card>
             )}
 
@@ -303,14 +337,29 @@ export default function AddCaseNotePage({ params }: AddCaseNotePageProps) {
                 <Card>
                   <Stack space="400">
                     <Heading level={3}>Touchpoint Details</Heading>
-                    <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '16px' }}>
+                    <div
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: '2fr 1fr',
+                        gap: '16px',
+                      }}
+                    >
                       <div>
-                        <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, marginBottom: '8px' }}>
+                        <label
+                          style={{
+                            display: 'block',
+                            fontSize: '13px',
+                            fontWeight: 500,
+                            marginBottom: '8px',
+                          }}
+                        >
                           Touchpoint Type
                         </label>
                         <select
                           value={touchpointType}
-                          onChange={(e) => setTouchpointType(e.target.value as TouchpointType)}
+                          onChange={(e) =>
+                            setTouchpointType(e.target.value as TouchpointType)
+                          }
                           style={{
                             width: '100%',
                             padding: '10px 12px',
@@ -328,7 +377,14 @@ export default function AddCaseNotePage({ params }: AddCaseNotePageProps) {
                       </div>
 
                       <div>
-                        <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, marginBottom: '8px' }}>
+                        <label
+                          style={{
+                            display: 'block',
+                            fontSize: '13px',
+                            fontWeight: 500,
+                            marginBottom: '8px',
+                          }}
+                        >
                           Duration (min)
                         </label>
                         <input
@@ -347,7 +403,14 @@ export default function AddCaseNotePage({ params }: AddCaseNotePageProps) {
                       </div>
 
                       <div>
-                        <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, marginBottom: '8px' }}>
+                        <label
+                          style={{
+                            display: 'block',
+                            fontSize: '13px',
+                            fontWeight: 500,
+                            marginBottom: '8px',
+                          }}
+                        >
                           Location
                         </label>
                         <input
@@ -366,7 +429,14 @@ export default function AddCaseNotePage({ params }: AddCaseNotePageProps) {
                       </div>
 
                       <div>
-                        <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, marginBottom: '8px' }}>
+                        <label
+                          style={{
+                            display: 'block',
+                            fontSize: '13px',
+                            fontWeight: 500,
+                            marginBottom: '8px',
+                          }}
+                        >
                           Next Check-In
                         </label>
                         <input
@@ -386,13 +456,22 @@ export default function AddCaseNotePage({ params }: AddCaseNotePageProps) {
 
                     {nextCheckInDate && (
                       <div>
-                        <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, marginBottom: '8px' }}>
+                        <label
+                          style={{
+                            display: 'block',
+                            fontSize: '13px',
+                            fontWeight: 500,
+                            marginBottom: '8px',
+                          }}
+                        >
                           Meeting Link (optional)
                         </label>
                         <input
                           type="url"
                           value={nextCheckInZoomLink}
-                          onChange={(e) => setNextCheckInZoomLink(e.target.value)}
+                          onChange={(e) =>
+                            setNextCheckInZoomLink(e.target.value)
+                          }
                           placeholder="https://zoom.us/j/..."
                           style={{
                             width: '100%',
@@ -402,8 +481,13 @@ export default function AddCaseNotePage({ params }: AddCaseNotePageProps) {
                             fontSize: '14px',
                           }}
                         />
-                        <Text variant="xs" color="subdued" style={{ marginTop: '4px' }}>
-                          Add a Zoom, Teams, or Google Meet link for virtual check-ins
+                        <Text
+                          variant="xs"
+                          color="subdued"
+                          style={{ marginTop: '4px' }}
+                        >
+                          Add a Zoom, Teams, or Google Meet link for virtual
+                          check-ins
                         </Text>
                       </div>
                     )}
@@ -430,9 +514,11 @@ export default function AddCaseNotePage({ params }: AddCaseNotePageProps) {
                       }}
                     />
                     <div style={{ fontSize: '13px', color: '#6b7280' }}>
-                      {isProcessing ? '⏳ Extracting structured data...' :
-                       noteText.length < 20 ? 'Type at least 20 characters to see AI extraction' :
-                       '✅ AI extraction ready'}
+                      {isProcessing
+                        ? '⏳ Extracting structured data...'
+                        : noteText.length < 20
+                          ? 'Type at least 20 characters to see AI extraction'
+                          : '✅ AI extraction ready'}
                     </div>
                   </Stack>
                 </Card>
@@ -463,54 +549,87 @@ export default function AddCaseNotePage({ params }: AddCaseNotePageProps) {
                 {extraction && (
                   <Stack space="400">
                     {/* Goal Progress */}
-                    {extraction.progressOnGoals && extraction.progressOnGoals.length > 0 && (
-                      <Stack space="200">
-                        <Text weight="500" variant="sm">Goal Progress</Text>
-                        <Stack space="100">
-                          {extraction.progressOnGoals.map((progress, idx) => (
-                            <Card key={idx} style={{ backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0', padding: '12px' }}>
-                              <Stack space="100">
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                  <span style={{
-                                    padding: '2px 8px',
-                                    backgroundColor: '#22c55e',
-                                    color: 'white',
-                                    borderRadius: '4px',
-                                    fontSize: '10px',
-                                    fontWeight: 600,
-                                    textTransform: 'uppercase',
-                                  }}>
-                                    positive
-                                  </span>
-                                  <Text variant="sm" weight="500">{progress.goal}</Text>
-                                </div>
-                                <Text variant="xs" style={{ color: '#166534' }}>
-                                  {progress.progress}
-                                </Text>
-                              </Stack>
-                            </Card>
-                          ))}
+                    {extraction.progressOnGoals &&
+                      extraction.progressOnGoals.length > 0 && (
+                        <Stack space="200">
+                          <Text weight="500" variant="sm">
+                            Goal Progress
+                          </Text>
+                          <Stack space="100">
+                            {extraction.progressOnGoals.map((progress, idx) => (
+                              <Card
+                                key={idx}
+                                style={{
+                                  backgroundColor: '#f0fdf4',
+                                  border: '1px solid #bbf7d0',
+                                  padding: '12px',
+                                }}
+                              >
+                                <Stack space="100">
+                                  <div
+                                    style={{
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      gap: '6px',
+                                    }}
+                                  >
+                                    <span
+                                      style={{
+                                        padding: '2px 8px',
+                                        backgroundColor: '#22c55e',
+                                        color: 'white',
+                                        borderRadius: '4px',
+                                        fontSize: '10px',
+                                        fontWeight: 600,
+                                        textTransform: 'uppercase',
+                                      }}
+                                    >
+                                      positive
+                                    </span>
+                                    <Text variant="sm" weight="500">
+                                      {progress.goal}
+                                    </Text>
+                                  </div>
+                                  <Text
+                                    variant="xs"
+                                    style={{ color: '#166534' }}
+                                  >
+                                    {progress.progress}
+                                  </Text>
+                                </Stack>
+                              </Card>
+                            ))}
+                          </Stack>
                         </Stack>
-                      </Stack>
-                    )}
+                      )}
 
                     {/* Emotional State */}
                     {extraction.emotionalState && (
                       <Stack space="200">
-                        <Text weight="500" variant="sm">Emotional State</Text>
-                        <Card style={{ backgroundColor: '#f5f3ff', border: '1px solid #d8b4fe', padding: '12px' }}>
+                        <Text weight="500" variant="sm">
+                          Emotional State
+                        </Text>
+                        <Card
+                          style={{
+                            backgroundColor: '#f5f3ff',
+                            border: '1px solid #d8b4fe',
+                            padding: '12px',
+                          }}
+                        >
                           <Stack space="100">
-                            <span style={{
-                              padding: '2px 8px',
-                              backgroundColor: '#a855f7',
-                              color: 'white',
-                              borderRadius: '4px',
-                              fontSize: '10px',
-                              fontWeight: 600,
-                              textTransform: 'capitalize',
-                              display: 'inline-block',
-                              width: 'fit-content',
-                            }}>
+                            <span
+                              style={{
+                                padding: '2px 8px',
+                                backgroundColor: '#a855f7',
+                                color: 'white',
+                                borderRadius: '4px',
+                                fontSize: '10px',
+                                fontWeight: 600,
+                                textTransform: 'capitalize',
+                                display: 'inline-block',
+                                width: 'fit-content',
+                              }}
+                            >
                               {typeof extraction.emotionalState === 'string'
                                 ? extraction.emotionalState
                                 : extraction.emotionalState.primary}
@@ -526,86 +645,137 @@ export default function AddCaseNotePage({ params }: AddCaseNotePageProps) {
                     )}
 
                     {/* Services */}
-                    {extraction.servicesProvided && extraction.servicesProvided.length > 0 && (
-                      <Stack space="200">
-                        <Text weight="500" variant="sm">Services Detected</Text>
-                        <Stack space="100">
-                          {extraction.servicesProvided.map((service, idx) => (
-                            <Card
-                              key={idx}
-                              style={{
-                                padding: '10px',
-                                cursor: 'pointer',
-                                backgroundColor: selectedServices.has(idx) ? '#eff6ff' : 'white',
-                                border: selectedServices.has(idx) ? '1px solid #3b82f6' : '1px solid #e5e7eb',
-                              }}
-                            >
-                              <label style={{ display: 'flex', alignItems: 'start', cursor: 'pointer' }}>
-                                <input
-                                  type="checkbox"
-                                  checked={selectedServices.has(idx)}
-                                  onChange={(e) => {
-                                    const newSet = new Set(selectedServices);
-                                    if (e.target.checked) newSet.add(idx);
-                                    else newSet.delete(idx);
-                                    setSelectedServices(newSet);
+                    {extraction.servicesProvided &&
+                      extraction.servicesProvided.length > 0 && (
+                        <Stack space="200">
+                          <Text weight="500" variant="sm">
+                            Services Detected
+                          </Text>
+                          <Stack space="100">
+                            {extraction.servicesProvided.map((service, idx) => (
+                              <Card
+                                key={idx}
+                                style={{
+                                  padding: '10px',
+                                  cursor: 'pointer',
+                                  backgroundColor: selectedServices.has(idx)
+                                    ? '#eff6ff'
+                                    : 'white',
+                                  border: selectedServices.has(idx)
+                                    ? '1px solid #3b82f6'
+                                    : '1px solid #e5e7eb',
+                                }}
+                              >
+                                <label
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'start',
+                                    cursor: 'pointer',
                                   }}
-                                  style={{ marginRight: '10px', marginTop: '2px' }}
-                                />
-                                <Stack space="50">
-                                  <Text variant="sm" weight="500">{service.serviceType}</Text>
-                                  <Text variant="xs" color="subdued">
-                                    {service.quantity} {service.unit}
-                                    {service.amount && ` - $${service.amount.toFixed(2)}`}
-                                  </Text>
-                                </Stack>
-                              </label>
-                            </Card>
-                          ))}
+                                >
+                                  <input
+                                    type="checkbox"
+                                    checked={selectedServices.has(idx)}
+                                    onChange={(e) => {
+                                      const newSet = new Set(selectedServices);
+                                      if (e.target.checked) newSet.add(idx);
+                                      else newSet.delete(idx);
+                                      setSelectedServices(newSet);
+                                    }}
+                                    style={{
+                                      marginRight: '10px',
+                                      marginTop: '2px',
+                                    }}
+                                  />
+                                  <Stack space="50">
+                                    <Text variant="sm" weight="500">
+                                      {service.serviceType}
+                                    </Text>
+                                    <Text variant="xs" color="subdued">
+                                      {service.quantity} {service.unit}
+                                      {service.amount &&
+                                        ` - $${service.amount.toFixed(2)}`}
+                                    </Text>
+                                  </Stack>
+                                </label>
+                              </Card>
+                            ))}
+                          </Stack>
                         </Stack>
-                      </Stack>
-                    )}
+                      )}
 
                     {/* Risk Flags */}
-                    {extraction.riskFlags && extraction.riskFlags.length > 0 && (
-                      <Stack space="200">
-                        <Text weight="500" variant="sm">Risk Flags</Text>
-                        <Stack space="100">
-                          {extraction.riskFlags.map((risk, idx) => (
-                            <Card
-                              key={idx}
-                              style={{
-                                padding: '12px',
-                                backgroundColor: risk.severity === 'high' ? '#fef2f2' : '#fef3c7',
-                                border: risk.severity === 'high' ? '1px solid #fca5a5' : '1px solid #fcd34d',
-                              }}
-                            >
-                              <Stack space="100">
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                  <span style={{
-                                    padding: '2px 8px',
-                                    backgroundColor: risk.severity === 'high' ? '#ef4444' : '#f59e0b',
-                                    color: 'white',
-                                    borderRadius: '4px',
-                                    fontSize: '10px',
-                                    fontWeight: 600,
-                                    textTransform: 'uppercase',
-                                  }}>
-                                    {risk.severity}
-                                  </span>
-                                  <Text variant="sm" weight="500" style={{ textTransform: 'capitalize' }}>
-                                    {risk.type}
+                    {extraction.riskFlags &&
+                      extraction.riskFlags.length > 0 && (
+                        <Stack space="200">
+                          <Text weight="500" variant="sm">
+                            Risk Flags
+                          </Text>
+                          <Stack space="100">
+                            {extraction.riskFlags.map((risk, idx) => (
+                              <Card
+                                key={idx}
+                                style={{
+                                  padding: '12px',
+                                  backgroundColor:
+                                    risk.severity === 'high'
+                                      ? '#fef2f2'
+                                      : '#fef3c7',
+                                  border:
+                                    risk.severity === 'high'
+                                      ? '1px solid #fca5a5'
+                                      : '1px solid #fcd34d',
+                                }}
+                              >
+                                <Stack space="100">
+                                  <div
+                                    style={{
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      gap: '6px',
+                                    }}
+                                  >
+                                    <span
+                                      style={{
+                                        padding: '2px 8px',
+                                        backgroundColor:
+                                          risk.severity === 'high'
+                                            ? '#ef4444'
+                                            : '#f59e0b',
+                                        color: 'white',
+                                        borderRadius: '4px',
+                                        fontSize: '10px',
+                                        fontWeight: 600,
+                                        textTransform: 'uppercase',
+                                      }}
+                                    >
+                                      {risk.severity}
+                                    </span>
+                                    <Text
+                                      variant="sm"
+                                      weight="500"
+                                      style={{ textTransform: 'capitalize' }}
+                                    >
+                                      {risk.type}
+                                    </Text>
+                                  </div>
+                                  <Text
+                                    variant="xs"
+                                    style={{
+                                      color:
+                                        risk.severity === 'high'
+                                          ? '#7f1d1d'
+                                          : '#78350f',
+                                    }}
+                                  >
+                                    {risk.description}
                                   </Text>
-                                </div>
-                                <Text variant="xs" style={{ color: risk.severity === 'high' ? '#7f1d1d' : '#78350f' }}>
-                                  {risk.description}
-                                </Text>
-                              </Stack>
-                            </Card>
-                          ))}
+                                </Stack>
+                              </Card>
+                            ))}
+                          </Stack>
                         </Stack>
-                      </Stack>
-                    )}
+                      )}
                   </Stack>
                 )}
 

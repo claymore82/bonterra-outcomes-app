@@ -24,14 +24,17 @@ export async function POST(request: NextRequest) {
       const { messages, programId, customFields = [] } = body;
 
       // Build custom fields description
-      const customFieldsDesc = customFields.length > 0
-        ? `\n\nProgram-specific demographics to extract:\n${customFields
-            .map((f: any) => {
-              const opts = f.options ? ` (options: ${f.options.join(', ')})` : '';
-              return `- ${f.label} (${f.fieldType})${opts}`;
-            })
-            .join('\n')}`
-        : '';
+      const customFieldsDesc =
+        customFields.length > 0
+          ? `\n\nProgram-specific demographics to extract:\n${customFields
+              .map((f: any) => {
+                const opts = f.options
+                  ? ` (options: ${f.options.join(', ')})`
+                  : '';
+                return `- ${f.label} (${f.fieldType})${opts}`;
+              })
+              .join('\n')}`
+          : '';
 
       // System prompt for participant extraction
       const systemPrompt = `You are a helpful assistant that extracts participant information from natural language descriptions.

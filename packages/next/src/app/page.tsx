@@ -20,7 +20,8 @@ export default function Home() {
           <Stack space="400">
             <Heading level={1}>Welcome to Bonterra Outcomes</Heading>
             <Text>
-              Modern case management system with AI-powered intake and outcomes tracking
+              Modern case management system with AI-powered intake and outcomes
+              tracking
             </Text>
           </Stack>
 

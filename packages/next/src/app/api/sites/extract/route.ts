@@ -89,10 +89,12 @@ When the user mentions programs, try to match them to these available programs.`
           const bedrockClient = getBedrockClient();
 
           // Convert messages to Bedrock format
-          const bedrockMessages = messages.map((msg: { role: string; content: string }) => ({
-            role: msg.role === 'user' ? 'user' : 'assistant',
-            content: [{ text: msg.content }],
-          }));
+          const bedrockMessages = messages.map(
+            (msg: { role: string; content: string }) => ({
+              role: msg.role === 'user' ? 'user' : 'assistant',
+              content: [{ text: msg.content }],
+            }),
+          );
 
           const command = new ConverseCommand({
             modelId: BEDROCK_MODEL_ID,
@@ -114,19 +116,23 @@ When the user mentions programs, try to match them to these available programs.`
             // Stream the text token by token for UI effect
             for (let i = 0; i < fullText.length; i++) {
               controller.enqueue(
-                encoder.encode(`data: ${JSON.stringify({ type: 'token', content: fullText[i] })}\n\n`)
+                encoder.encode(
+                  `data: ${JSON.stringify({ type: 'token', content: fullText[i] })}\n\n`,
+                ),
               );
             }
 
             // Extract data from the response
-            const extractionMatch = fullText.match(/EXTRACTION_START\s*([\s\S]*?)\s*EXTRACTION_END/);
+            const extractionMatch = fullText.match(
+              /EXTRACTION_START\s*([\s\S]*?)\s*EXTRACTION_END/,
+            );
             if (extractionMatch) {
               try {
                 const extractedData = JSON.parse(extractionMatch[1]);
                 controller.enqueue(
                   encoder.encode(
-                    `data: ${JSON.stringify({ type: 'extraction', data: extractedData })}\n\n`
-                  )
+                    `data: ${JSON.stringify({ type: 'extraction', data: extractedData })}\n\n`,
+                  ),
                 );
               } catch (e) {
                 console.error('Failed to parse extraction:', e);
@@ -134,14 +140,16 @@ When the user mentions programs, try to match them to these available programs.`
             }
           }
 
-          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'done' })}\n\n`));
+          controller.enqueue(
+            encoder.encode(`data: ${JSON.stringify({ type: 'done' })}\n\n`),
+          );
           controller.close();
         } catch (error) {
           console.error('Stream error:', error);
           controller.enqueue(
             encoder.encode(
-              `data: ${JSON.stringify({ type: 'error', error: 'Failed to process request' })}\n\n`
-            )
+              `data: ${JSON.stringify({ type: 'error', error: 'Failed to process request' })}\n\n`,
+            ),
           );
           controller.close();
         }

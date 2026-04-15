@@ -1,12 +1,18 @@
 import { create } from 'zustand';
 import { ServiceType, ServiceTransaction } from '@/types/services';
-import { mockServiceTypes, mockServiceTransactions } from '@/lib/mockServiceData';
+import {
+  mockServiceTypes,
+  mockServiceTransactions,
+} from '@/lib/mockServiceData';
 
 interface ServiceStats {
   totalCost: number;
   totalQuantity: number;
   serviceCount: number;
-  byServiceType: Record<string, { quantity: number; cost: number; count: number }>;
+  byServiceType: Record<
+    string,
+    { quantity: number; cost: number; count: number }
+  >;
   byCategory: Record<string, { quantity: number; cost: number; count: number }>;
 }
 
@@ -16,7 +22,9 @@ interface ServiceStore {
 
   // Service Type CRUD
   getServiceTypeById: (id: string) => ServiceType | undefined;
-  createServiceType: (serviceType: Omit<ServiceType, 'id' | 'createdAt' | 'updatedAt'>) => ServiceType;
+  createServiceType: (
+    serviceType: Omit<ServiceType, 'id' | 'createdAt' | 'updatedAt'>,
+  ) => ServiceType;
   updateServiceType: (id: string, updates: Partial<ServiceType>) => void;
   deleteServiceType: (id: string) => void;
 
@@ -28,9 +36,12 @@ interface ServiceStore {
   // Service Transaction CRUD
   getServiceTransactionById: (id: string) => ServiceTransaction | undefined;
   createServiceTransaction: (
-    transaction: Omit<ServiceTransaction, 'id' | 'createdAt' | 'updatedAt'>
+    transaction: Omit<ServiceTransaction, 'id' | 'createdAt' | 'updatedAt'>,
   ) => ServiceTransaction;
-  updateServiceTransaction: (id: string, updates: Partial<ServiceTransaction>) => void;
+  updateServiceTransaction: (
+    id: string,
+    updates: Partial<ServiceTransaction>,
+  ) => void;
   deleteServiceTransaction: (id: string) => void;
 
   // Service Transaction Queries
@@ -38,7 +49,10 @@ interface ServiceStore {
   getTransactionsByParticipant: (participantId: string) => ServiceTransaction[];
   getTransactionsByServiceType: (serviceTypeId: string) => ServiceTransaction[];
   getTransactionsByCaseWorker: (caseWorkerId: string) => ServiceTransaction[];
-  getTransactionsByDateRange: (startDate: Date, endDate: Date) => ServiceTransaction[];
+  getTransactionsByDateRange: (
+    startDate: Date,
+    endDate: Date,
+  ) => ServiceTransaction[];
 
   // Service Statistics
   calculateServiceStats: (filters?: {
@@ -51,8 +65,13 @@ interface ServiceStore {
   }) => ServiceStats;
 
   // Bulk Operations
-  bulkCreateServiceTypes: (serviceTypes: Omit<ServiceType, 'id' | 'createdAt' | 'updatedAt'>[]) => void;
-  assignServiceTypeToPrograms: (serviceTypeId: string, programIds: string[]) => void;
+  bulkCreateServiceTypes: (
+    serviceTypes: Omit<ServiceType, 'id' | 'createdAt' | 'updatedAt'>[],
+  ) => void;
+  assignServiceTypeToPrograms: (
+    serviceTypeId: string,
+    programIds: string[],
+  ) => void;
 
   // Utility
   getServiceTypesForProgram: (programId: string) => ServiceType[];
@@ -88,7 +107,7 @@ export const useServiceStore = create<ServiceStore>((set, get) => ({
   updateServiceType: (id, updates) => {
     set((state) => ({
       serviceTypes: state.serviceTypes.map((st) =>
-        st.id === id ? { ...st, ...updates, updatedAt: new Date() } : st
+        st.id === id ? { ...st, ...updates, updatedAt: new Date() } : st,
       ),
     }));
   },
@@ -121,7 +140,9 @@ export const useServiceStore = create<ServiceStore>((set, get) => ({
     const serviceType = get().getServiceTypeById(transaction.serviceTypeId);
     const totalCost =
       transaction.totalCost ??
-      (serviceType?.costPerUnit ? transaction.quantity * serviceType.costPerUnit : undefined);
+      (serviceType?.costPerUnit
+        ? transaction.quantity * serviceType.costPerUnit
+        : undefined);
 
     const newTransaction: ServiceTransaction = {
       ...transaction,
@@ -141,7 +162,7 @@ export const useServiceStore = create<ServiceStore>((set, get) => ({
   updateServiceTransaction: (id, updates) => {
     set((state) => ({
       serviceTransactions: state.serviceTransactions.map((t) =>
-        t.id === id ? { ...t, ...updates, updatedAt: new Date() } : t
+        t.id === id ? { ...t, ...updates, updatedAt: new Date() } : t,
       ),
     }));
   },
@@ -154,19 +175,27 @@ export const useServiceStore = create<ServiceStore>((set, get) => ({
 
   // Service Transaction Queries
   getTransactionsByEnrollment: (enrollmentId: string) => {
-    return get().serviceTransactions.filter((t) => t.enrollmentId === enrollmentId);
+    return get().serviceTransactions.filter(
+      (t) => t.enrollmentId === enrollmentId,
+    );
   },
 
   getTransactionsByParticipant: (participantId: string) => {
-    return get().serviceTransactions.filter((t) => t.participantId === participantId);
+    return get().serviceTransactions.filter(
+      (t) => t.participantId === participantId,
+    );
   },
 
   getTransactionsByServiceType: (serviceTypeId: string) => {
-    return get().serviceTransactions.filter((t) => t.serviceTypeId === serviceTypeId);
+    return get().serviceTransactions.filter(
+      (t) => t.serviceTypeId === serviceTypeId,
+    );
   },
 
   getTransactionsByCaseWorker: (caseWorkerId: string) => {
-    return get().serviceTransactions.filter((t) => t.providedBy === caseWorkerId);
+    return get().serviceTransactions.filter(
+      (t) => t.providedBy === caseWorkerId,
+    );
   },
 
   getTransactionsByDateRange: (startDate: Date, endDate: Date) => {
@@ -182,18 +211,26 @@ export const useServiceStore = create<ServiceStore>((set, get) => ({
 
     // Apply filters
     if (filters.participantId) {
-      transactions = transactions.filter((t) => t.participantId === filters.participantId);
+      transactions = transactions.filter(
+        (t) => t.participantId === filters.participantId,
+      );
     }
     if (filters.enrollmentId) {
-      transactions = transactions.filter((t) => t.enrollmentId === filters.enrollmentId);
+      transactions = transactions.filter(
+        (t) => t.enrollmentId === filters.enrollmentId,
+      );
     }
     if (filters.serviceTypeId) {
-      transactions = transactions.filter((t) => t.serviceTypeId === filters.serviceTypeId);
+      transactions = transactions.filter(
+        (t) => t.serviceTypeId === filters.serviceTypeId,
+      );
     }
     if (filters.startDate && filters.endDate) {
       transactions = transactions.filter((t) => {
         const serviceDate = new Date(t.serviceDate);
-        return serviceDate >= filters.startDate! && serviceDate <= filters.endDate!;
+        return (
+          serviceDate >= filters.startDate! && serviceDate <= filters.endDate!
+        );
       });
     }
 
@@ -209,7 +246,9 @@ export const useServiceStore = create<ServiceStore>((set, get) => ({
     const serviceTypes = get().serviceTypes;
 
     transactions.forEach((transaction) => {
-      const serviceType = serviceTypes.find((st) => st.id === transaction.serviceTypeId);
+      const serviceType = serviceTypes.find(
+        (st) => st.id === transaction.serviceTypeId,
+      );
 
       // Total cost and quantity
       stats.totalCost += transaction.totalCost || 0;
@@ -223,8 +262,10 @@ export const useServiceStore = create<ServiceStore>((set, get) => ({
           count: 0,
         };
       }
-      stats.byServiceType[transaction.serviceTypeId].quantity += transaction.quantity;
-      stats.byServiceType[transaction.serviceTypeId].cost += transaction.totalCost || 0;
+      stats.byServiceType[transaction.serviceTypeId].quantity +=
+        transaction.quantity;
+      stats.byServiceType[transaction.serviceTypeId].cost +=
+        transaction.totalCost || 0;
       stats.byServiceType[transaction.serviceTypeId].count += 1;
 
       // By category
@@ -264,15 +305,21 @@ export const useServiceStore = create<ServiceStore>((set, get) => ({
     set((state) => ({
       serviceTypes: state.serviceTypes.map((st) =>
         st.id === serviceTypeId
-          ? { ...st, programs: [...new Set([...st.programs, ...programIds])], updatedAt: new Date() }
-          : st
+          ? {
+              ...st,
+              programs: [...new Set([...st.programs, ...programIds])],
+              updatedAt: new Date(),
+            }
+          : st,
       ),
     }));
   },
 
   // Utility
   getServiceTypesForProgram: (programId: string) => {
-    return get().serviceTypes.filter((st) => st.active && st.programs.includes(programId));
+    return get().serviceTypes.filter(
+      (st) => st.active && st.programs.includes(programId),
+    );
   },
 
   // Fund Management
@@ -282,7 +329,9 @@ export const useServiceStore = create<ServiceStore>((set, get) => ({
     // Get all service transactions for this program
     // We need to filter by enrollments that belong to this program
     const programTransactions = serviceTransactions.filter((txn) => {
-      const serviceType = serviceTypes.find((st) => st.id === txn.serviceTypeId);
+      const serviceType = serviceTypes.find(
+        (st) => st.id === txn.serviceTypeId,
+      );
       return serviceType && serviceType.programs.includes(programId);
     });
 

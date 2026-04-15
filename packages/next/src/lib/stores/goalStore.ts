@@ -15,13 +15,25 @@ interface GoalStore {
 
   // Milestone Operations
   addMilestone: (goalId: string, milestone: Omit<GoalMilestone, 'id'>) => void;
-  updateMilestone: (goalId: string, milestoneId: string, updates: Partial<GoalMilestone>) => void;
-  completeMilestone: (goalId: string, milestoneId: string, notes?: string) => void;
+  updateMilestone: (
+    goalId: string,
+    milestoneId: string,
+    updates: Partial<GoalMilestone>,
+  ) => void;
+  completeMilestone: (
+    goalId: string,
+    milestoneId: string,
+    notes?: string,
+  ) => void;
   deleteMilestone: (goalId: string, milestoneId: string) => void;
 
   // Progress Operations
   addProgressNote: (goalId: string, note: string) => void;
-  updateGoalStatus: (goalId: string, status: GoalStatus, completedDate?: Date) => void;
+  updateGoalStatus: (
+    goalId: string,
+    status: GoalStatus,
+    completedDate?: Date,
+  ) => void;
 
   // Query Operations
   getActiveGoals: (enrollmentId: string) => Goal[];
@@ -35,18 +47,18 @@ export const useGoalStore = create<GoalStore>((set, get) => ({
 
   // CRUD Operations
   getGoalById: (id: string) => {
-    return get().goals.find(g => g.id === id);
+    return get().goals.find((g) => g.id === id);
   },
 
   getGoalsByEnrollment: (enrollmentId: string) => {
-    return get().goals
-      .filter(g => g.enrollmentId === enrollmentId)
+    return get()
+      .goals.filter((g) => g.enrollmentId === enrollmentId)
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   },
 
   getGoalsByParticipant: (participantId: string) => {
-    return get().goals
-      .filter(g => g.participantId === participantId)
+    return get()
+      .goals.filter((g) => g.participantId === participantId)
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   },
 
@@ -68,7 +80,7 @@ export const useGoalStore = create<GoalStore>((set, get) => ({
   updateGoal: (id, updates) => {
     set((state) => ({
       goals: state.goals.map((g) =>
-        g.id === id ? { ...g, ...updates, updatedAt: new Date() } : g
+        g.id === id ? { ...g, ...updates, updatedAt: new Date() } : g,
       ),
     }));
   },
@@ -94,7 +106,7 @@ export const useGoalStore = create<GoalStore>((set, get) => ({
               milestones: [...g.milestones, newMilestone],
               updatedAt: new Date(),
             }
-          : g
+          : g,
       ),
     }));
   },
@@ -106,11 +118,11 @@ export const useGoalStore = create<GoalStore>((set, get) => ({
           ? {
               ...g,
               milestones: g.milestones.map((m) =>
-                m.id === milestoneId ? { ...m, ...updates } : m
+                m.id === milestoneId ? { ...m, ...updates } : m,
               ),
               updatedAt: new Date(),
             }
-          : g
+          : g,
       ),
     }));
   },
@@ -129,11 +141,11 @@ export const useGoalStore = create<GoalStore>((set, get) => ({
                       completedDate: new Date(),
                       notes: notes || m.notes,
                     }
-                  : m
+                  : m,
               ),
               updatedAt: new Date(),
             }
-          : g
+          : g,
       ),
     }));
   },
@@ -147,7 +159,7 @@ export const useGoalStore = create<GoalStore>((set, get) => ({
               milestones: g.milestones.filter((m) => m.id !== milestoneId),
               updatedAt: new Date(),
             }
-          : g
+          : g,
       ),
     }));
   },
@@ -162,7 +174,7 @@ export const useGoalStore = create<GoalStore>((set, get) => ({
               progressNotes: [...g.progressNotes, note],
               updatedAt: new Date(),
             }
-          : g
+          : g,
       ),
     }));
   },
@@ -174,10 +186,12 @@ export const useGoalStore = create<GoalStore>((set, get) => ({
           ? {
               ...g,
               status,
-              completedDate: completedDate || (status === 'achieved' ? new Date() : g.completedDate),
+              completedDate:
+                completedDate ||
+                (status === 'achieved' ? new Date() : g.completedDate),
               updatedAt: new Date(),
             }
-          : g
+          : g,
       ),
     }));
   },
@@ -185,19 +199,21 @@ export const useGoalStore = create<GoalStore>((set, get) => ({
   // Query Operations
   getActiveGoals: (enrollmentId: string) => {
     return get().goals.filter(
-      g => g.enrollmentId === enrollmentId && g.status === 'in-progress'
+      (g) => g.enrollmentId === enrollmentId && g.status === 'in-progress',
     );
   },
 
   getCompletedGoals: (enrollmentId: string) => {
     return get().goals.filter(
-      g => g.enrollmentId === enrollmentId && (g.status === 'achieved' || g.status === 'partially-achieved')
+      (g) =>
+        g.enrollmentId === enrollmentId &&
+        (g.status === 'achieved' || g.status === 'partially-achieved'),
     );
   },
 
   getGoalsByCategory: (enrollmentId: string, category: string) => {
     return get().goals.filter(
-      g => g.enrollmentId === enrollmentId && g.category === category
+      (g) => g.enrollmentId === enrollmentId && g.category === category,
     );
   },
 
@@ -206,7 +222,7 @@ export const useGoalStore = create<GoalStore>((set, get) => ({
     if (goals.length === 0) return 0;
 
     const completed = goals.filter(
-      g => g.status === 'achieved' || g.status === 'partially-achieved'
+      (g) => g.status === 'achieved' || g.status === 'partially-achieved',
     ).length;
 
     return (completed / goals.length) * 100;

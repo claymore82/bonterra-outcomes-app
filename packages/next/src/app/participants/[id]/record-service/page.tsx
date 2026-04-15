@@ -18,7 +18,11 @@ import { useServiceStore } from '@/lib/stores/serviceStore';
 import { useEnrollmentStore } from '@/lib/stores/enrollmentStore';
 import { useParticipantStore } from '@/lib/stores/participantStore';
 import { useCaseWorkerStore } from '@/lib/stores/caseWorkerStore';
-import { SERVICE_UNITS, ServiceOutcome, SERVICE_OUTCOMES } from '@/types/services';
+import {
+  SERVICE_UNITS,
+  ServiceOutcome,
+  SERVICE_OUTCOMES,
+} from '@/types/services';
 import { HMIS_GENDER_CODES } from '@/types/poc';
 import PageLayout from '../../../components/PageLayout';
 
@@ -32,12 +36,17 @@ export default function RecordServicePage({ params }: RecordServicePageProps) {
   const searchParams = useSearchParams();
   const enrollmentIdFromUrl = searchParams.get('enrollmentId');
 
-  const { serviceTypes, createServiceTransaction, getTransactionsByParticipant, calculateServiceStats } = useServiceStore();
+  const {
+    serviceTypes,
+    createServiceTransaction,
+    getTransactionsByParticipant,
+    calculateServiceStats,
+  } = useServiceStore();
   const { getEnrollmentsByParticipant } = useEnrollmentStore();
   const { participants } = useParticipantStore();
   const { caseWorkers } = useCaseWorkerStore();
 
-  const participant = participants.find(p => p.id === id);
+  const participant = participants.find((p) => p.id === id);
   const [selectedEnrollment, setSelectedEnrollment] = useState<string>('');
   const [formData, setFormData] = useState({
     serviceTypeId: '',
@@ -50,14 +59,23 @@ export default function RecordServicePage({ params }: RecordServicePageProps) {
 
   const [showHistory, setShowHistory] = useState(false);
 
-  const enrollments = participant ? getEnrollmentsByParticipant(participant.id) : [];
-  const activeEnrollments = participant ? enrollments.filter(e => e.status === 'active') : [];
-  const enrollment = enrollments.find(e => e.id === selectedEnrollment);
-  const selectedServiceType = serviceTypes.find(st => st.id === formData.serviceTypeId);
+  const enrollments = participant
+    ? getEnrollmentsByParticipant(participant.id)
+    : [];
+  const activeEnrollments = participant
+    ? enrollments.filter((e) => e.status === 'active')
+    : [];
+  const enrollment = enrollments.find((e) => e.id === selectedEnrollment);
+  const selectedServiceType = serviceTypes.find(
+    (st) => st.id === formData.serviceTypeId,
+  );
 
   // Pre-select enrollment if provided in URL
   useEffect(() => {
-    if (enrollmentIdFromUrl && enrollments.some(e => e.id === enrollmentIdFromUrl)) {
+    if (
+      enrollmentIdFromUrl &&
+      enrollments.some((e) => e.id === enrollmentIdFromUrl)
+    ) {
       setSelectedEnrollment(enrollmentIdFromUrl);
     } else if (activeEnrollments.length === 1) {
       // Auto-select if only one active enrollment
@@ -67,7 +85,9 @@ export default function RecordServicePage({ params }: RecordServicePageProps) {
 
   // Filter services by enrollment's program
   const availableServices = enrollment
-    ? serviceTypes.filter(st => st.active && st.programs.includes(enrollment.programId))
+    ? serviceTypes.filter(
+        (st) => st.active && st.programs.includes(enrollment.programId),
+      )
     : [];
 
   const handleSubmit = () => {
@@ -76,7 +96,9 @@ export default function RecordServicePage({ params }: RecordServicePageProps) {
       return;
     }
 
-    const serviceType = serviceTypes.find(st => st.id === formData.serviceTypeId);
+    const serviceType = serviceTypes.find(
+      (st) => st.id === formData.serviceTypeId,
+    );
     if (!serviceType) {
       alert('Invalid service type');
       return;
@@ -126,7 +148,10 @@ export default function RecordServicePage({ params }: RecordServicePageProps) {
           <Stack space="300" style={{ padding: '40px', textAlign: 'center' }}>
             <Icon name="user" size="large" />
             <Heading level={3}>Participant not found</Heading>
-            <Button variant="primary" onPress={() => router.push('/participants')}>
+            <Button
+              variant="primary"
+              onPress={() => router.push('/participants')}
+            >
               Back to Individuals
             </Button>
           </Stack>
@@ -136,7 +161,9 @@ export default function RecordServicePage({ params }: RecordServicePageProps) {
   }
 
   return (
-    <PageLayout pageTitle={`Record Service - ${participant.firstName} ${participant.lastName}`}>
+    <PageLayout
+      pageTitle={`Record Service - ${participant.firstName} ${participant.lastName}`}
+    >
       <Stack space="600">
         {/* Header */}
         <Stack space="300">
@@ -163,18 +190,28 @@ export default function RecordServicePage({ params }: RecordServicePageProps) {
                 color: '#ffffff',
               }}
             >
-              {participant.firstName[0]}{participant.lastName[0]}
+              {participant.firstName[0]}
+              {participant.lastName[0]}
             </div>
             <div>
-              <Text weight="600">{participant.firstName} {participant.lastName}</Text>
+              <Text weight="600">
+                {participant.firstName} {participant.lastName}
+              </Text>
               <Text variant="sm" color="subdued">
-                {HMIS_GENDER_CODES[participant.gender]}, DOB: {participant.dateOfBirth.toLocaleDateString()}
+                {HMIS_GENDER_CODES[participant.gender]}, DOB:{' '}
+                {participant.dateOfBirth.toLocaleDateString()}
               </Text>
             </div>
           </InlineStack>
         </Stack>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '2fr 1fr',
+            gap: '24px',
+          }}
+        >
           {/* Main Form */}
           <div>
             <Card>
@@ -194,7 +231,10 @@ export default function RecordServicePage({ params }: RecordServicePageProps) {
                   >
                     {enrollments.map((e) => (
                       <SelectItem key={e.id} id={e.id}>
-                        {e.id} - {e.status === 'active' ? '✓ Active' : `Ended ${e.endDate?.toLocaleDateString()}`}
+                        {e.id} -{' '}
+                        {e.status === 'active'
+                          ? '✓ Active'
+                          : `Ended ${e.endDate?.toLocaleDateString()}`}
                       </SelectItem>
                     ))}
                   </Select>
@@ -212,7 +252,7 @@ export default function RecordServicePage({ params }: RecordServicePageProps) {
                         placeholder="Choose a service..."
                         selectedKey={formData.serviceTypeId}
                         onSelectionChange={(key) => {
-                          const st = serviceTypes.find(s => s.id === key);
+                          const st = serviceTypes.find((s) => s.id === key);
                           setFormData({
                             ...formData,
                             serviceTypeId: key as string,
@@ -229,11 +269,18 @@ export default function RecordServicePage({ params }: RecordServicePageProps) {
                       {selectedServiceType && (
                         <Text variant="sm" color="subdued">
                           {selectedServiceType.description}
-                          {selectedServiceType.costPerUnit && selectedServiceType.costPerUnit > 0 && (
-                            <span style={{ color: '#3b82f6', marginLeft: '8px' }}>
-                              (${selectedServiceType.costPerUnit}/{SERVICE_UNITS[selectedServiceType.unit].toLowerCase()})
-                            </span>
-                          )}
+                          {selectedServiceType.costPerUnit &&
+                            selectedServiceType.costPerUnit > 0 && (
+                              <span
+                                style={{ color: '#3b82f6', marginLeft: '8px' }}
+                              >
+                                (${selectedServiceType.costPerUnit}/
+                                {SERVICE_UNITS[
+                                  selectedServiceType.unit
+                                ].toLowerCase()}
+                                )
+                              </span>
+                            )}
                         </Text>
                       )}
 
@@ -243,27 +290,41 @@ export default function RecordServicePage({ params }: RecordServicePageProps) {
                           label="Date *"
                           type="date"
                           value={formData.serviceDate}
-                          onChange={(value) => setFormData({ ...formData, serviceDate: value })}
+                          onChange={(value) =>
+                            setFormData({ ...formData, serviceDate: value })
+                          }
                         />
                         <TextField
                           label={`Quantity * ${selectedServiceType ? `(${SERVICE_UNITS[selectedServiceType.unit]})` : ''}`}
                           type="number"
                           value={formData.quantity}
-                          onChange={(value) => setFormData({ ...formData, quantity: value })}
+                          onChange={(value) =>
+                            setFormData({ ...formData, quantity: value })
+                          }
                         />
                       </InlineStack>
 
-                      {selectedServiceType?.costPerUnit && parseFloat(formData.quantity) > 0 && (
-                        <Text variant="sm" color="subdued">
-                          Total Cost: ${(selectedServiceType.costPerUnit * parseFloat(formData.quantity)).toFixed(2)}
-                        </Text>
-                      )}
+                      {selectedServiceType?.costPerUnit &&
+                        parseFloat(formData.quantity) > 0 && (
+                          <Text variant="sm" color="subdued">
+                            Total Cost: $
+                            {(
+                              selectedServiceType.costPerUnit *
+                              parseFloat(formData.quantity)
+                            ).toFixed(2)}
+                          </Text>
+                        )}
 
                       <InlineStack gap="400">
                         <Select
                           label="Provided By"
                           selectedKey={formData.providedBy}
-                          onSelectionChange={(key) => setFormData({ ...formData, providedBy: key as string })}
+                          onSelectionChange={(key) =>
+                            setFormData({
+                              ...formData,
+                              providedBy: key as string,
+                            })
+                          }
                         >
                           {caseWorkers.map((cw) => (
                             <SelectItem key={cw.id} id={cw.id}>
@@ -275,34 +336,42 @@ export default function RecordServicePage({ params }: RecordServicePageProps) {
                         <Select
                           label="Outcome"
                           selectedKey={formData.outcome}
-                          onSelectionChange={(key) => setFormData({ ...formData, outcome: key as ServiceOutcome })}
+                          onSelectionChange={(key) =>
+                            setFormData({
+                              ...formData,
+                              outcome: key as ServiceOutcome,
+                            })
+                          }
                         >
-                          {Object.entries(SERVICE_OUTCOMES).map(([key, label]) => (
-                            <SelectItem key={key} id={key}>
-                              {label}
-                            </SelectItem>
-                          ))}
+                          {Object.entries(SERVICE_OUTCOMES).map(
+                            ([key, label]) => (
+                              <SelectItem key={key} id={key}>
+                                {label}
+                              </SelectItem>
+                            ),
+                          )}
                         </Select>
                       </InlineStack>
 
                       <TextField
                         label="Notes"
                         value={formData.notes}
-                        onChange={(value) => setFormData({ ...formData, notes: value })}
+                        onChange={(value) =>
+                          setFormData({ ...formData, notes: value })
+                        }
                         placeholder="Additional details about this service..."
                       />
 
                       <InlineStack gap="300">
                         <Button
                           variant="secondary"
-                          onPress={() => router.push(`/participants/${participant.id}`)}
+                          onPress={() =>
+                            router.push(`/participants/${participant.id}`)
+                          }
                         >
                           Cancel
                         </Button>
-                        <Button
-                          variant="primary"
-                          onPress={handleSubmit}
-                        >
+                        <Button variant="primary" onPress={handleSubmit}>
                           <Icon name="check" />
                           Record Service
                         </Button>
@@ -323,22 +392,39 @@ export default function RecordServicePage({ params }: RecordServicePageProps) {
                     <Heading level={3}>Service Summary</Heading>
                     <Stack space="300">
                       <div>
-                        <Text variant="sm" color="subdued">Total Services</Text>
+                        <Text variant="sm" color="subdued">
+                          Total Services
+                        </Text>
                         <Heading level={2}>{stats.serviceCount}</Heading>
                       </div>
                       <div>
-                        <Text variant="sm" color="subdued">Total Cost</Text>
-                        <Heading level={2}>${stats.totalCost.toFixed(2)}</Heading>
+                        <Text variant="sm" color="subdued">
+                          Total Cost
+                        </Text>
+                        <Heading level={2}>
+                          ${stats.totalCost.toFixed(2)}
+                        </Heading>
                       </div>
                       <div>
-                        <Text variant="sm" color="subdued">By Category</Text>
+                        <Text variant="sm" color="subdued">
+                          By Category
+                        </Text>
                         <Stack space="200">
-                          {Object.entries(stats.byCategory).map(([category, data]) => (
-                            <InlineStack key={category} gap="200">
-                              <Text variant="sm" style={{ textTransform: 'capitalize' }}>{category}:</Text>
-                              <Text variant="sm" weight="600">{data.count} (${data.cost.toFixed(2)})</Text>
-                            </InlineStack>
-                          ))}
+                          {Object.entries(stats.byCategory).map(
+                            ([category, data]) => (
+                              <InlineStack key={category} gap="200">
+                                <Text
+                                  variant="sm"
+                                  style={{ textTransform: 'capitalize' }}
+                                >
+                                  {category}:
+                                </Text>
+                                <Text variant="sm" weight="600">
+                                  {data.count} (${data.cost.toFixed(2)})
+                                </Text>
+                              </InlineStack>
+                            ),
+                          )}
                         </Stack>
                       </div>
                     </Stack>
@@ -348,7 +434,11 @@ export default function RecordServicePage({ params }: RecordServicePageProps) {
 
               <Card>
                 <Stack space="400">
-                  <InlineStack gap="300" verticalAlign="center" distribute="space-between">
+                  <InlineStack
+                    gap="300"
+                    verticalAlign="center"
+                    distribute="space-between"
+                  >
                     <Heading level={3}>Service History</Heading>
                     <Button
                       variant="secondary"
@@ -360,14 +450,24 @@ export default function RecordServicePage({ params }: RecordServicePageProps) {
                   </InlineStack>
 
                   {showHistory && (
-                    <Stack space="300" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                    <Stack
+                      space="300"
+                      style={{ maxHeight: '400px', overflowY: 'auto' }}
+                    >
                       {serviceHistory.length === 0 ? (
-                        <Text variant="sm" color="subdued">No services recorded yet</Text>
+                        <Text variant="sm" color="subdued">
+                          No services recorded yet
+                        </Text>
                       ) : (
                         serviceHistory
-                          .sort((a, b) => b.serviceDate.getTime() - a.serviceDate.getTime())
+                          .sort(
+                            (a, b) =>
+                              b.serviceDate.getTime() - a.serviceDate.getTime(),
+                          )
                           .map((transaction) => {
-                            const serviceType = serviceTypes.find(st => st.id === transaction.serviceTypeId);
+                            const serviceType = serviceTypes.find(
+                              (st) => st.id === transaction.serviceTypeId,
+                            );
                             return (
                               <div
                                 key={transaction.id}
@@ -378,13 +478,22 @@ export default function RecordServicePage({ params }: RecordServicePageProps) {
                                   paddingBottom: '8px',
                                 }}
                               >
-                                <Text variant="sm" weight="600">{serviceType?.name}</Text>
+                                <Text variant="sm" weight="600">
+                                  {serviceType?.name}
+                                </Text>
                                 <Text variant="sm" color="subdued">
-                                  {transaction.serviceDate.toLocaleDateString()} • {transaction.quantity} {SERVICE_UNITS[transaction.unit].toLowerCase()}
-                                  {transaction.totalCost && ` • $${transaction.totalCost.toFixed(2)}`}
+                                  {transaction.serviceDate.toLocaleDateString()}{' '}
+                                  • {transaction.quantity}{' '}
+                                  {SERVICE_UNITS[
+                                    transaction.unit
+                                  ].toLowerCase()}
+                                  {transaction.totalCost &&
+                                    ` • $${transaction.totalCost.toFixed(2)}`}
                                 </Text>
                                 {transaction.notes && (
-                                  <Text variant="sm" color="subdued">{transaction.notes}</Text>
+                                  <Text variant="sm" color="subdued">
+                                    {transaction.notes}
+                                  </Text>
                                 )}
                               </div>
                             );

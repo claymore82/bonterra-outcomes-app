@@ -33,13 +33,14 @@ export default function FamiliesPage() {
   const [sizeFilter, setSizeFilter] = useState('all');
 
   const totalMembers = households.reduce((sum, h) => sum + h.members.length, 0);
-  const avgSize = households.length > 0 ? (totalMembers / households.length).toFixed(1) : 0;
+  const avgSize =
+    households.length > 0 ? (totalMembers / households.length).toFixed(1) : 0;
 
   // Get enrollment status for household
   const getHouseholdStatus = (household: any) => {
     const activeEnrollments = getActiveEnrollments();
     const hasActiveMembers = household.members.some((member: any) =>
-      activeEnrollments.some(e => e.participantId === member.id)
+      activeEnrollments.some((e) => e.participantId === member.id),
     );
     return hasActiveMembers;
   };
@@ -48,13 +49,18 @@ export default function FamiliesPage() {
   const filteredHouseholds = useMemo(() => {
     const activeEnrollments = getActiveEnrollments();
 
-    return households.filter(household => {
+    return households.filter((household) => {
       // Search filter
-      const matchesSearch = searchQuery === '' ||
-        household.householdName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      const matchesSearch =
+        searchQuery === '' ||
+        household.householdName
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
         household.address?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        household.members.some(m =>
-          `${m.firstName} ${m.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
+        household.members.some((m) =>
+          `${m.firstName} ${m.lastName}`
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()),
         );
 
       // Size filter
@@ -70,12 +76,13 @@ export default function FamiliesPage() {
       let matchesProgramOrSite = true;
       if (currentProgramId || currentSiteId) {
         // Check if any household member has an enrollment matching the current program/site
-        matchesProgramOrSite = household.members.some(member => {
-          return activeEnrollments.some(e => {
+        matchesProgramOrSite = household.members.some((member) => {
+          return activeEnrollments.some((e) => {
             if (e.participantId !== member.id) return false;
 
             // Check program filter
-            if (currentProgramId && e.programId !== currentProgramId) return false;
+            if (currentProgramId && e.programId !== currentProgramId)
+              return false;
 
             // Check site filter
             if (currentSiteId && e.siteId !== currentSiteId) return false;
@@ -87,9 +94,18 @@ export default function FamiliesPage() {
 
       return matchesSearch && matchesSize && matchesProgramOrSite;
     });
-  }, [households, searchQuery, sizeFilter, currentProgramId, currentSiteId, enrollments]);
+  }, [
+    households,
+    searchQuery,
+    sizeFilter,
+    currentProgramId,
+    currentSiteId,
+    enrollments,
+  ]);
 
-  const activeHouseholds = households.filter(h => getHouseholdStatus(h)).length;
+  const activeHouseholds = households.filter((h) =>
+    getHouseholdStatus(h),
+  ).length;
 
   return (
     <PageLayout pageTitle="Families">
@@ -117,26 +133,34 @@ export default function FamiliesPage() {
         <TileLayout columns="4" columnsSM="2" space="400">
           <Card>
             <Stack space="200">
-              <Text variant="sm" color="subdued">Total Households</Text>
+              <Text variant="sm" color="subdued">
+                Total Households
+              </Text>
               <Heading level={2}>{households.length}</Heading>
             </Stack>
           </Card>
           <Card>
             <Stack space="200">
-              <Text variant="sm" color="subdued">Total Members</Text>
+              <Text variant="sm" color="subdued">
+                Total Members
+              </Text>
               <Heading level={2}>{totalMembers}</Heading>
             </Stack>
           </Card>
           <Card>
             <Stack space="200">
-              <Text variant="sm" color="subdued">Active Households</Text>
+              <Text variant="sm" color="subdued">
+                Active Households
+              </Text>
               <Heading level={2}>{activeHouseholds}</Heading>
               <Text variant="sm">With enrollments</Text>
             </Stack>
           </Card>
           <Card>
             <Stack space="200">
-              <Text variant="sm" color="subdued">Avg. Size</Text>
+              <Text variant="sm" color="subdued">
+                Avg. Size
+              </Text>
               <Heading level={2}>{avgSize}</Heading>
               <Text variant="sm">Members per household</Text>
             </Stack>
@@ -174,9 +198,14 @@ export default function FamiliesPage() {
 
         {/* Households Grid */}
         <Stack space="400">
-          <InlineStack gap="400" verticalAlign="center" distribute="space-between">
+          <InlineStack
+            gap="400"
+            verticalAlign="center"
+            distribute="space-between"
+          >
             <Heading level={3}>
-              {filteredHouseholds.length} Household{filteredHouseholds.length !== 1 ? 's' : ''}
+              {filteredHouseholds.length} Household
+              {filteredHouseholds.length !== 1 ? 's' : ''}
             </Heading>
             {(searchQuery || sizeFilter !== 'all') && (
               <Button
@@ -193,7 +222,10 @@ export default function FamiliesPage() {
 
           {filteredHouseholds.length === 0 ? (
             <Card>
-              <Stack space="300" style={{ padding: '40px', textAlign: 'center' }}>
+              <Stack
+                space="300"
+                style={{ padding: '40px', textAlign: 'center' }}
+              >
                 <Icon name="users" size="large" />
                 <Heading level={3}>No households found</Heading>
                 <Text color="subdued">
@@ -221,17 +253,24 @@ export default function FamiliesPage() {
                   <Card key={household.id}>
                     <Stack space="400">
                       {/* Header */}
-                      <InlineStack gap="300" verticalAlign="center" distribute="space-between">
+                      <InlineStack
+                        gap="300"
+                        verticalAlign="center"
+                        distribute="space-between"
+                      >
                         <Stack space="200">
                           <InlineStack gap="200" verticalAlign="center">
-                            <Heading level={3}>{household.householdName}</Heading>
+                            <Heading level={3}>
+                              {household.householdName}
+                            </Heading>
                             {hasActiveEnrollments && (
                               <SimpleBadge tone="positive">Active</SimpleBadge>
                             )}
                           </InlineStack>
                           <InlineStack gap="300">
                             <Text variant="sm" color="subdued">
-                              <Icon name="users" /> {household.members.length} member{household.members.length !== 1 ? 's' : ''}
+                              <Icon name="users" /> {household.members.length}{' '}
+                              member{household.members.length !== 1 ? 's' : ''}
                             </Text>
                           </InlineStack>
                         </Stack>
@@ -246,10 +285,14 @@ export default function FamiliesPage() {
 
                       {/* Members Preview */}
                       <Stack space="200">
-                        <Text variant="sm" weight="500">Members</Text>
+                        <Text variant="sm" weight="500">
+                          Members
+                        </Text>
                         <InlineStack gap="200">
                           {household.members.slice(0, 5).map((member) => {
-                            const memberInfo = participants.find(p => p.id === member.id);
+                            const memberInfo = participants.find(
+                              (p) => p.id === member.id,
+                            );
                             return (
                               <div
                                 key={member.id}
@@ -257,7 +300,8 @@ export default function FamiliesPage() {
                                   width: '40px',
                                   height: '40px',
                                   borderRadius: '50%',
-                                  background: 'linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%)',
+                                  background:
+                                    'linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%)',
                                   display: 'flex',
                                   alignItems: 'center',
                                   justifyContent: 'center',
@@ -268,7 +312,8 @@ export default function FamiliesPage() {
                                 }}
                                 title={`${member.firstName} ${member.lastName}`}
                               >
-                                {member.firstName[0]}{member.lastName[0]}
+                                {member.firstName[0]}
+                                {member.lastName[0]}
                               </div>
                             );
                           })}
@@ -296,7 +341,11 @@ export default function FamiliesPage() {
                       {/* Members List */}
                       <Stack space="100">
                         {household.members.slice(0, 3).map((member) => (
-                          <InlineStack key={member.id} gap="200" verticalAlign="center">
+                          <InlineStack
+                            key={member.id}
+                            gap="200"
+                            verticalAlign="center"
+                          >
                             <Text variant="sm">
                               {member.firstName} {member.lastName}
                             </Text>
@@ -307,7 +356,8 @@ export default function FamiliesPage() {
                         ))}
                         {household.members.length > 3 && (
                           <Text variant="sm" color="subdued">
-                            + {household.members.length - 3} more member{household.members.length - 3 !== 1 ? 's' : ''}
+                            + {household.members.length - 3} more member
+                            {household.members.length - 3 !== 1 ? 's' : ''}
                           </Text>
                         )}
                       </Stack>

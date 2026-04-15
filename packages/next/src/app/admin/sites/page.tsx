@@ -22,9 +22,11 @@ export default function SitesPage() {
 
   const [showModal, setShowModal] = useState(false);
   const [editingSite, setEditingSite] = useState<Site | null>(null);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(
+    null,
+  );
 
-  const activeSites = sites.filter(s => s.active);
+  const activeSites = sites.filter((s) => s.active);
 
   const handleEdit = (site: Site) => {
     setEditingSite(site);
@@ -65,14 +67,18 @@ export default function SitesPage() {
         <InlineStack gap="400">
           <Card>
             <Stack space="200">
-              <Text variant="sm" color="subdued">Total Sites</Text>
+              <Text variant="sm" color="subdued">
+                Total Sites
+              </Text>
               <Heading level={2}>{sites.length}</Heading>
             </Stack>
           </Card>
 
           <Card>
             <Stack space="200">
-              <Text variant="sm" color="subdued">Active</Text>
+              <Text variant="sm" color="subdued">
+                Active
+              </Text>
               <Heading level={2}>{activeSites.length}</Heading>
             </Stack>
           </Card>
@@ -93,14 +99,16 @@ export default function SitesPage() {
                       <InlineStack gap="300">
                         <Text weight="600">{site.name}</Text>
                         {site.active && (
-                          <Text variant="sm" color="success">✓ Active</Text>
+                          <Text variant="sm" color="success">
+                            ✓ Active
+                          </Text>
                         )}
                       </InlineStack>
-                      {site.address && (
-                        <Text variant="sm">{site.address}</Text>
-                      )}
+                      {site.address && <Text variant="sm">{site.address}</Text>}
                       {site.phone && (
-                        <Text variant="sm" color="subdued">{site.phone}</Text>
+                        <Text variant="sm" color="subdued">
+                          {site.phone}
+                        </Text>
                       )}
                       <InlineStack gap="200">
                         <Button
@@ -149,20 +157,23 @@ export default function SitesPage() {
 
       {/* Delete Confirmation */}
       {showDeleteConfirm && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          backgroundColor: 'rgba(0,0,0,0.5)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 9999,
-        }}>
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999,
+          }}
+        >
           <Card>
             <Stack space="400">
               <Heading level={3}>Confirm Delete</Heading>
               <Text>
-                Are you sure you want to delete this site? This action cannot be undone.
+                Are you sure you want to delete this site? This action cannot be
+                undone.
               </Text>
               <InlineStack gap="300">
                 <Button
@@ -219,29 +230,31 @@ function SiteModal({ site, onClose, onSave }: SiteModalProps) {
   };
 
   return (
-    <div style={{
-      position: 'fixed',
-      inset: 0,
-      backgroundColor: 'rgba(0,0,0,0.5)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 9999,
-      padding: '16px',
-    }}>
-      <div style={{
-        backgroundColor: 'white',
-        borderRadius: '12px',
-        maxWidth: '600px',
-        width: '100%',
-        maxHeight: '90vh',
-        overflow: 'auto',
-      }}>
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 9999,
+        padding: '16px',
+      }}
+    >
+      <div
+        style={{
+          backgroundColor: 'white',
+          borderRadius: '12px',
+          maxWidth: '600px',
+          width: '100%',
+          maxHeight: '90vh',
+          overflow: 'auto',
+        }}
+      >
         <Card>
           <Stack space="500">
-            <Heading level={2}>
-              {site ? 'Edit Site' : 'Create Site'}
-            </Heading>
+            <Heading level={2}>{site ? 'Edit Site' : 'Create Site'}</Heading>
 
             <Stack space="400">
               {/* Name */}

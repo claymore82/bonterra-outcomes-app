@@ -4,7 +4,9 @@ import { mockPrograms } from '@/lib/mockData';
 
 interface ProgramStore {
   programs: Program[];
-  addProgram: (program: Omit<Program, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  addProgram: (
+    program: Omit<Program, 'id' | 'createdAt' | 'updatedAt'>,
+  ) => void;
   updateProgram: (id: string, program: Partial<Program>) => void;
   deleteProgram: (id: string) => void;
   getProgram: (id: string) => Program | undefined;
@@ -31,7 +33,7 @@ export const useProgramStore = create<ProgramStore>((set, get) => ({
       programs: state.programs.map((program) =>
         program.id === id
           ? { ...program, ...updates, updatedAt: new Date() }
-          : program
+          : program,
       ),
     }));
   },

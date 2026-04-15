@@ -45,18 +45,26 @@ export async function POST(req: NextRequest) {
     // Extract base64 data and media type from data URL
     const matches = image.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
     if (!matches || matches.length !== 3) {
-      return NextResponse.json({ error: 'Invalid image format' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Invalid image format' },
+        { status: 400 },
+      );
     }
 
     const mediaType = matches[1];
     const base64Data = matches[2];
 
     // Validate media type
-    const validMediaTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    const validMediaTypes = [
+      'image/jpeg',
+      'image/jpg',
+      'image/png',
+      'image/webp',
+    ];
     if (!validMediaTypes.includes(mediaType)) {
       return NextResponse.json(
         { error: 'Unsupported image format. Please use JPG, PNG, or WebP.' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -107,7 +115,11 @@ If a field is not present or not legible, omit it from the response. Return ONLY
           content: [
             {
               image: {
-                format: mediaType.split('/')[1] as 'jpeg' | 'png' | 'gif' | 'webp',
+                format: mediaType.split('/')[1] as
+                  | 'jpeg'
+                  | 'png'
+                  | 'gif'
+                  | 'webp',
                 source: {
                   bytes: Buffer.from(base64Data, 'base64'),
                 },
@@ -149,9 +161,12 @@ If a field is not present or not legible, omit it from the response. Return ONLY
     console.error('Document extraction error:', error);
     return NextResponse.json(
       {
-        error: error instanceof Error ? error.message : 'Failed to extract document data',
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Failed to extract document data',
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

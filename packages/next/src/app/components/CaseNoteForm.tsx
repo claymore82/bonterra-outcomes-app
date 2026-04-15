@@ -36,7 +36,7 @@ export default function CaseNoteForm({
   participantId,
   enrollmentId: preselectedEnrollmentId,
   onSave,
-  onCancel
+  onCancel,
 }: CaseNoteFormProps) {
   const { getEnrollmentById, enrollments } = useEnrollmentStore();
   const { getActiveFields } = useTouchpointFieldStore();
@@ -45,23 +45,37 @@ export default function CaseNoteForm({
 
   // Get participant's active enrollments
   const participantEnrollments = enrollments.filter(
-    e => e.participantId === participantId && e.status === 'active'
+    (e) => e.participantId === participantId && e.status === 'active',
   );
 
-  const [selectedEnrollmentId, setSelectedEnrollmentId] = useState<string | null>(
-    preselectedEnrollmentId || (participantEnrollments.length === 1 ? participantEnrollments[0].id : null)
+  const [selectedEnrollmentId, setSelectedEnrollmentId] = useState<
+    string | null
+  >(
+    preselectedEnrollmentId ||
+      (participantEnrollments.length === 1
+        ? participantEnrollments[0].id
+        : null),
   );
-  const [touchpointType, setTouchpointType] = useState<TouchpointType>('in-person');
+  const [touchpointType, setTouchpointType] =
+    useState<TouchpointType>('in-person');
   const [duration, setDuration] = useState<string>('');
   const [location, setLocation] = useState<string>('');
   const [noteText, setNoteText] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
-  const [extraction, setExtraction] = useState<TouchpointExtraction | null>(null);
-  const [selectedServices, setSelectedServices] = useState<Set<number>>(new Set());
-  const [extractionTimeout, setExtractionTimeout] = useState<NodeJS.Timeout | null>(null);
-  const [abortController, setAbortController] = useState<AbortController | null>(null);
+  const [extraction, setExtraction] = useState<TouchpointExtraction | null>(
+    null,
+  );
+  const [selectedServices, setSelectedServices] = useState<Set<number>>(
+    new Set(),
+  );
+  const [extractionTimeout, setExtractionTimeout] =
+    useState<NodeJS.Timeout | null>(null);
+  const [abortController, setAbortController] =
+    useState<AbortController | null>(null);
 
-  const selectedEnrollment = selectedEnrollmentId ? getEnrollmentById(selectedEnrollmentId) : null;
+  const selectedEnrollment = selectedEnrollmentId
+    ? getEnrollmentById(selectedEnrollmentId)
+    : null;
 
   // Cleanup on unmount
   useEffect(() => {
@@ -152,8 +166,10 @@ export default function CaseNoteForm({
                     if (data.data.servicesProvided) {
                       setSelectedServices(
                         new Set(
-                          data.data.servicesProvided.map((_: any, idx: number) => idx)
-                        )
+                          data.data.servicesProvided.map(
+                            (_: any, idx: number) => idx,
+                          ),
+                        ),
                       );
                     }
                   } else if (data.type === 'done') {
@@ -238,7 +254,14 @@ export default function CaseNoteForm({
       {/* Enrollment Selector */}
       {participantEnrollments.length > 1 && (
         <div>
-          <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, marginBottom: '6px' }}>
+          <label
+            style={{
+              display: 'block',
+              fontSize: '13px',
+              fontWeight: 500,
+              marginBottom: '6px',
+            }}
+          >
             Select Enrollment
           </label>
           <select
@@ -264,21 +287,38 @@ export default function CaseNoteForm({
 
       {participantEnrollments.length === 0 && (
         <Card>
-          <Text color="subdued">This individual has no active enrollments.</Text>
+          <Text color="subdued">
+            This individual has no active enrollments.
+          </Text>
         </Card>
       )}
 
       {selectedEnrollmentId && (
         <>
           {/* Touchpoint Details */}
-          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 2fr', gap: '16px' }}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '2fr 1fr 2fr',
+              gap: '16px',
+            }}
+          >
             <div>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, marginBottom: '6px' }}>
+              <label
+                style={{
+                  display: 'block',
+                  fontSize: '13px',
+                  fontWeight: 500,
+                  marginBottom: '6px',
+                }}
+              >
                 Touchpoint Type
               </label>
               <select
                 value={touchpointType}
-                onChange={(e) => setTouchpointType(e.target.value as TouchpointType)}
+                onChange={(e) =>
+                  setTouchpointType(e.target.value as TouchpointType)
+                }
                 style={{
                   width: '100%',
                   padding: '8px 12px',
@@ -296,7 +336,14 @@ export default function CaseNoteForm({
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, marginBottom: '6px' }}>
+              <label
+                style={{
+                  display: 'block',
+                  fontSize: '13px',
+                  fontWeight: 500,
+                  marginBottom: '6px',
+                }}
+              >
                 Duration (min)
               </label>
               <input
@@ -315,7 +362,14 @@ export default function CaseNoteForm({
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, marginBottom: '6px' }}>
+              <label
+                style={{
+                  display: 'block',
+                  fontSize: '13px',
+                  fontWeight: 500,
+                  marginBottom: '6px',
+                }}
+              >
                 Location
               </label>
               <input
@@ -336,7 +390,14 @@ export default function CaseNoteForm({
 
           {/* Case Notes Textarea */}
           <div>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, marginBottom: '6px' }}>
+            <label
+              style={{
+                display: 'block',
+                fontSize: '13px',
+                fontWeight: 500,
+                marginBottom: '6px',
+              }}
+            >
               Case Notes
             </label>
             <textarea
@@ -354,10 +415,14 @@ export default function CaseNoteForm({
                 resize: 'vertical',
               }}
             />
-            <div style={{ fontSize: '13px', color: '#6b7280', marginTop: '4px' }}>
-              {isProcessing ? '⏳ Extracting structured data...' :
-               noteText.length < 20 ? 'Type at least 20 characters to see AI extraction' :
-               '✅ AI extraction ready'}
+            <div
+              style={{ fontSize: '13px', color: '#6b7280', marginTop: '4px' }}
+            >
+              {isProcessing
+                ? '⏳ Extracting structured data...'
+                : noteText.length < 20
+                  ? 'Type at least 20 characters to see AI extraction'
+                  : '✅ AI extraction ready'}
             </div>
           </div>
 
@@ -367,41 +432,61 @@ export default function CaseNoteForm({
               <Stack space="300">
                 <Heading level={4}>AI Extracted Data</Heading>
 
-                {extraction.progressOnGoals && extraction.progressOnGoals.length > 0 && (
-                  <div>
-                    <Text weight="500" variant="sm">Goal Progress</Text>
-                    {extraction.progressOnGoals.map((progress, idx) => (
-                      <Text key={idx} variant="sm" color="subdued">• {progress.goal}</Text>
-                    ))}
-                  </div>
-                )}
+                {extraction.progressOnGoals &&
+                  extraction.progressOnGoals.length > 0 && (
+                    <div>
+                      <Text weight="500" variant="sm">
+                        Goal Progress
+                      </Text>
+                      {extraction.progressOnGoals.map((progress, idx) => (
+                        <Text key={idx} variant="sm" color="subdued">
+                          • {progress.goal}
+                        </Text>
+                      ))}
+                    </div>
+                  )}
 
-                {extraction.servicesProvided && extraction.servicesProvided.length > 0 && (
-                  <div>
-                    <Text weight="500" variant="sm">Services Detected</Text>
-                    {extraction.servicesProvided.map((service, idx) => (
-                      <label key={idx} style={{ display: 'flex', gap: '8px', fontSize: '13px' }}>
-                        <input
-                          type="checkbox"
-                          checked={selectedServices.has(idx)}
-                          onChange={(e) => {
-                            const newSet = new Set(selectedServices);
-                            if (e.target.checked) newSet.add(idx);
-                            else newSet.delete(idx);
-                            setSelectedServices(newSet);
+                {extraction.servicesProvided &&
+                  extraction.servicesProvided.length > 0 && (
+                    <div>
+                      <Text weight="500" variant="sm">
+                        Services Detected
+                      </Text>
+                      {extraction.servicesProvided.map((service, idx) => (
+                        <label
+                          key={idx}
+                          style={{
+                            display: 'flex',
+                            gap: '8px',
+                            fontSize: '13px',
                           }}
-                        />
-                        <Text variant="sm">{service.serviceType} - {service.quantity} {service.unit}</Text>
-                      </label>
-                    ))}
-                  </div>
-                )}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={selectedServices.has(idx)}
+                            onChange={(e) => {
+                              const newSet = new Set(selectedServices);
+                              if (e.target.checked) newSet.add(idx);
+                              else newSet.delete(idx);
+                              setSelectedServices(newSet);
+                            }}
+                          />
+                          <Text variant="sm">
+                            {service.serviceType} - {service.quantity}{' '}
+                            {service.unit}
+                          </Text>
+                        </label>
+                      ))}
+                    </div>
+                  )}
               </Stack>
             </Card>
           )}
 
           {/* Action Buttons */}
-          <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+          <div
+            style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}
+          >
             {onCancel && (
               <Button variant="secondary" onPress={onCancel}>
                 Cancel

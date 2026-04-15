@@ -47,18 +47,17 @@ export default function FamilyDetailPage({ params }: FamilyDetailPageProps) {
   // Load Highcharts on client side only
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      Promise.all([
-        import('highcharts'),
-        import('@highcharts/react'),
-      ]).then(([highchartsModule, highchartsReactModule]) => {
-        setHighcharts(highchartsModule.default);
-        setHighchartsReact(() => highchartsReactModule.default);
-        setChartsReady(true);
-      });
+      Promise.all([import('highcharts'), import('@highcharts/react')]).then(
+        ([highchartsModule, highchartsReactModule]) => {
+          setHighcharts(highchartsModule.default);
+          setHighchartsReact(() => highchartsReactModule.default);
+          setChartsReady(true);
+        },
+      );
     }
   }, []);
 
-  const household = households.find(h => h.id === id);
+  const household = households.find((h) => h.id === id);
 
   if (!household) {
     return (
@@ -76,14 +75,16 @@ export default function FamilyDetailPage({ params }: FamilyDetailPageProps) {
     );
   }
 
-  const memberIds = household.members.map(m => m.id);
+  const memberIds = household.members.map((m) => m.id);
   const activeEnrollments = getActiveEnrollments();
-  const activeFamilyEnrollments = activeEnrollments.filter(e => memberIds.includes(e.participantId));
+  const activeFamilyEnrollments = activeEnrollments.filter((e) =>
+    memberIds.includes(e.participantId),
+  );
 
   // Get all family services
   const familyServices = useMemo(() => {
-    return serviceTransactions.filter(st => {
-      const enrollment = enrollments.find(e => e.id === st.enrollmentId);
+    return serviceTransactions.filter((st) => {
+      const enrollment = enrollments.find((e) => e.id === st.enrollmentId);
       return enrollment && memberIds.includes(enrollment.participantId);
     });
   }, [serviceTransactions, enrollments, memberIds]);
@@ -91,7 +92,7 @@ export default function FamilyDetailPage({ params }: FamilyDetailPageProps) {
   // Chart data for analytics
   const servicesOverTimeData = useMemo(() => {
     const monthlyServices: { [key: string]: number } = {};
-    familyServices.forEach(service => {
+    familyServices.forEach((service) => {
       const date = new Date(service.serviceDate);
       const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
       monthlyServices[monthKey] = (monthlyServices[monthKey] || 0) + 1;
@@ -99,21 +100,28 @@ export default function FamilyDetailPage({ params }: FamilyDetailPageProps) {
 
     const sortedMonths = Object.keys(monthlyServices).sort();
     return {
-      categories: sortedMonths.map(m => {
+      categories: sortedMonths.map((m) => {
         const [year, month] = m.split('-');
-        return new Date(parseInt(year), parseInt(month) - 1).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+        return new Date(parseInt(year), parseInt(month) - 1).toLocaleDateString(
+          'en-US',
+          { month: 'short', year: 'numeric' },
+        );
       }),
-      data: sortedMonths.map(m => monthlyServices[m]),
+      data: sortedMonths.map((m) => monthlyServices[m]),
     };
   }, [familyServices]);
 
   const servicesByMemberData = useMemo(() => {
     const memberServiceCounts: { [key: string]: number } = {};
-    familyServices.forEach(service => {
-      const enrollment = enrollments.find(e => e.id === service.enrollmentId);
+    familyServices.forEach((service) => {
+      const enrollment = enrollments.find((e) => e.id === service.enrollmentId);
       if (enrollment?.participantId) {
-        const member = household.members.find(m => m.id === enrollment.participantId);
-        const name = member ? `${member.firstName} ${member.lastName}` : 'Unknown';
+        const member = household.members.find(
+          (m) => m.id === enrollment.participantId,
+        );
+        const name = member
+          ? `${member.firstName} ${member.lastName}`
+          : 'Unknown';
         memberServiceCounts[name] = (memberServiceCounts[name] || 0) + 1;
       }
     });
@@ -126,24 +134,32 @@ export default function FamilyDetailPage({ params }: FamilyDetailPageProps) {
 
   const caseWorkerTimeData = useMemo(() => {
     const caseWorkerTime: { [key: string]: number } = {};
-    familyServices.forEach(service => {
-      const enrollment = enrollments.find(e => e.id === service.enrollmentId);
+    familyServices.forEach((service) => {
+      const enrollment = enrollments.find((e) => e.id === service.enrollmentId);
       if (enrollment?.caseWorkerId) {
-        const caseWorker = caseWorkers.find(cw => cw.id === enrollment.caseWorkerId);
-        const name = caseWorker ? `${caseWorker.firstName} ${caseWorker.lastName}` : 'Unknown';
-        caseWorkerTime[name] = (caseWorkerTime[name] || 0) + (service.duration || 0);
+        const caseWorker = caseWorkers.find(
+          (cw) => cw.id === enrollment.caseWorkerId,
+        );
+        const name = caseWorker
+          ? `${caseWorker.firstName} ${caseWorker.lastName}`
+          : 'Unknown';
+        caseWorkerTime[name] =
+          (caseWorkerTime[name] || 0) + (service.duration || 0);
       }
     });
 
     return Object.entries(caseWorkerTime).map(([name, minutes]) => ({
       name,
-      y: Math.round(minutes / 60 * 10) / 10,
+      y: Math.round((minutes / 60) * 10) / 10,
     }));
   }, [familyServices, enrollments, caseWorkers]);
 
   const totalServiceHours = useMemo(() => {
-    const totalMinutes = familyServices.reduce((sum, service) => sum + (service.duration || 0), 0);
-    return Math.round(totalMinutes / 60 * 10) / 10;
+    const totalMinutes = familyServices.reduce(
+      (sum, service) => sum + (service.duration || 0),
+      0,
+    );
+    return Math.round((totalMinutes / 60) * 10) / 10;
   }, [familyServices]);
 
   return (
@@ -151,10 +167,7 @@ export default function FamilyDetailPage({ params }: FamilyDetailPageProps) {
       <Stack space="600">
         {/* Back Button */}
         <InlineStack gap="400" verticalAlign="center">
-          <Button
-            variant="tertiary"
-            onPress={() => router.push('/families')}
-          >
+          <Button variant="tertiary" onPress={() => router.push('/families')}>
             <Icon name="arrow-left" />
             Back
           </Button>
@@ -163,14 +176,19 @@ export default function FamilyDetailPage({ params }: FamilyDetailPageProps) {
         {/* Household Header */}
         <Card>
           <Stack space="400">
-            <InlineStack gap="400" verticalAlign="center" distribute="space-between">
+            <InlineStack
+              gap="400"
+              verticalAlign="center"
+              distribute="space-between"
+            >
               <InlineStack gap="400" verticalAlign="center">
                 <div
                   style={{
                     width: '80px',
                     height: '80px',
                     borderRadius: '16px',
-                    background: 'linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%)',
+                    background:
+                      'linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -188,7 +206,9 @@ export default function FamilyDetailPage({ params }: FamilyDetailPageProps) {
                     ) : (
                       <SimpleBadge tone="neutral">Inactive</SimpleBadge>
                     )}
-                    <SimpleBadge tone="info">{household.members.length} Members</SimpleBadge>
+                    <SimpleBadge tone="info">
+                      {household.members.length} Members
+                    </SimpleBadge>
                   </InlineStack>
                 </Stack>
               </InlineStack>
@@ -207,29 +227,38 @@ export default function FamilyDetailPage({ params }: FamilyDetailPageProps) {
         <TileLayout columns="4" columnsSM="2" space="400">
           <Card>
             <Stack space="200">
-              <Text variant="sm" color="subdued">Members</Text>
+              <Text variant="sm" color="subdued">
+                Members
+              </Text>
               <Heading level={2}>{household.members.length}</Heading>
             </Stack>
           </Card>
           <Card>
             <Stack space="200">
-              <Text variant="sm" color="subdued">Active Enrollments</Text>
+              <Text variant="sm" color="subdued">
+                Active Enrollments
+              </Text>
               <Heading level={2}>{activeFamilyEnrollments.length}</Heading>
             </Stack>
           </Card>
           <Card>
             <Stack space="200">
-              <Text variant="sm" color="subdued">Programs</Text>
+              <Text variant="sm" color="subdued">
+                Programs
+              </Text>
               <Heading level={2}>
-                {new Set(activeFamilyEnrollments.map(e => e.programId)).size}
+                {new Set(activeFamilyEnrollments.map((e) => e.programId)).size}
               </Heading>
             </Stack>
           </Card>
           <Card>
             <Stack space="200">
-              <Text variant="sm" color="subdued">Head of Household</Text>
+              <Text variant="sm" color="subdued">
+                Head of Household
+              </Text>
               <Text weight="500">
-                {household.members.find(m => m.relationshipToHead === 'Self')?.firstName || 'Unknown'}
+                {household.members.find((m) => m.relationshipToHead === 'Self')
+                  ?.firstName || 'Unknown'}
               </Text>
             </Stack>
           </Card>
@@ -237,7 +266,10 @@ export default function FamilyDetailPage({ params }: FamilyDetailPageProps) {
 
         {/* Tabbed Content */}
         <Card>
-          <Tabs selectedKey={selectedTab} onSelectionChange={(key) => setSelectedTab(key as string)}>
+          <Tabs
+            selectedKey={selectedTab}
+            onSelectionChange={(key) => setSelectedTab(key as string)}
+          >
             <TabList>
               <Tab id="overview">Overview</Tab>
               <Tab id="members">Members ({household.members.length})</Tab>
@@ -250,12 +282,16 @@ export default function FamilyDetailPage({ params }: FamilyDetailPageProps) {
                 <Heading level={3}>Household Information</Heading>
                 <TileLayout columns="2" columnsSM="1" space="300">
                   <Stack space="200">
-                    <Text variant="sm" color="subdued">Household Name</Text>
+                    <Text variant="sm" color="subdued">
+                      Household Name
+                    </Text>
                     <Text>{household.householdName}</Text>
                   </Stack>
                   {household.address && (
                     <Stack space="200">
-                      <Text variant="sm" color="subdued">Address</Text>
+                      <Text variant="sm" color="subdued">
+                        Address
+                      </Text>
                       <Text>{household.address}</Text>
                     </Stack>
                   )}
@@ -266,22 +302,33 @@ export default function FamilyDetailPage({ params }: FamilyDetailPageProps) {
             {/* Members Tab */}
             <TabPanel id="members">
               <Stack space="400">
-                <Heading level={3}>{household.members.length} Family Members</Heading>
+                <Heading level={3}>
+                  {household.members.length} Family Members
+                </Heading>
                 <Stack space="300">
                   {household.members.map((member) => {
-                    const memberParticipant = participants.find(p => p.id === member.id);
-                    const memberEnrollments = activeEnrollments.filter(e => e.participantId === member.id);
+                    const memberParticipant = participants.find(
+                      (p) => p.id === member.id,
+                    );
+                    const memberEnrollments = activeEnrollments.filter(
+                      (e) => e.participantId === member.id,
+                    );
 
                     return (
                       <Card key={member.id}>
-                        <InlineStack gap="300" verticalAlign="center" distribute="space-between">
+                        <InlineStack
+                          gap="300"
+                          verticalAlign="center"
+                          distribute="space-between"
+                        >
                           <InlineStack gap="300" verticalAlign="center">
                             <div
                               style={{
                                 width: '56px',
                                 height: '56px',
                                 borderRadius: '50%',
-                                background: 'linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%)',
+                                background:
+                                  'linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
@@ -290,7 +337,8 @@ export default function FamilyDetailPage({ params }: FamilyDetailPageProps) {
                                 color: '#ffffff',
                               }}
                             >
-                              {member.firstName[0]}{member.lastName[0]}
+                              {member.firstName[0]}
+                              {member.lastName[0]}
                             </div>
                             <Stack space="100">
                               <Text weight="500">
@@ -301,7 +349,9 @@ export default function FamilyDetailPage({ params }: FamilyDetailPageProps) {
                                   {member.relationshipToHead}
                                 </Text>
                                 {memberEnrollments.length > 0 && (
-                                  <SimpleBadge tone="positive">{memberEnrollments.length} active</SimpleBadge>
+                                  <SimpleBadge tone="positive">
+                                    {memberEnrollments.length} active
+                                  </SimpleBadge>
                                 )}
                               </InlineStack>
                             </Stack>
@@ -309,7 +359,9 @@ export default function FamilyDetailPage({ params }: FamilyDetailPageProps) {
                           {memberParticipant && (
                             <Button
                               variant="tertiary"
-                              onPress={() => router.push(`/participants/${member.id}`)}
+                              onPress={() =>
+                                router.push(`/participants/${member.id}`)
+                              }
                             >
                               View Profile
                             </Button>
@@ -335,21 +387,29 @@ export default function FamilyDetailPage({ params }: FamilyDetailPageProps) {
                     <TileLayout columns="3" columnsSM="1" space="400">
                       <Card>
                         <Stack space="200">
-                          <Text variant="sm" color="subdued">Total Services</Text>
+                          <Text variant="sm" color="subdued">
+                            Total Services
+                          </Text>
                           <Heading level={2}>{familyServices.length}</Heading>
                         </Stack>
                       </Card>
                       <Card>
                         <Stack space="200">
-                          <Text variant="sm" color="subdued">Service Hours</Text>
+                          <Text variant="sm" color="subdued">
+                            Service Hours
+                          </Text>
                           <Heading level={2}>{totalServiceHours}h</Heading>
                         </Stack>
                       </Card>
                       <Card>
                         <Stack space="200">
-                          <Text variant="sm" color="subdued">Avg Per Member</Text>
+                          <Text variant="sm" color="subdued">
+                            Avg Per Member
+                          </Text>
                           <Heading level={2}>
-                            {Math.round(familyServices.length / household.members.length)}
+                            {Math.round(
+                              familyServices.length / household.members.length,
+                            )}
                           </Heading>
                         </Stack>
                       </Card>
@@ -384,7 +444,12 @@ export default function FamilyDetailPage({ params }: FamilyDetailPageProps) {
                                   plotOptions: {
                                     area: {
                                       fillColor: {
-                                        linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+                                        linearGradient: {
+                                          x1: 0,
+                                          y1: 0,
+                                          x2: 0,
+                                          y2: 1,
+                                        },
                                         stops: [
                                           [0, 'rgba(124, 58, 237, 0.3)'],
                                           [1, 'rgba(124, 58, 237, 0.05)'],
@@ -452,7 +517,13 @@ export default function FamilyDetailPage({ params }: FamilyDetailPageProps) {
                                   plotOptions: {
                                     column: {
                                       colorByPoint: true,
-                                      colors: ['#7C3AED', '#A78BFA', '#C4B5FD', '#DDD6FE', '#EDE9FE'],
+                                      colors: [
+                                        '#7C3AED',
+                                        '#A78BFA',
+                                        '#C4B5FD',
+                                        '#DDD6FE',
+                                        '#EDE9FE',
+                                      ],
                                     },
                                   },
                                   series: [

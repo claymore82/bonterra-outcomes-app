@@ -1,11 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import {
-  Text,
-  InlineStack,
-  Icon,
-} from '@bonterratech/stitch-extension';
+import { Text, InlineStack, Icon } from '@bonterratech/stitch-extension';
 import { useUserStore } from '@/lib/stores/userStore';
 import { useSiteStore } from '@/lib/stores/siteStore';
 import { useEnrollmentStore } from '@/lib/stores/enrollmentStore';
@@ -21,7 +17,10 @@ export default function SiteSelector() {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -30,20 +29,28 @@ export default function SiteSelector() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const activeSites = sites.filter(s => s.active);
+  const activeSites = sites.filter((s) => s.active);
 
   const currentSite = currentSiteId
-    ? sites.find(s => s.id === currentSiteId)
+    ? sites.find((s) => s.id === currentSiteId)
     : null;
 
   const activeEnrollmentCount = currentSite
-    ? getActiveEnrollments().filter(e => e.siteId === currentSite.id).length
+    ? getActiveEnrollments().filter((e) => e.siteId === currentSite.id).length
     : getActiveEnrollments().length;
 
   const displayText = currentSite ? currentSite.name : 'All Sites';
 
   return (
-    <div style={{ position: 'relative', height: '100%', display: 'flex', alignItems: 'center' }} ref={dropdownRef}>
+    <div
+      style={{
+        position: 'relative',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+      }}
+      ref={dropdownRef}
+    >
       <button
         onClick={() => setIsOpen(!isOpen)}
         style={{
@@ -58,8 +65,12 @@ export default function SiteSelector() {
           transition: 'background-color 0.2s',
           height: 'fit-content',
         }}
-        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f3f4f6')}
-        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+        onMouseEnter={(e) =>
+          (e.currentTarget.style.backgroundColor = '#f3f4f6')
+        }
+        onMouseLeave={(e) =>
+          (e.currentTarget.style.backgroundColor = 'transparent')
+        }
       >
         <Text variant="sm" weight="500" style={{ fontSize: '15px' }}>
           {displayText}
@@ -81,7 +92,8 @@ export default function SiteSelector() {
             width: '280px',
             backgroundColor: 'white',
             borderRadius: '8px',
-            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+            boxShadow:
+              '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
             border: '1px solid #e5e7eb',
             maxHeight: '400px',
             overflowY: 'auto',
@@ -102,11 +114,19 @@ export default function SiteSelector() {
               cursor: 'pointer',
               transition: 'background-color 0.2s',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f9fafb')}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = currentSiteId === null ? '#f3f4f6' : 'white')}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = '#f9fafb')
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor =
+                currentSiteId === null ? '#f3f4f6' : 'white')
+            }
           >
             <InlineStack gap="300" verticalAlign="center">
-              <Text variant="sm" weight={currentSiteId === null ? '600' : '400'}>
+              <Text
+                variant="sm"
+                weight={currentSiteId === null ? '600' : '400'}
+              >
                 All Sites
               </Text>
               {currentSiteId === null && (
@@ -118,7 +138,9 @@ export default function SiteSelector() {
           </button>
           {activeSites.map((site) => {
             const isSelected = currentSiteId === site.id;
-            const siteActiveCount = getActiveEnrollments().filter(e => e.siteId === site.id).length;
+            const siteActiveCount = getActiveEnrollments().filter(
+              (e) => e.siteId === site.id,
+            ).length;
 
             return (
               <button
@@ -136,8 +158,14 @@ export default function SiteSelector() {
                   cursor: 'pointer',
                   transition: 'background-color 0.2s',
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f9fafb')}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = isSelected ? '#f3f4f6' : 'white')}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor = '#f9fafb')
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = isSelected
+                    ? '#f3f4f6'
+                    : 'white')
+                }
               >
                 <InlineStack gap="300" verticalAlign="center">
                   <Text variant="sm" weight={isSelected ? '600' : '400'}>

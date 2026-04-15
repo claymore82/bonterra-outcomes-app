@@ -62,7 +62,9 @@ export default function UserSettingsPage() {
               <InlineStack gap="400" verticalAlign="center">
                 <Stack space="100" style={{ flex: 1 }}>
                   <Text weight="600">Email Notifications</Text>
-                  <Text variant="sm" color="subdued">Receive email updates about your cases</Text>
+                  <Text variant="sm" color="subdued">
+                    Receive email updates about your cases
+                  </Text>
                 </Stack>
                 <Switch
                   isSelected={emailNotifications}
@@ -74,7 +76,9 @@ export default function UserSettingsPage() {
               <InlineStack gap="400" verticalAlign="center">
                 <Stack space="100" style={{ flex: 1 }}>
                   <Text weight="600">Push Notifications</Text>
-                  <Text variant="sm" color="subdued">Receive browser notifications for urgent updates</Text>
+                  <Text variant="sm" color="subdued">
+                    Receive browser notifications for urgent updates
+                  </Text>
                 </Stack>
                 <Switch
                   isSelected={pushNotifications}
@@ -86,7 +90,9 @@ export default function UserSettingsPage() {
               <InlineStack gap="400" verticalAlign="center">
                 <Stack space="100" style={{ flex: 1 }}>
                   <Text weight="600">Weekly Reports</Text>
-                  <Text variant="sm" color="subdued">Receive weekly summary of your caseload</Text>
+                  <Text variant="sm" color="subdued">
+                    Receive weekly summary of your caseload
+                  </Text>
                 </Stack>
                 <Switch
                   isSelected={weeklyReports}
@@ -142,12 +148,17 @@ export default function UserSettingsPage() {
           <Stack space="400">
             <Heading level={2}>Privacy & Security</Heading>
             <Stack space="300">
-              <Link href="/settings/password" style={{ textDecoration: 'none' }}>
+              <Link
+                href="/settings/password"
+                style={{ textDecoration: 'none' }}
+              >
                 <InlineStack gap="400" verticalAlign="center">
                   <Icon name="key" size="medium" />
                   <Stack space="100" style={{ flex: 1 }}>
                     <Text weight="600">Change Password</Text>
-                    <Text variant="sm" color="subdued">Update your password</Text>
+                    <Text variant="sm" color="subdued">
+                      Update your password
+                    </Text>
                   </Stack>
                   <Icon name="chevron-right" size="small" />
                 </InlineStack>
@@ -167,7 +178,9 @@ export default function UserSettingsPage() {
                   <Icon name="lock" size="medium" />
                   <Stack space="100" style={{ flex: 1 }}>
                     <Text weight="600">Two-Factor Authentication</Text>
-                    <Text variant="sm" color="subdued">Not enabled</Text>
+                    <Text variant="sm" color="subdued">
+                      Not enabled
+                    </Text>
                   </Stack>
                   <Icon name="chevron-right" size="small" />
                 </InlineStack>

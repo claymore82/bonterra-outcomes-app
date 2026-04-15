@@ -31,9 +31,7 @@ export const useSiteStore = create<SiteStore>((set, get) => ({
   updateSite: (id, updates) => {
     set((state) => ({
       sites: state.sites.map((site) =>
-        site.id === id
-          ? { ...site, ...updates, updatedAt: new Date() }
-          : site
+        site.id === id ? { ...site, ...updates, updatedAt: new Date() } : site,
       ),
     }));
   },
@@ -49,8 +47,8 @@ export const useSiteStore = create<SiteStore>((set, get) => ({
   },
 
   getSitesByProgram: (programId) => {
-    return get().sites.filter((site) =>
-      site.programIds.includes(programId) && site.status === 'active'
+    return get().sites.filter(
+      (site) => site.programIds.includes(programId) && site.status === 'active',
     );
   },
 
