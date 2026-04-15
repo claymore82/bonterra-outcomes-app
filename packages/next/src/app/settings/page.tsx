@@ -9,11 +9,71 @@ import {
   Stack,
   InlineStack,
   Button,
-  Switch,
   Icon,
 } from '@bonterratech/stitch-extension';
 import { useUserStore } from '@/lib/stores/userStore';
 import PageLayout from '../components/PageLayout';
+
+// Simple Toggle Switch Component
+function ToggleSwitch({
+  checked,
+  onChange,
+  label,
+}: {
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  label: string;
+}) {
+  return (
+    <label
+      style={{
+        position: 'relative',
+        display: 'inline-block',
+        width: '48px',
+        height: '24px',
+        cursor: 'pointer',
+      }}
+    >
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+        aria-label={label}
+        style={{
+          opacity: 0,
+          width: 0,
+          height: 0,
+        }}
+      />
+      <span
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: checked ? '#7c3aed' : '#d1d5db',
+          borderRadius: '24px',
+          transition: 'background-color 0.2s',
+        }}
+      >
+        <span
+          style={{
+            position: 'absolute',
+            content: '',
+            height: '18px',
+            width: '18px',
+            left: checked ? '26px' : '3px',
+            bottom: '3px',
+            backgroundColor: 'white',
+            borderRadius: '50%',
+            transition: 'left 0.2s',
+          }}
+        />
+      </span>
+    </label>
+  );
+}
 
 export default function UserSettingsPage() {
   const { currentUser } = useUserStore();
@@ -66,10 +126,10 @@ export default function UserSettingsPage() {
                     Receive email updates about your cases
                   </Text>
                 </Stack>
-                <Switch
-                  isSelected={emailNotifications}
+                <ToggleSwitch
+                  checked={emailNotifications}
                   onChange={setEmailNotifications}
-                  aria-label="Email Notifications"
+                  label="Email Notifications"
                 />
               </InlineStack>
 
@@ -80,10 +140,10 @@ export default function UserSettingsPage() {
                     Receive browser notifications for urgent updates
                   </Text>
                 </Stack>
-                <Switch
-                  isSelected={pushNotifications}
+                <ToggleSwitch
+                  checked={pushNotifications}
                   onChange={setPushNotifications}
-                  aria-label="Push Notifications"
+                  label="Push Notifications"
                 />
               </InlineStack>
 
@@ -94,10 +154,10 @@ export default function UserSettingsPage() {
                     Receive weekly summary of your caseload
                   </Text>
                 </Stack>
-                <Switch
-                  isSelected={weeklyReports}
+                <ToggleSwitch
+                  checked={weeklyReports}
                   onChange={setWeeklyReports}
-                  aria-label="Weekly Reports"
+                  label="Weekly Reports"
                 />
               </InlineStack>
             </Stack>
