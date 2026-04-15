@@ -1,0 +1,85 @@
+<svg width="800" height="500" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="800" height="500" fill="#E8F4F8"/>
+
+  <!-- Header -->
+  <rect width="800" height="80" fill="#2C5F8D"/>
+  <text x="20" y="35" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="white">STATE OF CALIFORNIA</text>
+  <text x="20" y="60" font-family="Arial, sans-serif" font-size="16" fill="white">DRIVER LICENSE</text>
+
+  <!-- Photo placeholder -->
+  <rect x="30" y="100" width="180" height="220" fill="#D0D0D0" stroke="#666" stroke-width="2"/>
+  <text x="120" y="210" font-family="Arial, sans-serif" font-size="14" fill="#666" text-anchor="middle">PHOTO</text>
+
+  <!-- Personal Information -->
+  <g transform="translate(240, 100)">
+    <!-- DL Number -->
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="12" fill="#666">DL</text>
+    <text x="0" y="20" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#000">D1234567</text>
+
+    <!-- Expiration -->
+    <text x="0" y="50" font-family="Arial, sans-serif" font-size="12" fill="#666">EXP</text>
+    <text x="0" y="70" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#000">03/15/2027</text>
+
+    <!-- Class -->
+    <text x="200" y="0" font-family="Arial, sans-serif" font-size="12" fill="#666">CLASS</text>
+    <text x="200" y="20" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#000">C</text>
+
+    <!-- DOB -->
+    <text x="200" y="50" font-family="Arial, sans-serif" font-size="12" fill="#666">DOB</text>
+    <text x="200" y="70" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#000">08/23/1985</text>
+  </g>
+
+  <!-- Name Section -->
+  <g transform="translate(240, 200)">
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="12" fill="#666">LN</text>
+    <text x="0" y="20" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#000">JOHNSON</text>
+
+    <text x="0" y="50" font-family="Arial, sans-serif" font-size="12" fill="#666">FN</text>
+    <text x="0" y="70" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#000">SARAH</text>
+
+    <text x="200" y="50" font-family="Arial, sans-serif" font-size="12" fill="#666">MN</text>
+    <text x="200" y="70" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#000">M</text>
+  </g>
+
+  <!-- Address Section -->
+  <g transform="translate(30, 340)">
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="12" fill="#666">ADDRESS</text>
+    <text x="0" y="20" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#000">1847 MARKET STREET</text>
+    <text x="0" y="42" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#000">SAN FRANCISCO, CA 94102</text>
+  </g>
+
+  <!-- Additional Info -->
+  <g transform="translate(30, 410)">
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="12" fill="#666">SEX</text>
+    <text x="0" y="18" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#000">F</text>
+
+    <text x="60" y="0" font-family="Arial, sans-serif" font-size="12" fill="#666">HAIR</text>
+    <text x="60" y="18" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#000">BRN</text>
+
+    <text x="120" y="0" font-family="Arial, sans-serif" font-size="12" fill="#666">EYES</text>
+    <text x="120" y="18" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#000">BLU</text>
+
+    <text x="180" y="0" font-family="Arial, sans-serif" font-size="12" fill="#666">HGT</text>
+    <text x="180" y="18" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#000">5'-06"</text>
+
+    <text x="240" y="0" font-family="Arial, sans-serif" font-size="12" fill="#666">WGT</text>
+    <text x="240" y="18" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#000">135 lb</text>
+
+    <text x="320" y="0" font-family="Arial, sans-serif" font-size="12" fill="#666">ISS</text>
+    <text x="320" y="18" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#000">03/15/2023</text>
+  </g>
+
+  <!-- Restrictions/Endorsements -->
+  <g transform="translate(30, 450)">
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="10" fill="#666">RSTR: NONE</text>
+    <text x="150" y="0" font-family="Arial, sans-serif" font-size="10" fill="#666">END: NONE</text>
+  </g>
+
+  <!-- Barcode placeholder -->
+  <rect x="500" y="340" width="270" height="120" fill="#000"/>
+  <text x="635" y="415" font-family="monospace" font-size="10" fill="white" text-anchor="middle">PDF417 BARCODE</text>
+
+  <!-- Sample watermark -->
+  <text x="400" y="250" font-family="Arial, sans-serif" font-size="60" fill="rgba(255,0,0,0.15)" transform="rotate(-30 400 250)" text-anchor="middle" font-weight="bold">SAMPLE</text>
+</svg>

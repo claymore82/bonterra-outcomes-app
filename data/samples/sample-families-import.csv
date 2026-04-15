@@ -1,0 +1,15 @@
+Family Name,First Name,Last Name,Date of Birth,Relationship,Gender,Email,Phone
+Smith Family,John,Smith,1980-05-15,Head of Household,Male,john.smith@email.com,555-1001
+Smith Family,Mary,Smith,1982-08-22,Spouse,Female,mary.smith@email.com,555-1001
+Smith Family,Emma,Smith,2010-03-10,Child,Female,,
+Smith Family,Noah,Smith,2012-11-05,Child,Male,,
+Johnson Family,Sarah,Johnson,1975-12-01,Head of Household,Female,sarah.j@email.com,555-2002
+Johnson Family,Michael,Johnson,2008-06-18,Child,Male,,
+Johnson Family,Olivia,Johnson,2011-09-25,Child,Female,,
+Rodriguez Family,Carlos,Rodriguez,1978-04-20,Head of Household,Male,carlos.r@email.com,555-3003
+Rodriguez Family,Maria,Rodriguez,1979-07-12,Spouse,Female,maria.r@email.com,555-3003
+Rodriguez Family,Sofia,Rodriguez,2013-01-30,Child,Female,,
+Williams Family,Lisa,Williams,1985-10-08,Head of Household,Female,lisa.w@email.com,555-4004
+Williams Family,James,Williams,1984-02-14,Spouse,Male,james.w@email.com,555-4004
+Williams Family,Ava,Williams,2015-05-22,Child,Female,,
+Williams Family,Liam,Williams,2017-08-16,Child,Male,,

@@ -15,6 +15,9 @@
     "prettier": "npm run prettier -w packages/next",
     "prettier:check": "npm run prettier:check -w packages/next",
     "typecheck": "npm run typecheck -w packages/next",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
     "bonstart:init": "node scripts/setup.js",
     "postinstall": "node scripts/copy-stitch-docs.mjs",
     "prepare": "node scripts/setup-hooks.js",
@@ -27,9 +30,10 @@
     "npm": ">=10.0.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "markdownlint-cli": "^0.43.0",
     "sst": "^3.9.28",
-    "typescript": "^5.7.2",
-    "markdownlint-cli": "^0.43.0"
+    "typescript": "^5.7.2"
   },
   "optionalDependencies": {
     "sst-darwin-arm64": "3.17.19",
@@ -37,5 +41,13 @@
     "sst-linux-arm64": "3.17.19",
     "sst-linux-x64": "3.17.19",
     "sst-win32-x64": "3.17.19"
+  },
+  "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.1022.0",
+    "@highcharts/react": "^4.2.1",
+    "highcharts": "^12.5.0",
+    "recharts": "^3.8.1",
+    "zod": "^4.3.6",
+    "zustand": "^5.0.12"
   }
 }

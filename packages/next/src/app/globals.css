@@ -1,1 +1,22 @@
 /* Stitch uses StyleX exclusively for styling, and is the first choice for adding custom styles. However, you may need to use vanilla css for certain use cases. You can use this file to add your own vanilla css styles. */
+
+/* Button hover effects */
+button[data-rac]:hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+  transition: background-color 0.15s ease-in-out;
+}
+
+button[data-rac]:active {
+  background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Primary button hover (preserve original color but enhance) */
+button[data-rac].stitch-extension__buttonVariants\.primary:hover {
+  filter: brightness(1.1);
+  background-color: inherit !important;
+}
+
+button[data-rac].stitch-extension__buttonVariants\.primary:active {
+  filter: brightness(0.95);
+  background-color: inherit !important;
+}

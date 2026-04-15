@@ -36,6 +36,9 @@ next-env.d.ts
 # testing
 coverage/
 .nyc_output/
+test-results/
+playwright-report/
+.playwright/
 
 # IDE
 .vscode/

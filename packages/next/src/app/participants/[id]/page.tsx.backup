@@ -1,0 +1,711 @@
+'use client';
+
+import { use, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import {
+  Card,
+  Heading,
+  Text,
+  Stack,
+  InlineStack,
+  Button,
+  Icon,
+  Divider,
+  TileLayout,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanel,
+} from '@bonterratech/stitch-extension';
+import PageLayout from '../../components/PageLayout';
+import ActivityTimeline, { type TimelineEvent } from '../../components/ActivityTimeline';
+import SimpleBadge from '../../components/SimpleBadge';
+import { useParticipantStore } from '@/lib/stores/participantStore';
+import { useEnrollmentStore } from '@/lib/stores/enrollmentStore';
+import { useProgramStore } from '@/lib/stores/programStore';
+import { useServiceStore } from '@/lib/stores/serviceStore';
+import { useGoalStore } from '@/lib/stores/goalStore';
+import { useHouseholdStore } from '@/lib/stores/householdStore';
+
+interface ParticipantDetailPageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default function ParticipantDetailPage({ params }: ParticipantDetailPageProps) {
+  const { id } = use(params);
+  const router = useRouter();
+  const { participants } = useParticipantStore();
+  const { enrollments, getActiveEnrollments } = useEnrollmentStore();
+  const { programs } = useProgramStore();
+  const { serviceTransactions, serviceTypes } = useServiceStore();
+  const { goals } = useGoalStore();
+  const { households } = useHouseholdStore();
+
+  const [selectedTab, setSelectedTab] = useState('overview');
+
+  const participant = participants.find(p => p.id === id);
+
+  if (!participant) {
+    return (
+      <PageLayout>
+        <Card>
+          <Stack space="400" style={{ padding: '40px', textAlign: 'center' }}>
+            <Icon name="user" size="large" />
+            <Heading level={2}>Participant not found</Heading>
+            <Text color="subdued">The participant you're looking for doesn't exist.</Text>
+            <Button onPress={() => router.push('/participants')}>
+              Back to Participants
+            </Button>
+          </Stack>
+        </Card>
+      </PageLayout>
+    );
+  }
+
+  // Get all participant data
+  const participantEnrollments = enrollments.filter(e => e.participantId === id);
+  const activeEnrollments = getActiveEnrollments().filter(e => e.participantId === id);
+  const participantServices = serviceTransactions.filter(st => {
+    const enrollment = enrollments.find(e => e.id === st.enrollmentId);
+    return enrollment?.participantId === id;
+  });
+  const participantGoals = goals.filter(g => {
+    const enrollment = enrollments.find(e => e.id === g.enrollmentId);
+    return enrollment?.participantId === id;
+  });
+
+  // Find household
+  const household = households.find(h => h.members.some(m => m.id === id));
+  const householdMember = household?.members.find(m => m.id === id);
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  };
+
+  // Build activity timeline
+  const timelineEvents: TimelineEvent[] = useMemo(() => {
+    const events: TimelineEvent[] = [];
+
+    // Add enrollments
+    participantEnrollments.forEach(enrollment => {
+      const program = programs.find(p => p.id === enrollment.programId);
+      events.push({
+        id: `enrollment-${enrollment.id}`,
+        type: 'enrollment',
+        title: `Enrolled in ${program?.name || 'Program'}`,
+        description: `Started enrollment in ${program?.name || 'program'}`,
+        date: enrollment.startDate,
+        icon: 'clipboard-list',
+        color: '#7C3AED',
+        metadata: {
+          program: program?.name,
+          status: enrollment.status,
+        },
+      });
+
+      if (enrollment.endDate) {
+        events.push({
+          id: `enrollment-end-${enrollment.id}`,
+          type: 'enrollment',
+          title: `Completed ${program?.name || 'Program'}`,
+          description: `Enrollment ended`,
+          date: enrollment.endDate,
+          icon: 'check-circle',
+          color: '#10B981',
+          metadata: {
+            program: program?.name,
+            status: 'completed',
+          },
+        });
+      }
+    });
+
+    // Add services (last 10)
+    participantServices.slice(-10).forEach(service => {
+      const serviceType = serviceTypes.find(st => st.id === service.serviceTypeId);
+      const enrollment = enrollments.find(e => e.id === service.enrollmentId);
+      const program = programs.find(p => p.id === enrollment?.programId);
+
+      events.push({
+        id: `service-${service.id}`,
+        type: 'service',
+        title: serviceType?.name || 'Service Provided',
+        description: `${service.duration} minutes • ${service.unitsProvided} units`,
+        date: service.serviceDate,
+        icon: 'briefcase',
+        color: '#3B82F6',
+        metadata: {
+          program: program?.name,
+        },
+      });
+    });
+
+    // Add goals
+    participantGoals.forEach(goal => {
+      events.push({
+        id: `goal-${goal.id}`,
+        type: 'goal',
+        title: 'Goal Set',
+        description: goal.description,
+        date: goal.createdDate || goal.targetDate || new Date().toISOString(),
+        icon: 'target',
+        color: '#F59E0B',
+        metadata: {
+          status: goal.status,
+        },
+      });
+
+      if (goal.status === 'achieved' && goal.achievedDate) {
+        events.push({
+          id: `goal-achieved-${goal.id}`,
+          type: 'goal',
+          title: 'Goal Achieved',
+          description: goal.description,
+          date: goal.achievedDate,
+          icon: 'check-circle',
+          color: '#10B981',
+          metadata: {
+            status: 'achieved',
+          },
+        });
+      }
+    });
+
+    return events.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  }, [participantEnrollments, participantServices, participantGoals, programs, serviceTypes, enrollments]);
+
+  const getStatusSimpleBadge = (status: string) => {
+    const toneMap: Record<string, 'positive' | 'caution' | 'critical' | 'neutral' | 'info'> = {
+      active: 'positive',
+      completed: 'info',
+      exited: 'neutral',
+      'on hold': 'caution',
+    };
+    return <SimpleBadge tone={toneMap[status] || 'neutral'}>{status}</SimpleBadge>;
+  };
+
+  return (
+    <PageLayout pageTitle={`${participant.firstName} ${participant.lastName}`}>
+      <Stack space="600">
+        {/* Header with Back Button */}
+        <InlineStack gap="400" verticalAlign="center">
+          <Button
+            variant="tertiary"
+            onPress={() => router.push('/participants')}
+          >
+            <Icon name="arrow-left" />
+            Back to Participants
+          </Button>
+        </InlineStack>
+
+        {/* Profile Header */}
+        <Card>
+          <Stack space="400">
+            <InlineStack gap="400" verticalAlign="center" distribute="space-between">
+              <InlineStack gap="400" verticalAlign="center">
+                <div
+                  style={{
+                    width: '80px',
+                    height: '80px',
+                    borderRadius: '50%',
+                    background: 'linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '32px',
+                    fontWeight: '600',
+                    color: '#ffffff',
+                  }}
+                >
+                  {participant.firstName[0]}{participant.lastName[0]}
+                </div>
+                <Stack space="200">
+                  <Heading level={1}>
+                    {participant.firstName} {participant.lastName}
+                  </Heading>
+                  <InlineStack gap="300">
+                    {activeEnrollments.length > 0 ? (
+                      <SimpleBadge tone="positive">
+                        <Icon name="check-circle" /> Active
+                      </SimpleBadge>
+                    ) : (
+                      <SimpleBadge tone="neutral">Inactive</SimpleBadge>
+                    )}
+                    {household && (
+                      <SimpleBadge tone="info">
+                        <Icon name="users" /> {householdMember?.relationshipToHead || 'Family Member'}
+                      </SimpleBadge>
+                    )}
+                  </InlineStack>
+                </Stack>
+              </InlineStack>
+              <InlineStack gap="300">
+                <Button
+                  variant="primary"
+                  onPress={() => router.push(`/enroll?participantId=${id}`)}
+                >
+                  <Icon name="user-plus" />
+                  New Enrollment
+                </Button>
+                <Button
+                  variant="secondary"
+                  onPress={() => router.push(`/case-notes?participantId=${id}`)}
+                >
+                  <Icon name="file-text" />
+                  Add Case Note
+                </Button>
+              </InlineStack>
+            </InlineStack>
+          </Stack>
+        </Card>
+
+        {/* Quick Stats */}
+        <TileLayout columns="4" columnsSM="2" space="400">
+          <Card>
+            <Stack space="200">
+              <Text variant="sm" color="subdued">Active Enrollments</Text>
+              <Heading level={2}>{activeEnrollments.length}</Heading>
+              <Text variant="sm">
+                {participantEnrollments.length} total
+              </Text>
+            </Stack>
+          </Card>
+          <Card>
+            <Stack space="200">
+              <Text variant="sm" color="subdued">Services Received</Text>
+              <Heading level={2}>{participantServices.length}</Heading>
+              <Text variant="sm">All time</Text>
+            </Stack>
+          </Card>
+          <Card>
+            <Stack space="200">
+              <Text variant="sm" color="subdued">Goals</Text>
+              <Heading level={2}>{participantGoals.length}</Heading>
+              <Text variant="sm">
+                {participantGoals.filter(g => g.status === 'achieved').length} achieved
+              </Text>
+            </Stack>
+          </Card>
+          <Card>
+            <Stack space="200">
+              <Text variant="sm" color="subdued">Household</Text>
+              <Heading level={2}>{household?.members.length || 1}</Heading>
+              <Text variant="sm">
+                {household ? 'Family members' : 'Individual'}
+              </Text>
+            </Stack>
+          </Card>
+        </TileLayout>
+
+        {/* Tabbed Content */}
+        <Card>
+          <Tabs selectedKey={selectedTab} onSelectionChange={(key) => setSelectedTab(key as string)}>
+            <TabList>
+              <Tab id="overview">
+                <Icon name="user" /> Overview
+              </Tab>
+              <Tab id="enrollments">
+                <Icon name="clipboard-list" /> Enrollments
+              </Tab>
+              <Tab id="services">
+                <Icon name="briefcase" /> Services
+              </Tab>
+              <Tab id="goals">
+                <Icon name="target" /> Goals
+              </Tab>
+              <Tab id="activity">
+                <Icon name="clock" /> Activity
+              </Tab>
+              {household && (
+                <Tab id="family">
+                  <Icon name="users" /> Family
+                </Tab>
+              )}
+            </TabList>
+
+            {/* Overview Tab */}
+            <TabPanel id="overview">
+              <Stack space="500">
+                {/* Contact Information */}
+                <Stack space="300">
+                  <Heading level={3}>Contact Information</Heading>
+                  <TileLayout columns="2" columnsSM="1" space="300">
+                    <Stack space="200">
+                      <Text variant="sm" color="subdued">Email</Text>
+                      <Text>{participant.email || '—'}</Text>
+                    </Stack>
+                    <Stack space="200">
+                      <Text variant="sm" color="subdued">Phone</Text>
+                      <Text>{participant.phone || '—'}</Text>
+                    </Stack>
+                    <Stack space="200">
+                      <Text variant="sm" color="subdued">Date of Birth</Text>
+                      <Text>{participant.dateOfBirth || '—'}</Text>
+                    </Stack>
+                    <Stack space="200">
+                      <Text variant="sm" color="subdued">Address</Text>
+                      <Text>
+                        {participant.address || '—'}
+                        {participant.city && participant.state && (
+                          <><br />{participant.city}, {participant.state} {participant.zipCode}</>
+                        )}
+                      </Text>
+                    </Stack>
+                  </TileLayout>
+                </Stack>
+
+                <Divider />
+
+                {/* Demographics */}
+                {(participant.gender || participant.race || participant.ethnicity) && (
+                  <>
+                    <Stack space="300">
+                      <Heading level={3}>Demographics</Heading>
+                      <TileLayout columns="3" columnsSM="1" space="300">
+                        {participant.gender && (
+                          <Stack space="200">
+                            <Text variant="sm" color="subdued">Gender</Text>
+                            <Text>{participant.gender}</Text>
+                          </Stack>
+                        )}
+                        {participant.race && (
+                          <Stack space="200">
+                            <Text variant="sm" color="subdued">Race</Text>
+                            <Text>{participant.race}</Text>
+                          </Stack>
+                        )}
+                        {participant.ethnicity && (
+                          <Stack space="200">
+                            <Text variant="sm" color="subdued">Ethnicity</Text>
+                            <Text>{participant.ethnicity}</Text>
+                          </Stack>
+                        )}
+                      </TileLayout>
+                    </Stack>
+                    <Divider />
+                  </>
+                )}
+
+                {/* Recent Activity */}
+                <Stack space="300">
+                  <Heading level={3}>Recent Activity</Heading>
+                  <Stack space="300">
+                    {activeEnrollments.length > 0 && (
+                      <Card>
+                        <InlineStack gap="300" verticalAlign="center">
+                          <div style={{
+                            width: '40px',
+                            height: '40px',
+                            borderRadius: '50%',
+                            background: '#F3E8FF',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}>
+                            <Icon name="clipboard-list" />
+                          </div>
+                          <Stack space="100">
+                            <Text weight="500">Active in {activeEnrollments.length} program{activeEnrollments.length > 1 ? 's' : ''}</Text>
+                            <Text variant="sm" color="subdued">
+                              {activeEnrollments.map(e => programs.find(p => p.id === e.programId)?.name).join(', ')}
+                            </Text>
+                          </Stack>
+                        </InlineStack>
+                      </Card>
+                    )}
+                    {participantServices.length > 0 && (
+                      <Card>
+                        <InlineStack gap="300" verticalAlign="center">
+                          <div style={{
+                            width: '40px',
+                            height: '40px',
+                            borderRadius: '50%',
+                            background: '#E0F2FE',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}>
+                            <Icon name="briefcase" />
+                          </div>
+                          <Stack space="100">
+                            <Text weight="500">{participantServices.length} services received</Text>
+                            <Text variant="sm" color="subdued">
+                              Last service: {formatDate(participantServices[participantServices.length - 1].serviceDate)}
+                            </Text>
+                          </Stack>
+                        </InlineStack>
+                      </Card>
+                    )}
+                  </Stack>
+                </Stack>
+              </Stack>
+            </TabPanel>
+
+            {/* Enrollments Tab */}
+            <TabPanel id="enrollments">
+              <Stack space="400">
+                <InlineStack gap="400" verticalAlign="center" distribute="space-between">
+                  <Heading level={3}>{participantEnrollments.length} Enrollment{participantEnrollments.length !== 1 ? 's' : ''}</Heading>
+                  <Button
+                    variant="primary"
+                    onPress={() => router.push(`/enroll?participantId=${id}`)}
+                  >
+                    <Icon name="plus" />
+                    New Enrollment
+                  </Button>
+                </InlineStack>
+
+                {participantEnrollments.length === 0 ? (
+                  <Stack space="300" style={{ padding: '40px', textAlign: 'center' }}>
+                    <Icon name="clipboard-list" size="large" />
+                    <Heading level={3}>No enrollments yet</Heading>
+                    <Text color="subdued">Enroll this participant in a program to get started</Text>
+                  </Stack>
+                ) : (
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableHeaderCell>Program</TableHeaderCell>
+                        <TableHeaderCell>Start Date</TableHeaderCell>
+                        <TableHeaderCell>End Date</TableHeaderCell>
+                        <TableHeaderCell>Status</TableHeaderCell>
+                        <TableHeaderCell>Actions</TableHeaderCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {participantEnrollments.map((enrollment) => {
+                        const program = programs.find(p => p.id === enrollment.programId);
+                        return (
+                          <TableRow key={enrollment.id}>
+                            <TableCell>
+                              <Text weight="500">{program?.name || 'Unknown Program'}</Text>
+                            </TableCell>
+                            <TableCell>
+                              <Text>{formatDate(enrollment.startDate)}</Text>
+                            </TableCell>
+                            <TableCell>
+                              <Text>{enrollment.endDate ? formatDate(enrollment.endDate) : '—'}</Text>
+                            </TableCell>
+                            <TableCell>
+                              {getStatusSimpleBadge(enrollment.status)}
+                            </TableCell>
+                            <TableCell>
+                              <Button
+                                variant="tertiary"
+                                onPress={() => router.push(`/enrollments/${enrollment.id}`)}
+                              >
+                                View Details
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                )}
+              </Stack>
+            </TabPanel>
+
+            {/* Services Tab */}
+            <TabPanel id="services">
+              <Stack space="400">
+                <InlineStack gap="400" verticalAlign="center" distribute="space-between">
+                  <Heading level={3}>{participantServices.length} Service{participantServices.length !== 1 ? 's' : ''}</Heading>
+                  <Button
+                    variant="primary"
+                    onPress={() => router.push('/services/record')}
+                  >
+                    <Icon name="plus" />
+                    Record Service
+                  </Button>
+                </InlineStack>
+
+                {participantServices.length === 0 ? (
+                  <Stack space="300" style={{ padding: '40px', textAlign: 'center' }}>
+                    <Icon name="briefcase" size="large" />
+                    <Heading level={3}>No services recorded</Heading>
+                    <Text color="subdued">Record a service for this participant</Text>
+                  </Stack>
+                ) : (
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableHeaderCell>Service Type</TableHeaderCell>
+                        <TableHeaderCell>Date</TableHeaderCell>
+                        <TableHeaderCell>Duration</TableHeaderCell>
+                        <TableHeaderCell>Units</TableHeaderCell>
+                        <TableHeaderCell>Program</TableHeaderCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {participantServices.slice(-10).reverse().map((service) => {
+                        const serviceType = serviceTypes.find(st => st.id === service.serviceTypeId);
+                        const enrollment = enrollments.find(e => e.id === service.enrollmentId);
+                        const program = programs.find(p => p.id === enrollment?.programId);
+
+                        return (
+                          <TableRow key={service.id}>
+                            <TableCell>
+                              <Text weight="500">{serviceType?.name || 'Unknown Service'}</Text>
+                            </TableCell>
+                            <TableCell>
+                              <Text>{formatDate(service.serviceDate)}</Text>
+                            </TableCell>
+                            <TableCell>
+                              <Text>{service.duration} min</Text>
+                            </TableCell>
+                            <TableCell>
+                              <Text>{service.unitsProvided}</Text>
+                            </TableCell>
+                            <TableCell>
+                              <Text variant="sm">{program?.name || '—'}</Text>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                )}
+              </Stack>
+            </TabPanel>
+
+            {/* Goals Tab */}
+            <TabPanel id="goals">
+              <Stack space="400">
+                <Heading level={3}>{participantGoals.length} Goal{participantGoals.length !== 1 ? 's' : ''}</Heading>
+
+                {participantGoals.length === 0 ? (
+                  <Stack space="300" style={{ padding: '40px', textAlign: 'center' }}>
+                    <Icon name="target" size="large" />
+                    <Heading level={3}>No goals set</Heading>
+                    <Text color="subdued">Goals will appear here once they're created</Text>
+                  </Stack>
+                ) : (
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableHeaderCell>Goal</TableHeaderCell>
+                        <TableHeaderCell>Target Date</TableHeaderCell>
+                        <TableHeaderCell>Status</TableHeaderCell>
+                        <TableHeaderCell>Progress</TableHeaderCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {participantGoals.map((goal) => {
+                        return (
+                          <TableRow key={goal.id}>
+                            <TableCell>
+                              <Text weight="500">{goal.description}</Text>
+                            </TableCell>
+                            <TableCell>
+                              <Text>{goal.targetDate ? formatDate(goal.targetDate) : '—'}</Text>
+                            </TableCell>
+                            <TableCell>
+                              {getStatusSimpleBadge(goal.status)}
+                            </TableCell>
+                            <TableCell>
+                              <Text>{goal.progress || 0}%</Text>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                )}
+              </Stack>
+            </TabPanel>
+
+            {/* Activity Tab */}
+            <TabPanel id="activity">
+              <Stack space="400">
+                <InlineStack gap="400" verticalAlign="center" distribute="space-between">
+                  <Heading level={3}>Activity Timeline</Heading>
+                  <Text variant="sm" color="subdued">
+                    {timelineEvents.length} events
+                  </Text>
+                </InlineStack>
+
+                <ActivityTimeline events={timelineEvents} />
+              </Stack>
+            </TabPanel>
+
+            {/* Family Tab */}
+            {household && (
+              <TabPanel id="family">
+                <Stack space="400">
+                  <InlineStack gap="400" verticalAlign="center" distribute="space-between">
+                    <Heading level={3}>{household.householdName}</Heading>
+                    <Button
+                      variant="secondary"
+                      onPress={() => router.push(`/families/${household.id}`)}
+                    >
+                      View Full Household
+                    </Button>
+                  </InlineStack>
+
+                  <Stack space="300">
+                    <Text variant="sm" color="subdued">Household Members</Text>
+                    <Stack space="300">
+                      {household.members.map((member) => {
+                        const memberParticipant = participants.find(p => p.id === member.id);
+                        const memberEnrollments = getActiveEnrollments().filter(e => e.participantId === member.id);
+
+                        return (
+                          <Card key={member.id}>
+                            <InlineStack gap="300" verticalAlign="center" distribute="space-between">
+                              <InlineStack gap="300" verticalAlign="center">
+                                <div
+                                  style={{
+                                    width: '48px',
+                                    height: '48px',
+                                    borderRadius: '50%',
+                                    background: member.id === id ? 'linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%)' : '#E5E7EB',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontSize: '18px',
+                                    fontWeight: '600',
+                                    color: member.id === id ? '#ffffff' : '#666',
+                                  }}
+                                >
+                                  {member.firstName[0]}{member.lastName[0]}
+                                </div>
+                                <Stack space="100">
+                                  <InlineStack gap="200" verticalAlign="center">
+                                    <Text weight="500">
+                                      {member.firstName} {member.lastName}
+                                    </Text>
+                                    {member.id === id && <SimpleBadge tone="info">You</SimpleBadge>}
+                                  </InlineStack>
+                                  <Text variant="sm" color="subdued">
+                                    {member.relationshipToHead} • {memberEnrollments.length} active enrollment{memberEnrollments.length !== 1 ? 's' : ''}
+                                  </Text>
+                                </Stack>
+                              </InlineStack>
+                              {member.id !== id && memberParticipant && (
+                                <Button
+                                  variant="tertiary"
+                                  onPress={() => router.push(`/participants/${member.id}`)}
+                                >
+                                  View Profile
+                                </Button>
+                              )}
+                            </InlineStack>
+                          </Card>
+                        );
+                      })}
+                    </Stack>
+                  </Stack>
+                </Stack>
+              </TabPanel>
+            )}
+          </Tabs>
+        </Card>
+      </Stack>
+    </PageLayout>
+  );
+}

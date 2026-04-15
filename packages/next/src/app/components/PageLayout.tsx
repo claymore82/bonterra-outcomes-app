@@ -21,6 +21,9 @@ import {
 import { coreTokens as $ } from '@bonterratech/stitch-tokens/coreTokens.stylex';
 import Footer from './Footer';
 import SideNav from './SideNav';
+import UserMenu from './UserMenu';
+import ProgramSelector from './ProgramSelector';
+import SiteSelector from './SiteSelector';
 import type { StyleXStyles } from '@stylexjs/stylex';
 
 export interface PageLayoutProps {
@@ -36,6 +39,12 @@ export const styles = stylex.create({
   },
   headerContentWrapper: {
     padding: `${$['--s-space-100']} ${$['--s-space-300']}`,
+  },
+  endContainerWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    height: '100%',
+    maxHeight: $['--s-size-500'],
   },
   noSideNav: {
     gridTemplateAreas: `
@@ -77,14 +86,26 @@ export default function PageLayout({
                 </ResponsiveWrapper>
                 <ResponsiveWrapper hideBelow="md">
                   <Text variant="lg" weight="500" whitespace="nowrap">
-                    {pageTitle || 'Bonstart'}
+                    {pageTitle || 'Bonterra Outcomes'}
                   </Text>
                 </ResponsiveWrapper>
               </InlineStack>
             </Link>
           </InlineStack>
         </StartContainer>
-        <EndContainer />
+        <EndContainer>
+          <div {...stylex.props(styles.endContainerWrapper)}>
+            <InlineStack verticalAlign="center" gap="400">
+              <ResponsiveWrapper hideBelow="md">
+                <InlineStack verticalAlign="center" gap="300">
+                  <SiteSelector />
+                  <ProgramSelector />
+                </InlineStack>
+              </ResponsiveWrapper>
+              <UserMenu />
+            </InlineStack>
+          </div>
+        </EndContainer>
       </PageHeader>
       <>
         {!noSideNav && <SideNav />}

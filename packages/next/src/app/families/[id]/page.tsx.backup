@@ -1,0 +1,561 @@
+'use client';
+
+import { use, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import {
+  Card,
+  Heading,
+  Text,
+  Stack,
+  InlineStack,
+  Button,
+  Icon,
+  Divider,
+  TileLayout,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanel,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableHeaderCell,
+  TableCell,
+} from '@bonterratech/stitch-extension';
+import SimpleBadge from '../../components/SimpleBadge';
+import PageLayout from '../../components/PageLayout';
+import { useHouseholdStore } from '@/lib/stores/householdStore';
+import { useParticipantStore } from '@/lib/stores/participantStore';
+import { useEnrollmentStore } from '@/lib/stores/enrollmentStore';
+import { useProgramStore } from '@/lib/stores/programStore';
+import { useServiceStore } from '@/lib/stores/serviceStore';
+
+interface FamilyDetailPageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default function FamilyDetailPage({ params }: FamilyDetailPageProps) {
+  const { id } = use(params);
+  const router = useRouter();
+  const { households } = useHouseholdStore();
+  const { participants } = useParticipantStore();
+  const { enrollments, getActiveEnrollments } = useEnrollmentStore();
+  const { programs } = useProgramStore();
+  const { serviceTransactions } = useServiceStore();
+
+  const [selectedTab, setSelectedTab] = useState('overview');
+
+  const household = households.find(h => h.id === id);
+
+  if (!household) {
+    return (
+      <PageLayout>
+        <Card>
+          <Stack space="400" style={{ padding: '40px', textAlign: 'center' }}>
+            <Icon name="users" size="large" />
+            <Heading level={2}>Household not found</Heading>
+            <Text color="subdued">The household you're looking for doesn't exist.</Text>
+            <Button onPress={() => router.push('/families')}>
+              Back to Families
+            </Button>
+          </Stack>
+        </Card>
+      </PageLayout>
+    );
+  }
+
+  const memberIds = household.members.map(m => m.id);
+  const activeEnrollments = getActiveEnrollments();
+
+  // Get all family enrollments
+  const familyEnrollments = enrollments.filter(e => memberIds.includes(e.participantId));
+  const activeFamilyEnrollments = activeEnrollments.filter(e => memberIds.includes(e.participantId));
+
+  // Get all family services
+  const familyServices = serviceTransactions.filter(st => {
+    const enrollment = enrollments.find(e => e.id === st.enrollmentId);
+    return enrollment && memberIds.includes(enrollment.participantId);
+  });
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  };
+
+  return (
+    <PageLayout pageTitle={household.householdName}>
+      <Stack space="600">
+        {/* Back Button */}
+        <InlineStack gap="400" verticalAlign="center">
+          <Button
+            variant="tertiary"
+            onPress={() => router.push('/families')}
+          >
+            <Icon name="arrow-left" />
+            Back to Families
+          </Button>
+        </InlineStack>
+
+        {/* Household Header */}
+        <Card>
+          <Stack space="400">
+            <InlineStack gap="400" verticalAlign="center" distribute="space-between">
+              <InlineStack gap="400" verticalAlign="center">
+                <div
+                  style={{
+                    width: '80px',
+                    height: '80px',
+                    borderRadius: '16px',
+                    background: 'linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '32px',
+                    fontWeight: '600',
+                    color: '#ffffff',
+                  }}
+                >
+                  <Icon name="users" />
+                </div>
+                <Stack space="200">
+                  <Heading level={1}>{household.householdName}</Heading>
+                  <InlineStack gap="300">
+                    {activeFamilyEnrollments.length > 0 ? (
+                      <SimpleBadge tone="positive">
+                        <Icon name="check-circle" /> Active
+                      </SimpleBadge>
+                    ) : (
+                      <SimpleBadge tone="neutral">Inactive</SimpleBadge>
+                    )}
+                    <SimpleBadge tone="info">
+                      <Icon name="users" /> {household.members.length} Members
+                    </SimpleBadge>
+                  </InlineStack>
+                </Stack>
+              </InlineStack>
+              <Button
+                variant="primary"
+                onPress={() => router.push('/families/create-agent')}
+              >
+                <Icon name="user-plus" />
+                Add Member
+              </Button>
+            </InlineStack>
+
+            {household.address && (
+              <>
+                <Divider />
+                <InlineStack gap="200" verticalAlign="center">
+                  <Icon name="map-pin" />
+                  <Text>{household.address}</Text>
+                </InlineStack>
+              </>
+            )}
+          </Stack>
+        </Card>
+
+        {/* Quick Stats */}
+        <TileLayout columns="4" columnsSM="2" space="400">
+          <Card>
+            <Stack space="200">
+              <Text variant="sm" color="subdued">Active Enrollments</Text>
+              <Heading level={2}>{activeFamilyEnrollments.length}</Heading>
+              <Text variant="sm">
+                Across {household.members.length} members
+              </Text>
+            </Stack>
+          </Card>
+          <Card>
+            <Stack space="200">
+              <Text variant="sm" color="subdued">Total Services</Text>
+              <Heading level={2}>{familyServices.length}</Heading>
+              <Text variant="sm">Family-wide</Text>
+            </Stack>
+          </Card>
+          <Card>
+            <Stack space="200">
+              <Text variant="sm" color="subdued">Programs</Text>
+              <Heading level={2}>
+                {new Set(activeFamilyEnrollments.map(e => e.programId)).size}
+              </Heading>
+              <Text variant="sm">Currently enrolled</Text>
+            </Stack>
+          </Card>
+          <Card>
+            <Stack space="200">
+              <Text variant="sm" color="subdued">Head of Household</Text>
+              <Heading level={3}>
+                {household.members.find(m => m.relationshipToHead === 'Self')?.firstName || 'Unknown'}
+              </Heading>
+            </Stack>
+          </Card>
+        </TileLayout>
+
+        {/* Tabbed Content */}
+        <Card>
+          <Tabs selectedKey={selectedTab} onSelectionChange={(key) => setSelectedTab(key as string)}>
+            <TabList>
+              <Tab id="overview">
+                <Icon name="home" /> Overview
+              </Tab>
+              <Tab id="members">
+                <Icon name="users" /> Members
+              </Tab>
+              <Tab id="enrollments">
+                <Icon name="clipboard-list" /> Enrollments
+              </Tab>
+              <Tab id="services">
+                <Icon name="briefcase" /> Services
+              </Tab>
+            </TabList>
+
+            {/* Overview Tab */}
+            <TabPanel id="overview">
+              <Stack space="500">
+                {/* Household Information */}
+                <Stack space="300">
+                  <Heading level={3}>Household Information</Heading>
+                  <TileLayout columns="2" columnsSM="1" space="300">
+                    <Stack space="200">
+                      <Text variant="sm" color="subdued">Household Name</Text>
+                      <Text>{household.householdName}</Text>
+                    </Stack>
+                    <Stack space="200">
+                      <Text variant="sm" color="subdued">Total Members</Text>
+                      <Text>{household.members.length}</Text>
+                    </Stack>
+                    {household.address && (
+                      <Stack space="200">
+                        <Text variant="sm" color="subdued">Address</Text>
+                        <Text>{household.address}</Text>
+                      </Stack>
+                    )}
+                    <Stack space="200">
+                      <Text variant="sm" color="subdued">Active Enrollments</Text>
+                      <Text>{activeFamilyEnrollments.length}</Text>
+                    </Stack>
+                  </TileLayout>
+                </Stack>
+
+                <Divider />
+
+                {/* Quick Members Overview */}
+                <Stack space="300">
+                  <Heading level={3}>Family Members</Heading>
+                  <Stack space="300">
+                    {household.members.map((member) => {
+                      const memberParticipant = participants.find(p => p.id === member.id);
+                      const memberEnrollments = activeEnrollments.filter(e => e.participantId === member.id);
+
+                      return (
+                        <Card key={member.id}>
+                          <InlineStack gap="300" verticalAlign="center" distribute="space-between">
+                            <InlineStack gap="300" verticalAlign="center">
+                              <div
+                                style={{
+                                  width: '56px',
+                                  height: '56px',
+                                  borderRadius: '50%',
+                                  background: 'linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%)',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  fontSize: '20px',
+                                  fontWeight: '600',
+                                  color: '#ffffff',
+                                }}
+                              >
+                                {member.firstName[0]}{member.lastName[0]}
+                              </div>
+                              <Stack space="100">
+                                <Text weight="500">
+                                  {member.firstName} {member.lastName}
+                                </Text>
+                                <InlineStack gap="300">
+                                  <Text variant="sm" color="subdued">
+                                    {member.relationshipToHead}
+                                  </Text>
+                                  {memberEnrollments.length > 0 && (
+                                    <SimpleBadge tone="positive">{memberEnrollments.length} active</SimpleBadge>
+                                  )}
+                                </InlineStack>
+                              </Stack>
+                            </InlineStack>
+                            {memberParticipant && (
+                              <Button
+                                variant="tertiary"
+                                onPress={() => router.push(`/participants/${member.id}`)}
+                              >
+                                View Profile
+                              </Button>
+                            )}
+                          </InlineStack>
+                        </Card>
+                      );
+                    })}
+                  </Stack>
+                </Stack>
+
+                <Divider />
+
+                {/* Recent Activity */}
+                <Stack space="300">
+                  <Heading level={3}>Recent Activity</Heading>
+                  {activeFamilyEnrollments.length === 0 && familyServices.length === 0 ? (
+                    <Text color="subdued">No recent activity</Text>
+                  ) : (
+                    <Stack space="300">
+                      {activeFamilyEnrollments.slice(0, 3).map((enrollment) => {
+                        const member = household.members.find(m => m.id === enrollment.participantId);
+                        const program = programs.find(p => p.id === enrollment.programId);
+
+                        return (
+                          <Card key={enrollment.id}>
+                            <InlineStack gap="300" verticalAlign="center">
+                              <div style={{
+                                width: '40px',
+                                height: '40px',
+                                borderRadius: '50%',
+                                background: '#F3E8FF',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                              }}>
+                                <Icon name="clipboard-list" />
+                              </div>
+                              <Stack space="100">
+                                <Text weight="500">
+                                  {member?.firstName} enrolled in {program?.name}
+                                </Text>
+                                <Text variant="sm" color="subdued">
+                                  Started {formatDate(enrollment.startDate)}
+                                </Text>
+                              </Stack>
+                            </InlineStack>
+                          </Card>
+                        );
+                      })}
+                    </Stack>
+                  )}
+                </Stack>
+              </Stack>
+            </TabPanel>
+
+            {/* Members Tab */}
+            <TabPanel id="members">
+              <Stack space="400">
+                <Heading level={3}>{household.members.length} Family Members</Heading>
+
+                <Stack space="300">
+                  {household.members.map((member) => {
+                    const memberParticipant = participants.find(p => p.id === member.id);
+                    const memberEnrollments = activeEnrollments.filter(e => e.participantId === member.id);
+                    const memberServices = familyServices.filter(s => {
+                      const enrollment = enrollments.find(e => e.id === s.enrollmentId);
+                      return enrollment?.participantId === member.id;
+                    });
+
+                    return (
+                      <Card key={member.id}>
+                        <Stack space="300">
+                          <InlineStack gap="300" verticalAlign="center" distribute="space-between">
+                            <InlineStack gap="300" verticalAlign="center">
+                              <div
+                                style={{
+                                  width: '64px',
+                                  height: '64px',
+                                  borderRadius: '50%',
+                                  background: 'linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%)',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  fontSize: '24px',
+                                  fontWeight: '600',
+                                  color: '#ffffff',
+                                }}
+                              >
+                                {member.firstName[0]}{member.lastName[0]}
+                              </div>
+                              <Stack space="100">
+                                <Heading level={3}>
+                                  {member.firstName} {member.lastName}
+                                </Heading>
+                                <InlineStack gap="300">
+                                  <Text color="subdued">{member.relationshipToHead}</Text>
+                                  {memberEnrollments.length > 0 && (
+                                    <SimpleBadge tone="positive">{memberEnrollments.length} active</SimpleBadge>
+                                  )}
+                                </InlineStack>
+                              </Stack>
+                            </InlineStack>
+                            {memberParticipant && (
+                              <InlineStack gap="200">
+                                <Button
+                                  variant="secondary"
+                                  onPress={() => router.push(`/participants/${member.id}`)}
+                                >
+                                  View Profile
+                                </Button>
+                                <Button
+                                  variant="tertiary"
+                                  onPress={() => router.push(`/enroll?participantId=${member.id}`)}
+                                >
+                                  <Icon name="plus" />
+                                  Enroll
+                                </Button>
+                              </InlineStack>
+                            )}
+                          </InlineStack>
+
+                          {memberParticipant && (
+                            <TileLayout columns="3" columnsSM="1" space="300">
+                              <Stack space="100">
+                                <Text variant="sm" color="subdued">Contact</Text>
+                                <Text variant="sm">{memberParticipant.email || '—'}</Text>
+                                <Text variant="sm">{memberParticipant.phone || '—'}</Text>
+                              </Stack>
+                              <Stack space="100">
+                                <Text variant="sm" color="subdued">Enrollments</Text>
+                                <Text variant="sm">{memberEnrollments.length} active</Text>
+                              </Stack>
+                              <Stack space="100">
+                                <Text variant="sm" color="subdued">Services</Text>
+                                <Text variant="sm">{memberServices.length} received</Text>
+                              </Stack>
+                            </TileLayout>
+                          )}
+                        </Stack>
+                      </Card>
+                    );
+                  })}
+                </Stack>
+              </Stack>
+            </TabPanel>
+
+            {/* Enrollments Tab */}
+            <TabPanel id="enrollments">
+              <Stack space="400">
+                <Heading level={3}>{familyEnrollments.length} Family Enrollments</Heading>
+
+                {familyEnrollments.length === 0 ? (
+                  <Stack space="300" style={{ padding: '40px', textAlign: 'center' }}>
+                    <Icon name="clipboard-list" size="large" />
+                    <Heading level={3}>No enrollments yet</Heading>
+                    <Text color="subdued">Enroll family members in programs to get started</Text>
+                  </Stack>
+                ) : (
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableHeaderCell>Member</TableHeaderCell>
+                        <TableHeaderCell>Program</TableHeaderCell>
+                        <TableHeaderCell>Start Date</TableHeaderCell>
+                        <TableHeaderCell>Status</TableHeaderCell>
+                        <TableHeaderCell>Actions</TableHeaderCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {familyEnrollments.map((enrollment) => {
+                        const member = household.members.find(m => m.id === enrollment.participantId);
+                        const program = programs.find(p => p.id === enrollment.programId);
+
+                        return (
+                          <TableRow key={enrollment.id}>
+                            <TableCell>
+                              <Text weight="500">
+                                {member?.firstName} {member?.lastName}
+                              </Text>
+                            </TableCell>
+                            <TableCell>
+                              <Text>{program?.name || 'Unknown'}</Text>
+                            </TableCell>
+                            <TableCell>
+                              <Text>{formatDate(enrollment.startDate)}</Text>
+                            </TableCell>
+                            <TableCell>
+                              <SimpleBadge tone={enrollment.status === 'active' ? 'positive' : 'neutral'}>
+                                {enrollment.status}
+                              </SimpleBadge>
+                            </TableCell>
+                            <TableCell>
+                              <Button
+                                variant="tertiary"
+                                onPress={() => router.push(`/enrollments/${enrollment.id}`)}
+                              >
+                                View
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                )}
+              </Stack>
+            </TabPanel>
+
+            {/* Services Tab */}
+            <TabPanel id="services">
+              <Stack space="400">
+                <Heading level={3}>{familyServices.length} Family Services</Heading>
+
+                {familyServices.length === 0 ? (
+                  <Stack space="300" style={{ padding: '40px', textAlign: 'center' }}>
+                    <Icon name="briefcase" size="large" />
+                    <Heading level={3}>No services recorded</Heading>
+                    <Text color="subdued">Record services for family members</Text>
+                  </Stack>
+                ) : (
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableHeaderCell>Member</TableHeaderCell>
+                        <TableHeaderCell>Service</TableHeaderCell>
+                        <TableHeaderCell>Date</TableHeaderCell>
+                        <TableHeaderCell>Duration</TableHeaderCell>
+                        <TableHeaderCell>Program</TableHeaderCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {familyServices.slice(-15).reverse().map((service) => {
+                        const enrollment = enrollments.find(e => e.id === service.enrollmentId);
+                        const member = household.members.find(m => m.id === enrollment?.participantId);
+                        const program = programs.find(p => p.id === enrollment?.programId);
+
+                        return (
+                          <TableRow key={service.id}>
+                            <TableCell>
+                              <Text variant="sm">
+                                {member?.firstName} {member?.lastName}
+                              </Text>
+                            </TableCell>
+                            <TableCell>
+                              <Text variant="sm">Service</Text>
+                            </TableCell>
+                            <TableCell>
+                              <Text variant="sm">{formatDate(service.serviceDate)}</Text>
+                            </TableCell>
+                            <TableCell>
+                              <Text variant="sm">{service.duration} min</Text>
+                            </TableCell>
+                            <TableCell>
+                              <Text variant="sm">{program?.name || '—'}</Text>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                )}
+              </Stack>
+            </TabPanel>
+          </Tabs>
+        </Card>
+      </Stack>
+    </PageLayout>
+  );
+}
