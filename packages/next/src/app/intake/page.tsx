@@ -468,7 +468,7 @@ export default function IntakeAgentPage() {
       setCsvParticipants([]);
 
       // Redirect to participants list
-      router.push('/individuals');
+      router.push('/participants');
     } catch (error) {
       console.error('Bulk import error:', error);
       alert('An error occurred during import');
