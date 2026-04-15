@@ -2205,7 +2205,8 @@ export default function IntakeAgentPage() {
                           </label>
                           <select
                             value={
-                              extractedData.gender !== undefined
+                              extractedData.gender !== undefined &&
+                              extractedData.gender !== null
                                 ? extractedData.gender
                                 : 99
                             }
@@ -2248,7 +2249,7 @@ export default function IntakeAgentPage() {
 
                             if (field.fieldType === 'dropdown') {
                               return (
-                                <div key={field.name}>
+                                <div key={field.id}>
                                   <label
                                     style={{
                                       display: 'block',
@@ -2294,7 +2295,7 @@ export default function IntakeAgentPage() {
 
                             return (
                               <TextField
-                                key={field.name}
+                                key={field.id}
                                 label={
                                   field.label + (field.required ? ' *' : '')
                                 }
@@ -2643,7 +2644,7 @@ export default function IntakeAgentPage() {
                               const value =
                                 extractedData.customFields?.[field.name];
                               return (
-                                <div key={field.name}>
+                                <div key={field.id}>
                                   <div
                                     style={{
                                       display: 'flex',
